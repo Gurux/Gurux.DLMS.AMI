@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Gurux.DLMS.AMI.UI</RootNamespace>
+    <AssemblyName>Gurux.DLMS.AMI.UI</AssemblyName>
+    <Company>Gurux Ltd</Company>
+    <Authors>Gurux Ltd</Authors>
+    <Copyright>Copyright (c) 1998-2019 Gurux Ltd. All rights reserved.</Copyright>
+    <PackageProjectUrl>www.gurux.fi/index.php?q=Gurux.DLMS.AMI</PackageProjectUrl>
+    <Description>Gurux.AMI offers meter reading application that you can schedule or order to read wanted objects from DLMS meters.</Description>
+    <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">0.0.1-local</Version>
+    <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <TargetFramework>net46</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/gurux/gurux.dlms.ami</RepositoryUrl>
+    <PackageTags>Gurux Device Framework Network DLMS AMI</PackageTags>
+    <PackageId>Gurux.DLMS.AMI.UI</PackageId>
+    <ApplicationIcon>..\gurux_dlms_ami.ico</ApplicationIcon>
+    <PackageLicenseExpression>GPL-2.0-only</PackageLicenseExpression>
+    <PackageIcon>gurux_dlms_ami.png</PackageIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Gurux.Common" Version="8.1.1907.301" />
+    <PackageReference Include="Gurux.DLMS" Version="9.0.1911.901" />
+    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.1911.1408" />
+    <PackageReference Include="Gurux.Net" Version="8.1.1909.601" />
+    <PackageReference Include="Gurux.Serial" Version="8.1.1910.3102" />
+    <PackageReference Include="Gurux.Terminal" Version="8.1.1909.1201" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+ </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\gurux_dlms_ami.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>
