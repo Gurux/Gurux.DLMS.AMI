@@ -112,13 +112,13 @@ At the moment Gurux.AMI is supporting following databases:
 
 ## Examples for database settings:
 
-MariaDB and MySQL
+MariaDB and MySQL  
 Server=HOST;Database=DATABASE;UID=USER_ID;Password=PASSWORD
 
-Microsoft SQL Server (MSSQL)
+Microsoft SQL Server (MSSQL)  
 Server=HOST;Database=DATABASE;User Id=USER_ID;Password=PASSWORD;
 
-Oracle
+Oracle  
 User Id=USER_ID;Password=PASSWORD;Data Source=HOST_NAME:1521/XEPDB1;
 
 Update USER_ID, PASSWORD and HOST_NAME to what you use in your database.
