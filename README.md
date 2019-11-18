@@ -32,7 +32,6 @@ If you downloaded the app you need to unzip the file first.
 After that, you need to modify appsettings.json
 ```json
 {
-{
   "Logging": {
     "LogLevel": {
       "Default": "Warning"
