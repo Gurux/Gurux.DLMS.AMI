@@ -18,6 +18,12 @@ local.properties
 Gurux.DLMS.AMI.Tester/
 # External tool builders
 .externalToolBuilders/
+Gurux.DLMS.AMI.Messages/.vs
+Gurux.DLMS.AMI.Messages/packages
+Gurux.DLMS.AMI.UI/.vs
+Gurux.DLMS.AMI.UI/packages
+Gurux.DLMS.AMI/.vs
+Gurux.DLMS.AMI/packages
 
 # Locally stored "Eclipse launch configurations"
 *.launch

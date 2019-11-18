@@ -111,6 +111,22 @@ At the moment Gurux.AMI is supporting following databases:
 * [Oracle](http://www.oracle.com/ "Oracle")
 * [SQLite](http://www.sqlite.com/ "SQLite")
 
+## Examples for database settings:
+
+MariaDB and MySQL
+Server=HOST;Database=DATABASE;UID=USER_ID;Password=PASSWORD
+
+Microsoft SQL Server (MSSQL)
+Server=HOST;Database=DATABASE;User Id=USER_ID;Password=PASSWORD;
+
+Oracle
+User Id=USER_ID;Password=PASSWORD;Data Source=HOST_NAME:1521/XEPDB1;
+
+Update USER_ID, PASSWORD and HOST_NAME to what you use in your database.
+
+Note! Connection strings might vary for used database version.
+
+
 If you want to just test this you can start the application without modifications just running:
 
 ```csharp
@@ -121,7 +137,8 @@ Now you can test that is up and running.
 
 http://localhost:64881/api/info
 
-You can see a list of REST interfaces that you can use to control the Gurux.DLMS.AMI.
+You can see a list of REST interfaces that you can use to control the Gurux.DLMS.AMI. 
+This is in-memory database. All your actions are lost when you close the application.
 
 GXDLMSDirector
 =========================== 
@@ -155,3 +172,5 @@ You can add attributes to schedules, selecting COSEM object and "Add to Schedule
 Select Schedule where you want to add it and press OK. 
 
 All attributes of the selected object are added automatically and you can remove attributes that you don't want to read.
+
+You can also watch quick start [video](https://www.youtube.com/embed/KJT2ftPg3cQ "video") how get started.
