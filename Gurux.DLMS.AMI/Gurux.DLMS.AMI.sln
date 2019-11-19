@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gurux.DLMS.AMI", "Gurux.DLMS.AMI.csproj", "{ACB026B5-4C06-448D-88BE-EBB8CBBCC7BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gurux.DLMS.AMI.Messages", "..\Gurux.DLMS.AMI.Messages\Gurux.DLMS.AMI.Messages.csproj", "{BF504B53-A7E0-4544-9B78-67DE870400A4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{ACB026B5-4C06-448D-88BE-EBB8CBBCC7BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACB026B5-4C06-448D-88BE-EBB8CBBCC7BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACB026B5-4C06-448D-88BE-EBB8CBBCC7BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BF504B53-A7E0-4544-9B78-67DE870400A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BF504B53-A7E0-4544-9B78-67DE870400A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BF504B53-A7E0-4544-9B78-67DE870400A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BF504B53-A7E0-4544-9B78-67DE870400A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

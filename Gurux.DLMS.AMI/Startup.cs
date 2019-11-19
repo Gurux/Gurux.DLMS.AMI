@@ -88,12 +88,17 @@ namespace Gurux.DLMS.AMI
             GXDLMSReader reader = null;
             try
             {
+                var config = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json", optional: true)
+                   .Build();
+                ListenerOptions listener = config.GetSection("Listener").Get<ListenerOptions>();
+
                 HttpClient httpClient = new HttpClient();
                 using (GXNet media = (GXNet)parameter)
                 {
                     GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
-                    GXDLMSSecureClient client = new GXDLMSSecureClient(true, 0x10, 1, Authentication.None, null, InterfaceType.WRAPPER);
-                    client.UtcTimeZone = true;
+                    GXDLMSSecureClient client = new GXDLMSSecureClient(listener.UseLogicalNameReferencing, listener.ClientAddress, listener.ServerAddress, (Authentication) listener.Authentication, listener.Password, (InterfaceType) listener.Interface);
                     reader = new GXDLMSReader(client, media, TraceLevel.Verbose, null);
                     GXDLMSData ldn = new GXDLMSData("0.0.42.0.0.255");
                     ldn.SetUIDataType(2, DataType.String);
@@ -114,9 +119,7 @@ namespace Gurux.DLMS.AMI
                         {
                             //If device is unknown.
                             Console.WriteLine("Unknown Meter: " + ldn.Value);
-                            dev = new GXDevice() { Name = (string)ldn.Value };
-                            dev.Type = dev.Name.Substring(0, 4);
-                            Startup.AddDevice(dev);
+                            return;
                         }
                         else if (devs.Devices.Length != 1)
                         {
@@ -126,7 +129,7 @@ namespace Gurux.DLMS.AMI
                         {
                             dev = devs.Devices[0];
                             Console.WriteLine("Reading frame counter.");
-                            GXDLMSData fc = new GXDLMSData("0.0.43.1.1.255");
+                            GXDLMSData fc = new GXDLMSData(listener.InvocationCounter);
                             reader.Read(fc, 2);
                             dev.InvocationCounter = 1 + Convert.ToUInt32(fc.Value);
                             reader.Release();
@@ -145,8 +148,8 @@ namespace Gurux.DLMS.AMI
                             else
                             {
                                 Console.WriteLine("Task count: " + ret.Tasks.Length);
-                                client = new GXDLMSSecureClient(true, 1, 1, Authentication.HighGMAC, null, InterfaceType.WRAPPER);
-                                client.UtcTimeZone = true;
+                                client = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress, (Authentication)dev.Authentication, dev.Password, dev.InterfaceType);
+                                client.UtcTimeZone = dev.UtcTimeZone;
                                 client.Standard = (Standard)dev.Standard;
                                 if (dev.Conformance != 0)
                                 {

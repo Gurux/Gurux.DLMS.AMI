@@ -1,7 +1,7 @@
 //
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 
@@ -962,8 +962,6 @@ namespace Gurux.DLMS.AMI.UI
             device.UseLogicalNameReferencing = this.UseLNCB.Checked;
             device.LogicalAddress = Convert.ToInt32(LogicalServerAddressTB.Value);
             device.StartProtocol = (StartProtocolType)this.StartProtocolCB.SelectedItem;
-            //MIKKO GXDLMSDirector.Properties.Settings.Default.SelectedManufacturer = man.Name;
-
             device.Security = (Security)SecurityCB.SelectedItem;
             device.SystemTitle = GetAsHex(SystemTitleTB.Text, SystemTitleAsciiCb.Checked);
             device.BlockCipherKey = GetAsHex(BlockCipherKeyTB.Text, BlockCipherKeyAsciiCb.Checked);
@@ -1007,8 +1005,6 @@ namespace Gurux.DLMS.AMI.UI
             if (device is GXDevice)
             {
                 ((GXDevice)device).TemplateId = ((GXDeviceTemplate)TemplatesCB.SelectedItem).Id;
-                //MIKKO ((GXDevice)device).Manufacturer = ((GXDeviceTemplate)TemplatesCB.SelectedItem).Id;
-                //  m.man device.Manufacturer
             }
         }
 
@@ -1613,29 +1609,7 @@ namespace Gurux.DLMS.AMI.UI
                         {
                             XmlIgnore = true
                         };
-                        //MIKKO overrides.Add(typeof(GXDLMSDevice), "ObsoleteObjects", attribs);
                         overrides.Add(typeof(GXDLMSAttributeSettings), attribs);
-                        //MIKKO overrides.Add(typeof(GXDLMSDevice), "Objects", attribs);
-                        /*
-                        XmlSerializer x = new XmlSerializer(typeof(GXDLMSDevice), overrides, types.ToArray(), null, "Gurux1");
-                        using (TextWriter writer = new StreamWriter(ms))
-                        {
-                            using (TextReader reader = new StreamReader(ms))
-                            {
-                                if (CopyDevice == null)
-                                {
-                                    x.Serialize(writer, Device);
-                                    ms.Position = 0;
-                                    CopyDevice = (GXDLMSDevice)x.Deserialize(reader);
-                                    ms.Position = 0;
-                                }
-                                UpdateSettings(CopyDevice, false);
-                                x.Serialize(writer, CopyDevice);
-                                ms.Position = 0;
-                                textBox1.Text = reader.ReadToEnd();
-                            }
-                        }
-                        */
                     }
                 }
                 catch (Exception ex)
