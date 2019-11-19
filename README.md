@@ -48,7 +48,15 @@ After that, you need to modify appsettings.json
     "Disabled": "False"
   },
   "Listener": {
-    "Port": 1000
+    "Port": 1000,
+    "Interface": 0,
+    "UseLogicalNameReferencing": "True",
+    "ClientAddress": 16,
+    "ServerAddress": 1,
+    "Authentication": 0,
+    "Password": null,
+    "Security": 0,
+    "InvocationCounter": "0.0.43.1.1.255"
   },
   "Notify": {
     "Port": 4059
