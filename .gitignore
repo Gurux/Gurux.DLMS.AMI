@@ -176,3 +176,4 @@ pip-log.txt
 *.ide-shm
 Development/.vs/Gurux.Common/DesignTimeBuild/.dtbcache
 Gurux.DLMS.AMI.UI/.vs/Gurux.DLMS.AMI.UI/DesignTimeBuild/.dtbcache
+updateNugetPackages.bat
