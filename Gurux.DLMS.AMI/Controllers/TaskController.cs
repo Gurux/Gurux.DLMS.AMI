@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using System;
@@ -169,7 +169,16 @@ namespace DBService.Controllers
                     arg.Joins.AddInnerJoin<GXObject, GXDevice>(a => a.DeviceId, b => b.Id);
                     arg.Where.And<GXDevice>(q => q.Id == request.DeviceId);
                 }
+                else
+                {
+                    arg.Joins.AddInnerJoin<GXTask, GXObject>(a => a.Object, b => b.Id);
+                }
                 arg.OrderBy.Add<GXTask>(q => q.Id);
+                GXSelectArgs onProgress = GXSelectArgs.Select<GXObject>(c => c.DeviceId, q => q.Removed == DateTime.MinValue);
+                onProgress.Joins.AddInnerJoin<GXTask, GXObject>(a => a.Object, b => b.Id);
+                onProgress.Joins.AddInnerJoin<GXObject, GXDevice>(a => a.DeviceId, b => b.Id);
+                onProgress.Where.And<GXTask>(q => q.Start != DateTime.MinValue && q.End == DateTime.MinValue);
+                arg.Where.And<GXObject>(q => !GXSql.Exists<GXObject, GXDevice>(a => a.DeviceId, b => b.Id, onProgress));
                 GXTask task = host.Connection.SingleOrDefault<GXTask>(arg);
                 if (task != null)
                 {
