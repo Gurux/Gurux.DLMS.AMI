@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.Common;
@@ -120,6 +120,7 @@ namespace Gurux.DLMS.AMI.Reader
                     UInt64 attributeId = task.Object.Attributes[GetBufferIndex(task.Object)].Id;
                     List<GXValue> list = new List<GXValue>();
                     DateTime latest = task.Object.Attributes[GetBufferIndex(task.Object)].Read;
+                    Boolean read = false;
                     foreach (GXStructure row in (GXArray)val)
                     {
                         DateTime dt = DateTime.MinValue;
@@ -133,8 +134,9 @@ namespace Gurux.DLMS.AMI.Reader
                                 {
                                     dt = ((GXDateTime)row[pos]).Value.LocalDateTime;
                                     //If we have already read this row.
-                                    if (dt < latest)
+                                    if (dt <= latest)
                                     {
+                                        read = true;
                                         continue;
                                     }
                                     if (dt > latest)
@@ -148,17 +150,23 @@ namespace Gurux.DLMS.AMI.Reader
                         {
                             _logger.LogInformation("Read: " + task.Data);
                         }
-                        list.Add(new GXValue()
+                        if (!read)
                         {
-                            Read = dt,
-                            Value = task.Data,
-                            AttributeId = attributeId
-                        });
+                            list.Add(new GXValue()
+                            {
+                                Read = dt,
+                                Value = task.Data,
+                                AttributeId = attributeId
+                            });
+                        }
                     }
-                    v = new AddValue() { Items = list.ToArray() };
-                    response = client.PostAsJsonAsync(Startup.ServerAddress + "/api/value/AddValue", v).Result;
-                    Helpers.CheckStatus(response);
-                    ListDevicesResponse r = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
+                    if (list.Count != 0)
+                    {
+                        v = new AddValue() { Items = list.ToArray() };
+                        response = client.PostAsJsonAsync(Startup.ServerAddress + "/api/value/AddValue", v).Result;
+                        Helpers.CheckStatus(response);
+                        ListDevicesResponse r = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
+                    }
                 }
             }
             else
