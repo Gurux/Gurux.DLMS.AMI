@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.Common;
@@ -79,12 +79,11 @@ namespace Gurux.DLMS.AMI.Reader
         public System.Threading.Tasks.Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Reader Service is starting.");
-            HttpResponseMessage response;
             GXReaderInfo r = new GXReaderInfo();
             r.Guid = _guid;
             r.Name = _name;
             //Don't wait reply. It might that DB server is not up yet.
-            client.PostAsJsonAsync(Startup.ServerAddress + "/api/reader/AddReader", new AddReader() { Reader = r });           
+            client.PostAsJsonAsync(Startup.ServerAddress + "/api/reader/AddReader", new AddReader() { Reader = r });
             for (int pos = 0; pos != _threads; ++pos)
             {
                 Thread t3 = new Thread(() => DoWork());
@@ -308,7 +307,7 @@ namespace Gurux.DLMS.AMI.Reader
                             if (ret.Tasks != null)
                             {
                                 DateTime now = DateTime.Now;
-                                foreach(GXTask it in ret.Tasks)
+                                foreach (GXTask it in ret.Tasks)
                                 {
                                     it.Result = ex.Message;
                                     it.End = now;

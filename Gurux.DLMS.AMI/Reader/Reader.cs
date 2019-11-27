@@ -120,6 +120,7 @@ namespace Gurux.DLMS.AMI.Reader
                     UInt64 attributeId = task.Object.Attributes[GetBufferIndex(task.Object)].Id;
                     List<GXValue> list = new List<GXValue>();
                     DateTime latest = task.Object.Attributes[GetBufferIndex(task.Object)].Read;
+                    DateTime first = latest;
                     Boolean read = false;
                     foreach (GXStructure row in (GXArray)val)
                     {
@@ -134,16 +135,21 @@ namespace Gurux.DLMS.AMI.Reader
                                 {
                                     dt = ((GXDateTime)row[pos]).Value.LocalDateTime;
                                     //If we have already read this row.
-                                    if (dt <= latest)
+                                    if (dt <= first)
                                     {
                                         read = true;
-                                        continue;
+                                        break;
                                     }
                                     if (dt > latest)
                                     {
                                         latest = dt;
                                     }
                                 }
+                            }
+                            //Some meters are returning null as date time to save bytes...
+                            if (pos == 0 && row[pos] == null)
+                            {
+                                row[pos] = latest.AddHours(1);
                             }
                         }
                         if (_logger != null)
