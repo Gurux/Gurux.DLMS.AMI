@@ -98,7 +98,7 @@ namespace Gurux.DLMS.AMI
                 using (GXNet media = (GXNet)parameter)
                 {
                     GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
-                    GXDLMSSecureClient client = new GXDLMSSecureClient(listener.UseLogicalNameReferencing, listener.ClientAddress, listener.ServerAddress, (Authentication) listener.Authentication, listener.Password, (InterfaceType) listener.Interface);
+                    GXDLMSSecureClient client = new GXDLMSSecureClient(listener.UseLogicalNameReferencing, listener.ClientAddress, listener.ServerAddress, (Authentication)listener.Authentication, listener.Password, (InterfaceType)listener.Interface);
                     reader = new GXDLMSReader(client, media, TraceLevel.Verbose, null);
                     GXDLMSData ldn = new GXDLMSData("0.0.42.0.0.255");
                     ldn.SetUIDataType(2, DataType.String);
@@ -347,6 +347,12 @@ namespace Gurux.DLMS.AMI
                     h.Connection.CreateTable<GXReaderInfo>(false, false);
                     h.Connection.CreateTable<GXDeviceToReader>(false, false);
                     AddSchedule();
+                }
+                else
+                {
+                    h.Connection.UpdateTable<GXReaderInfo>();
+                    h.Connection.UpdateTable<GXObjectTemplate>();
+                    h.Connection.UpdateTable<GXObject>();
                 }
                 h.Connection.Insert(GXInsertArgs.Insert(new GXSystemError()
                 {

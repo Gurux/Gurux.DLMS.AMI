@@ -82,6 +82,8 @@ namespace Gurux.DLMS.AMI.Reader
             GXReaderInfo r = new GXReaderInfo();
             r.Guid = _guid;
             r.Name = _name;
+            FileVersionInfo info = FileVersionInfo.GetVersionInfo(typeof(ReaderService).Assembly.Location);
+            r.Version = info.FileVersion;
             //Don't wait reply. It might that DB server is not up yet.
             client.PostAsJsonAsync(Startup.ServerAddress + "/api/reader/AddReader", new AddReader() { Reader = r });
             for (int pos = 0; pos != _threads; ++pos)
@@ -171,7 +173,7 @@ namespace Gurux.DLMS.AMI.Reader
                         //Read frame counter from the meter.
                         if (dev.Security != 0)
                         {
-                            cl = new GXDLMSSecureClient(true, 16, dev.PhysicalAddress,
+                            cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, 16, dev.PhysicalAddress,
                                 Authentication.None, null, (InterfaceType)dev.InterfaceType);
                             reader = new GXDLMSReader(cl, media, TraceLevel.Verbose, _logger);
                             media.Open();
@@ -183,7 +185,7 @@ namespace Gurux.DLMS.AMI.Reader
                             reader.Disconnect();
                             media.Close();
                         }
-                        cl = new GXDLMSSecureClient(true, dev.ClientAddress, dev.PhysicalAddress,
+                        cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress,
                             (Authentication)dev.Authentication, dev.Password, (InterfaceType)dev.InterfaceType);
                         if (dev.HexPassword != null && dev.HexPassword.Length != 0)
                         {
@@ -222,6 +224,7 @@ namespace Gurux.DLMS.AMI.Reader
                             {
                                 GXDLMSObject obj = GXDLMSClient.CreateObject((ObjectType)task.Object.ObjectType);
                                 obj.LogicalName = task.Object.LogicalName;
+                                obj.ShortName = task.Object.ShortName;
                                 if (task.TaskType == TaskType.Write)
                                 {
                                     if (obj.LogicalName == "0.0.1.1.0.255" && task.Index == 2)

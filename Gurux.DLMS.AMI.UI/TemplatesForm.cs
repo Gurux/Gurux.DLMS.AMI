@@ -248,6 +248,7 @@ namespace Gurux.DLMS.AMI.UI
                                 obj.ObjectType = (int)value.ObjectType;
                                 obj.Name = value.Description;
                                 obj.Version = value.Version;
+                                obj.ShortName = value.ShortName;
                                 list.Add(obj);
                                 for (int pos = 2; pos <= ((IGXDLMSBase)value).GetAttributeCount(); ++pos)
                                 {
@@ -331,6 +332,34 @@ namespace Gurux.DLMS.AMI.UI
         private void PropertiesMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             PropertiesRemove.Enabled = PropertiesView.SelectedItems.Count != 0;
+        }
+
+        private void createTestDevicesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                GXDeviceTemplate[] templates = ami.templates;
+                GXDeviceTemplate target = null;
+                if (TemplatesView.SelectedItems.Count == 1)
+                {
+                    target = (GXDeviceTemplate)TemplatesView.SelectedItems[0].Tag;
+                }
+                TestDevicesDlg dlg = new TestDevicesDlg(target, templates);
+                if (dlg.ShowDialog(panel1.Parent) == DialogResult.OK)
+                {
+                    GXDevice dev = new GXDevice();
+                    GXDevice.Copy(dev, dlg.target);
+                    dev.TemplateId = dlg.target.Id;
+                    dev.Manufacturer = dlg.target.Name;
+                    ami.AddTestDevices(dev, dlg.Index, dlg.Count);
+                    MessageBox.Show(panel1.Parent, "Test devices added.", "GXDLMSDirector", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(panel1.Parent, Ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
     }
 }

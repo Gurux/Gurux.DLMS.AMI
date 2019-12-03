@@ -202,7 +202,7 @@ namespace Gurux.DLMS.AMI.UI
 
         GXDLMSMeter[] IGXDataConcentrator.GetDevices(string name)
         {
-            return GetDevices(name, TargetType.Device | TargetType.Object | TargetType.Attribute);
+            return GetDevices(name, TargetType.Device);
         }
 
         public GXDLMSMeter[] GetDevices(string name = null, TargetType targets = TargetType.Device | TargetType.Object | TargetType.Attribute)
@@ -269,7 +269,28 @@ namespace Gurux.DLMS.AMI.UI
                     if ((it.Key is GXDLMSAssociationLogicalName && it.Value == 2) ||
                         (it.Key is GXDLMSAssociationShortName && it.Value == 2))
                     {
-                        ((GXDLMSAssociationLogicalName)it.Key).ObjectList.Clear();
+                        if ((it.Key is GXDLMSAssociationLogicalName))
+                        {
+                            ((GXDLMSAssociationLogicalName)it.Key).ObjectList.Clear();
+                        }
+                        else
+                        {
+                            ((GXDLMSAssociationShortName)it.Key).ObjectList.Clear();
+                        }
+                        //If objects are not get yet.
+                        if (((GXDevice)m).Objects == null)
+                        {
+                            using (HttpClient cl = new HttpClient())
+                            {
+                                using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/device/ListDevices"),
+                                    new ListDevices() { Ids = new UInt64[] { ((GXDevice)m).Id }, Targets = TargetType.Object }).Result)
+                                {
+                                    Helpers.CheckStatus(response);
+                                    ListDevicesResponse devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
+                                    ((GXDevice)m).Objects = devs.Devices[0].Objects;
+                                }
+                            }
+                        }
                         foreach (GXObject o in ((GXDevice)m).Objects)
                         {
                             GXDLMSObject obj = GXDLMSClient.CreateObject((ObjectType)o.ObjectType);
@@ -288,7 +309,14 @@ namespace Gurux.DLMS.AMI.UI
                                     att.Access = (AccessMode)a.AccessLevel;
                                 }
                             }
-                            ((GXDLMSAssociationLogicalName)it.Key).ObjectList.Add(obj);
+                            if (it.Key is GXDLMSAssociationLogicalName)
+                            {
+                                ((GXDLMSAssociationLogicalName)it.Key).ObjectList.Add(obj);
+                            }
+                            else
+                            {
+                                ((GXDLMSAssociationShortName)it.Key).ObjectList.Add(obj);
+                            }
                         }
                     }
                     else
@@ -1110,6 +1138,23 @@ namespace Gurux.DLMS.AMI.UI
                     Helpers.CheckStatus(response);
                     GetNextTaskResponse ret = response.Content.ReadAsAsync<GetNextTaskResponse>().Result;
                     return ret.Tasks;
+                }
+            }
+        }
+
+        public void AddTestDevices(GXDevice meter, UInt16 index, UInt16 count)
+        {
+            if (templates == null)
+            {
+                templates = GetDeviceTemplates(null);
+            }
+            using (HttpClient cl = new HttpClient())
+            {
+                using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/Test/AddTestDevice"),
+                    new AddTestDevice() { Device = meter, Index = index, Count = count }).Result)
+                {
+                    Helpers.CheckStatus(response);
+                    ListDeviceTemplatesResponse devs = response.Content.ReadAsAsync<ListDeviceTemplatesResponse>().Result;
                 }
             }
         }

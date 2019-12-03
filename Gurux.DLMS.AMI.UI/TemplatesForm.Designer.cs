@@ -49,6 +49,7 @@
             this.TemplatesRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.TemplatesDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.createTestDevicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.PropertiesMenu.SuspendLayout();
             this.TemplatesMenu.SuspendLayout();
@@ -122,13 +123,13 @@
             this.PropertiesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.PropertiesRemove});
             this.PropertiesMenu.Name = "DCMenu";
-            this.PropertiesMenu.Size = new System.Drawing.Size(181, 48);
+            this.PropertiesMenu.Size = new System.Drawing.Size(118, 26);
             this.PropertiesMenu.Opening += new System.ComponentModel.CancelEventHandler(this.PropertiesMenu_Opening);
             // 
             // PropertiesRemove
             // 
             this.PropertiesRemove.Name = "PropertiesRemove";
-            this.PropertiesRemove.Size = new System.Drawing.Size(180, 22);
+            this.PropertiesRemove.Size = new System.Drawing.Size(117, 22);
             this.PropertiesRemove.Text = "Remove";
             this.PropertiesRemove.Click += new System.EventHandler(this.PropertiesRemove_Click);
             // 
@@ -168,43 +169,51 @@
             this.TemplatesEdit,
             this.TemplatesRefresh,
             this.toolStripSeparator5,
-            this.TemplatesDelete});
+            this.TemplatesDelete,
+            this.createTestDevicesToolStripMenuItem});
             this.TemplatesMenu.Name = "DCMenu";
-            this.TemplatesMenu.Size = new System.Drawing.Size(120, 98);
+            this.TemplatesMenu.Size = new System.Drawing.Size(181, 142);
             this.TemplatesMenu.Opening += new System.ComponentModel.CancelEventHandler(this.TemplatesMenu_Opening);
             // 
             // TemplatesAdd
             // 
             this.TemplatesAdd.Name = "TemplatesAdd";
-            this.TemplatesAdd.Size = new System.Drawing.Size(119, 22);
+            this.TemplatesAdd.Size = new System.Drawing.Size(180, 22);
             this.TemplatesAdd.Text = "Import...";
             this.TemplatesAdd.Click += new System.EventHandler(this.TemplatesAdd_Click);
             // 
             // TemplatesEdit
             // 
             this.TemplatesEdit.Name = "TemplatesEdit";
-            this.TemplatesEdit.Size = new System.Drawing.Size(119, 22);
+            this.TemplatesEdit.Size = new System.Drawing.Size(180, 22);
             this.TemplatesEdit.Text = "Edit";
             this.TemplatesEdit.Click += new System.EventHandler(this.ScheduleEdit_Click);
             // 
             // TemplatesRefresh
             // 
             this.TemplatesRefresh.Name = "TemplatesRefresh";
-            this.TemplatesRefresh.Size = new System.Drawing.Size(119, 22);
+            this.TemplatesRefresh.Size = new System.Drawing.Size(180, 22);
             this.TemplatesRefresh.Text = "Refresh";
             this.TemplatesRefresh.Click += new System.EventHandler(this.ScheduleRefresh_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(116, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // TemplatesDelete
             // 
             this.TemplatesDelete.Name = "TemplatesDelete";
-            this.TemplatesDelete.Size = new System.Drawing.Size(119, 22);
+            this.TemplatesDelete.Size = new System.Drawing.Size(180, 22);
             this.TemplatesDelete.Text = "Remove";
             this.TemplatesDelete.Click += new System.EventHandler(this.TemplatesDelete_Click);
+            // 
+            // createTestDevicesToolStripMenuItem
+            // 
+            this.createTestDevicesToolStripMenuItem.Name = "createTestDevicesToolStripMenuItem";
+            this.createTestDevicesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createTestDevicesToolStripMenuItem.Text = "Create Test devices";
+            this.createTestDevicesToolStripMenuItem.Click += new System.EventHandler(this.createTestDevicesToolStripMenuItem_Click);
             // 
             // TemplatesForm
             // 
@@ -243,5 +252,6 @@
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.ListView TemplatesView;
         private System.Windows.Forms.ColumnHeader columnHeader35;
+        private System.Windows.Forms.ToolStripMenuItem createTestDevicesToolStripMenuItem;
     }
 }

@@ -58,72 +58,68 @@ namespace Gurux.DLMS.AMI.UI
         public GXDLMSMeter Device = null;
         public DBDevicePropertiesForm(GXDeviceTemplate[] templates, GXDLMSMeter dev)
         {
-            try
+            InitializeComponent();
+            ServerAddressSizeCb.Items.Add("");
+            ServerAddressSizeCb.Items.Add((byte)1);
+            ServerAddressSizeCb.Items.Add((byte)2);
+            ServerAddressSizeCb.Items.Add((byte)4);
+            foreach (object it in Enum.GetValues(typeof(Standard)))
             {
-                InitializeComponent();
-                ServerAddressSizeCb.Items.Add("");
-                ServerAddressSizeCb.Items.Add((byte)1);
-                ServerAddressSizeCb.Items.Add((byte)2);
-                ServerAddressSizeCb.Items.Add((byte)4);
-                foreach (object it in Enum.GetValues(typeof(Standard)))
+                StandardCb.Items.Add(it);
+            }
+            foreach (InterfaceType it in Enum.GetValues(typeof(InterfaceType)))
+            {
+                if (it != InterfaceType.PDU)
                 {
-                    StandardCb.Items.Add(it);
+                    InterfaceCb.Items.Add(it);
                 }
-                foreach (InterfaceType it in Enum.GetValues(typeof(InterfaceType)))
-                {
-                    if (it != InterfaceType.PDU)
-                    {
-                        InterfaceCb.Items.Add(it);
-                    }
-                }
+            }
 
-                PriorityCb.Items.Add(Priority.Normal);
-                PriorityCb.Items.Add(Priority.High);
-                ServiceClassCb.Items.Add(ServiceClass.UnConfirmed);
-                ServiceClassCb.Items.Add(ServiceClass.Confirmed);
-                LNSettings.Dock = SNSettings.Dock = DockStyle.Fill;
-                SecurityCB.Items.AddRange(new object[] { Security.None, Security.Authentication,
+            PriorityCb.Items.Add(Priority.Normal);
+            PriorityCb.Items.Add(Priority.High);
+            ServiceClassCb.Items.Add(ServiceClass.UnConfirmed);
+            ServiceClassCb.Items.Add(ServiceClass.Confirmed);
+            LNSettings.Dock = SNSettings.Dock = DockStyle.Fill;
+            SecurityCB.Items.AddRange(new object[] { Security.None, Security.Authentication,
                                       Security.Encryption, Security.AuthenticationEncryption
                                                    });
-                NetProtocolCB.Items.AddRange(new object[] { NetworkType.Tcp, NetworkType.Udp });
-                this.ServerAddressTypeCB.SelectedIndexChanged += new System.EventHandler(this.ServerAddressTypeCB_SelectedIndexChanged);
-                NetworkSettingsGB.Width = this.Width - NetworkSettingsGB.Left;
-                CustomSettings.Bounds = SerialSettingsGB.Bounds = TerminalSettingsGB.Bounds = NetworkSettingsGB.Bounds;
-                Device = dev;
-                StartProtocolCB.Items.Add(StartProtocolType.IEC);
-                StartProtocolCB.Items.Add(StartProtocolType.DLMS);
-
-                foreach (GXDeviceTemplate it in templates)
-                {
-                    this.TemplatesCB.Items.Add(it);
-                }
-                if (Device.Name == null)
-                {
-                    //Select first manufacturer.
-                    TemplatesCB.SelectedIndex = 0;
-                    GXDLMSMeter.Copy(Device, templates[0]);
-                    Device.Name = null;
-                    Device.Conformance = (int)GXDLMSClient.GetInitialConformance(UseLNCB.Checked);
-                    FrameCounterTb.ReadOnly = true;
-                    UpdateSelectedMedia(templates[0].MediaType);
-                    UpdateDeviceSettings(Device);
-                }
-                else
-                {
-                    if (Device is GXDeviceTemplate)
-                    {
-                        this.TemplatesCB.Enabled = false;
-                    }
-                    UpdateSelectedMedia(Device.MediaType);
-                    UpdateDeviceSettings(Device);
-                }
-                TemplatesCB.DrawMode = MediasCB.DrawMode = DrawMode.OwnerDrawFixed;
-                UpdateMediaSettings();
-            }
-            catch (Exception Ex)
+            NetProtocolCB.Items.AddRange(new object[] { NetworkType.Tcp, NetworkType.Udp });
+            this.ServerAddressTypeCB.SelectedIndexChanged += new System.EventHandler(this.ServerAddressTypeCB_SelectedIndexChanged);
+            NetworkSettingsGB.Width = this.Width - NetworkSettingsGB.Left;
+            CustomSettings.Bounds = SerialSettingsGB.Bounds = TerminalSettingsGB.Bounds = NetworkSettingsGB.Bounds;
+            Device = dev;
+            StartProtocolCB.Items.Add(StartProtocolType.IEC);
+            StartProtocolCB.Items.Add(StartProtocolType.DLMS);
+            if (templates == null || templates.Length == 0)
             {
-                MessageBox.Show(null, Ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new Exception("No templates added.");
             }
+            foreach (GXDeviceTemplate it in templates)
+            {
+                this.TemplatesCB.Items.Add(it);
+            }
+            if (Device.Name == null)
+            {
+                //Select first manufacturer.
+                TemplatesCB.SelectedIndex = 0;
+                GXDLMSMeter.Copy(Device, templates[0]);
+                Device.Name = null;
+                Device.Conformance = (int)GXDLMSClient.GetInitialConformance(UseLNCB.Checked);
+                FrameCounterTb.ReadOnly = true;
+                UpdateSelectedMedia(templates[0].MediaType);
+                UpdateDeviceSettings(Device);
+            }
+            else
+            {
+                if (Device is GXDeviceTemplate)
+                {
+                    this.TemplatesCB.Enabled = false;
+                }
+                UpdateSelectedMedia(Device.MediaType);
+                UpdateDeviceSettings(Device);
+            }
+            TemplatesCB.DrawMode = MediasCB.DrawMode = DrawMode.OwnerDrawFixed;
+            UpdateMediaSettings();
         }
 
         private void UpdateSelectedMedia(string value)
