@@ -131,6 +131,17 @@ namespace Gurux.DLMS.AMI.Messages.DB
         }
 
         /// <summary>
+        /// Short name of the object.
+        /// </summary>
+        [DataMember]
+        [Description("Short name of the object.")]
+        public UInt16 ShortName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Generation time.
         /// </summary>
         [DataMember]
