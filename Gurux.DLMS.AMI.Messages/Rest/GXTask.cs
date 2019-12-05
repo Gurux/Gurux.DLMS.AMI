@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.Common;
@@ -161,6 +161,17 @@ namespace Gurux.DLMS.AMI.Messages.Rest
         [DataMember]
         [Description("Device ID. If device ID is given, all tasks for that device are retreaved.")]
         public UInt64 DeviceId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Is listener or normal read asking next task.
+        /// </summary>
+        [DataMember]
+        [Description("Is listener asking next task.")]
+        public bool Listener
         {
             get;
             set;

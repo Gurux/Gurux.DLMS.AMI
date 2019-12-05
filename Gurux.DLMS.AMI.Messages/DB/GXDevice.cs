@@ -202,6 +202,15 @@ namespace Gurux.DLMS.AMI.Messages.DB
         }
 
         /// <summary>
+        /// Is device using dynamic IP address.
+        /// </summary>
+        public bool Dynamic
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Extra info is used to save future extra info.
         /// </summary>
         [DataMember]
