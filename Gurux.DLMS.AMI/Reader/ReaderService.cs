@@ -111,6 +111,7 @@ namespace Gurux.DLMS.AMI.Reader
                     }
                     if (ret.Tasks != null)
                     {
+                        int pos = 0;
                         GXDevice dev;
                         GXDLMSSecureClient cl;
                         using (response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/device/ListDevices", new ListDevices() { Ids = new[] { ret.Tasks[0].Object.DeviceId } }))
@@ -142,7 +143,7 @@ namespace Gurux.DLMS.AMI.Reader
                             if (type == null)
                             {
                                 string ns = "";
-                                int pos = dev.MediaType.LastIndexOf('.');
+                                pos = dev.MediaType.LastIndexOf('.');
                                 if (pos != -1)
                                 {
                                     ns = dev.MediaType.Substring(0, pos);
@@ -218,8 +219,11 @@ namespace Gurux.DLMS.AMI.Reader
                         reader = new GXDLMSReader(cl, media, TraceLevel.Verbose, _logger);
                         media.Open();
                         reader.InitializeConnection();
+                        pos = 0;
+                        int count = ret.Tasks.Length;
                         foreach (GXTask task in ret.Tasks)
                         {
+                            ++pos;
                             try
                             {
                                 GXDLMSObject obj = GXDLMSClient.CreateObject((ObjectType)task.Object.ObjectType);
@@ -263,11 +267,34 @@ namespace Gurux.DLMS.AMI.Reader
                                 }
                             }
                             task.End = DateTime.Now;
+                            //Close connection after last task is executed.
+                            //This must done because there might be new task to execute.
+                            if (count == pos)
+                            {
+                                try
+                                {
+                                    reader.Close();
+                                }
+                                catch (Exception ex)
+                                {
+                                    task.Result = ex.Message;
+                                    AddError error = new AddError();
+                                    error.Error = new GXError()
+                                    {
+                                        DeviceId = dev.Id,
+                                        Error = "Failed to close the connection. " + ex.Message
+                                    };
+                                    using (response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/error/AddError", error))
+                                    {
+                                        Helpers.CheckStatus(response);
+                                        await response.Content.ReadAsAsync<AddErrorResponse>();
+                                    }
+                                }
+                            }
                             //Update execution time.
                             response = client.PostAsJsonAsync(Startup.ServerAddress + "/api/task/TaskReady", new TaskReady() { Tasks = new GXTask[] { task } }).Result;
                             Helpers.CheckStatus(response);
                         }
-                        media.Close();
                     }
                     else
                     {

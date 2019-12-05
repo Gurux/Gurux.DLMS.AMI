@@ -635,7 +635,7 @@ namespace Gurux.DLMS.AMI.Reader
             }
             //Update data type.
             DataType dt = it.GetDataType(attributeIndex);
-            if (dt== DataType.None)
+            if (dt == DataType.None)
             {
                 it.SetDataType(attributeIndex, reply.DataType);
                 dt = reply.DataType;
@@ -789,7 +789,11 @@ namespace Gurux.DLMS.AMI.Reader
                     GXReplyData reply = new GXReplyData();
                     try
                     {
-                        ReadDataBlock(Client.ReleaseRequest(), reply);
+                        if (Client.InterfaceType == InterfaceType.WRAPPER ||
+                            Client.Ciphering.Security != Security.None)
+                        {
+                            ReadDataBlock(Client.ReleaseRequest(), reply);
+                        }
                     }
                     catch (Exception ex)
                     {
