@@ -123,6 +123,15 @@ namespace Gurux.DLMS.AMI.UI
             this.SystemtitleLbl = new System.Windows.Forms.Label();
             this.SecurityLbl = new System.Windows.Forms.Label();
             this.DeviceSettingsTab = new System.Windows.Forms.TabPage();
+            this.NetworkSettingsGB = new System.Windows.Forms.GroupBox();
+            this.DynamicCb = new System.Windows.Forms.CheckBox();
+            this.NetProtocolCB = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.UseRemoteSerialCB = new System.Windows.Forms.CheckBox();
+            this.PortTB = new System.Windows.Forms.TextBox();
+            this.PortLbl = new System.Windows.Forms.Label();
+            this.HostNameTB = new System.Windows.Forms.TextBox();
+            this.HostLbl = new System.Windows.Forms.Label();
             this.SerialSettingsGB = new System.Windows.Forms.GroupBox();
             this.UseMaximumBaudRateCB = new System.Windows.Forms.CheckBox();
             this.MaximumBaudRateCB = new System.Windows.Forms.ComboBox();
@@ -165,14 +174,6 @@ namespace Gurux.DLMS.AMI.UI
             this.TerminalPortCB = new System.Windows.Forms.ComboBox();
             this.TerminalPhoneNumberTB = new System.Windows.Forms.TextBox();
             this.TerminalPhoneNumberLbl = new System.Windows.Forms.Label();
-            this.NetworkSettingsGB = new System.Windows.Forms.GroupBox();
-            this.NetProtocolCB = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.UseRemoteSerialCB = new System.Windows.Forms.CheckBox();
-            this.PortTB = new System.Windows.Forms.TextBox();
-            this.PortLbl = new System.Windows.Forms.Label();
-            this.HostNameTB = new System.Windows.Forms.TextBox();
-            this.HostLbl = new System.Windows.Forms.Label();
             this.DeviceTab = new System.Windows.Forms.TabControl();
             this.AdvancedTab = new System.Windows.Forms.TabPage();
             this.InactivityTimeoutTb = new System.Windows.Forms.TextBox();
@@ -218,13 +219,13 @@ namespace Gurux.DLMS.AMI.UI
             this.CipheringTab.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.DeviceSettingsTab.SuspendLayout();
+            this.NetworkSettingsGB.SuspendLayout();
             this.SerialSettingsGB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ResendTb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ClientAddTB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LogicalServerAddressTB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PhysicalServerAddressTB)).BeginInit();
             this.TerminalSettingsGB.SuspendLayout();
-            this.NetworkSettingsGB.SuspendLayout();
             this.DeviceTab.SuspendLayout();
             this.AdvancedTab.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -951,6 +952,7 @@ namespace Gurux.DLMS.AMI.UI
             // 
             // DeviceSettingsTab
             // 
+            this.DeviceSettingsTab.Controls.Add(this.NetworkSettingsGB);
             this.DeviceSettingsTab.Controls.Add(this.SerialSettingsGB);
             this.DeviceSettingsTab.Controls.Add(this.InterfaceCb);
             this.DeviceSettingsTab.Controls.Add(this.InterfaceLbl);
@@ -983,7 +985,6 @@ namespace Gurux.DLMS.AMI.UI
             this.DeviceSettingsTab.Controls.Add(this.MediasCB);
             this.DeviceSettingsTab.Controls.Add(this.label1);
             this.DeviceSettingsTab.Controls.Add(this.TerminalSettingsGB);
-            this.DeviceSettingsTab.Controls.Add(this.NetworkSettingsGB);
             this.helpProvider1.SetHelpKeyword(this.DeviceSettingsTab, "main");
             this.DeviceSettingsTab.Location = new System.Drawing.Point(4, 22);
             this.DeviceSettingsTab.Name = "DeviceSettingsTab";
@@ -993,6 +994,96 @@ namespace Gurux.DLMS.AMI.UI
             this.DeviceSettingsTab.TabIndex = 0;
             this.DeviceSettingsTab.Text = "Device Settings";
             this.DeviceSettingsTab.UseVisualStyleBackColor = true;
+            // 
+            // NetworkSettingsGB
+            // 
+            this.NetworkSettingsGB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.NetworkSettingsGB.Controls.Add(this.DynamicCb);
+            this.NetworkSettingsGB.Controls.Add(this.NetProtocolCB);
+            this.NetworkSettingsGB.Controls.Add(this.label2);
+            this.NetworkSettingsGB.Controls.Add(this.UseRemoteSerialCB);
+            this.NetworkSettingsGB.Controls.Add(this.PortTB);
+            this.NetworkSettingsGB.Controls.Add(this.PortLbl);
+            this.NetworkSettingsGB.Controls.Add(this.HostNameTB);
+            this.NetworkSettingsGB.Controls.Add(this.HostLbl);
+            this.NetworkSettingsGB.Location = new System.Drawing.Point(6, 243);
+            this.NetworkSettingsGB.Name = "NetworkSettingsGB";
+            this.NetworkSettingsGB.Size = new System.Drawing.Size(457, 99);
+            this.NetworkSettingsGB.TabIndex = 34;
+            this.NetworkSettingsGB.TabStop = false;
+            this.NetworkSettingsGB.Text = "Settings";
+            // 
+            // DynamicCb
+            // 
+            this.DynamicCb.AutoSize = true;
+            this.DynamicCb.Location = new System.Drawing.Point(204, 47);
+            this.DynamicCb.Name = "DynamicCb";
+            this.DynamicCb.Size = new System.Drawing.Size(120, 17);
+            this.DynamicCb.TabIndex = 15;
+            this.DynamicCb.Text = "Dynamic IP address";
+            this.DynamicCb.UseVisualStyleBackColor = true;
+            this.DynamicCb.CheckedChanged += new System.EventHandler(this.DynamicCb_CheckedChanged);
+            // 
+            // NetProtocolCB
+            // 
+            this.NetProtocolCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.NetProtocolCB.FormattingEnabled = true;
+            this.NetProtocolCB.Location = new System.Drawing.Point(101, 70);
+            this.NetProtocolCB.Name = "NetProtocolCB";
+            this.NetProtocolCB.Size = new System.Drawing.Size(85, 21);
+            this.NetProtocolCB.TabIndex = 13;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 74);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(49, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Protocol:";
+            // 
+            // UseRemoteSerialCB
+            // 
+            this.UseRemoteSerialCB.AutoSize = true;
+            this.UseRemoteSerialCB.Location = new System.Drawing.Point(204, 71);
+            this.UseRemoteSerialCB.Name = "UseRemoteSerialCB";
+            this.UseRemoteSerialCB.Size = new System.Drawing.Size(179, 17);
+            this.UseRemoteSerialCB.TabIndex = 14;
+            this.UseRemoteSerialCB.Text = "Use Serial port through ethernet.";
+            this.UseRemoteSerialCB.UseVisualStyleBackColor = true;
+            // 
+            // PortTB
+            // 
+            this.PortTB.Location = new System.Drawing.Point(101, 45);
+            this.PortTB.Name = "PortTB";
+            this.PortTB.Size = new System.Drawing.Size(85, 20);
+            this.PortTB.TabIndex = 12;
+            // 
+            // PortLbl
+            // 
+            this.PortLbl.AutoSize = true;
+            this.PortLbl.Location = new System.Drawing.Point(12, 48);
+            this.PortLbl.Name = "PortLbl";
+            this.PortLbl.Size = new System.Drawing.Size(29, 13);
+            this.PortLbl.TabIndex = 11;
+            this.PortLbl.Text = "Port:";
+            // 
+            // HostNameTB
+            // 
+            this.HostNameTB.Location = new System.Drawing.Point(101, 19);
+            this.HostNameTB.Name = "HostNameTB";
+            this.HostNameTB.Size = new System.Drawing.Size(274, 20);
+            this.HostNameTB.TabIndex = 11;
+            // 
+            // HostLbl
+            // 
+            this.HostLbl.AutoSize = true;
+            this.HostLbl.Location = new System.Drawing.Point(12, 22);
+            this.HostLbl.Name = "HostLbl";
+            this.HostLbl.Size = new System.Drawing.Size(61, 13);
+            this.HostLbl.TabIndex = 9;
+            this.HostLbl.Text = "Host name:";
             // 
             // SerialSettingsGB
             // 
@@ -1481,84 +1572,6 @@ namespace Gurux.DLMS.AMI.UI
             this.TerminalPhoneNumberLbl.TabIndex = 9;
             this.TerminalPhoneNumberLbl.Text = "Phone Number:";
             // 
-            // NetworkSettingsGB
-            // 
-            this.NetworkSettingsGB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.NetworkSettingsGB.Controls.Add(this.NetProtocolCB);
-            this.NetworkSettingsGB.Controls.Add(this.label2);
-            this.NetworkSettingsGB.Controls.Add(this.UseRemoteSerialCB);
-            this.NetworkSettingsGB.Controls.Add(this.PortTB);
-            this.NetworkSettingsGB.Controls.Add(this.PortLbl);
-            this.NetworkSettingsGB.Controls.Add(this.HostNameTB);
-            this.NetworkSettingsGB.Controls.Add(this.HostLbl);
-            this.NetworkSettingsGB.Location = new System.Drawing.Point(6, 243);
-            this.NetworkSettingsGB.Name = "NetworkSettingsGB";
-            this.NetworkSettingsGB.Size = new System.Drawing.Size(457, 99);
-            this.NetworkSettingsGB.TabIndex = 34;
-            this.NetworkSettingsGB.TabStop = false;
-            this.NetworkSettingsGB.Text = "Settings";
-            // 
-            // NetProtocolCB
-            // 
-            this.NetProtocolCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.NetProtocolCB.FormattingEnabled = true;
-            this.NetProtocolCB.Location = new System.Drawing.Point(101, 70);
-            this.NetProtocolCB.Name = "NetProtocolCB";
-            this.NetProtocolCB.Size = new System.Drawing.Size(85, 21);
-            this.NetProtocolCB.TabIndex = 13;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 74);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Protocol:";
-            // 
-            // UseRemoteSerialCB
-            // 
-            this.UseRemoteSerialCB.AutoSize = true;
-            this.UseRemoteSerialCB.Location = new System.Drawing.Point(204, 71);
-            this.UseRemoteSerialCB.Name = "UseRemoteSerialCB";
-            this.UseRemoteSerialCB.Size = new System.Drawing.Size(179, 17);
-            this.UseRemoteSerialCB.TabIndex = 14;
-            this.UseRemoteSerialCB.Text = "Use Serial port through ethernet.";
-            this.UseRemoteSerialCB.UseVisualStyleBackColor = true;
-            // 
-            // PortTB
-            // 
-            this.PortTB.Location = new System.Drawing.Point(101, 45);
-            this.PortTB.Name = "PortTB";
-            this.PortTB.Size = new System.Drawing.Size(274, 20);
-            this.PortTB.TabIndex = 12;
-            // 
-            // PortLbl
-            // 
-            this.PortLbl.AutoSize = true;
-            this.PortLbl.Location = new System.Drawing.Point(12, 48);
-            this.PortLbl.Name = "PortLbl";
-            this.PortLbl.Size = new System.Drawing.Size(29, 13);
-            this.PortLbl.TabIndex = 11;
-            this.PortLbl.Text = "Port:";
-            // 
-            // HostNameTB
-            // 
-            this.HostNameTB.Location = new System.Drawing.Point(101, 19);
-            this.HostNameTB.Name = "HostNameTB";
-            this.HostNameTB.Size = new System.Drawing.Size(274, 20);
-            this.HostNameTB.TabIndex = 11;
-            // 
-            // HostLbl
-            // 
-            this.HostLbl.AutoSize = true;
-            this.HostLbl.Location = new System.Drawing.Point(12, 22);
-            this.HostLbl.Name = "HostLbl";
-            this.HostLbl.Size = new System.Drawing.Size(61, 13);
-            this.HostLbl.TabIndex = 9;
-            this.HostLbl.Text = "Host name:";
-            // 
             // DeviceTab
             // 
             this.DeviceTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -2010,6 +2023,8 @@ namespace Gurux.DLMS.AMI.UI
             this.groupBox2.PerformLayout();
             this.DeviceSettingsTab.ResumeLayout(false);
             this.DeviceSettingsTab.PerformLayout();
+            this.NetworkSettingsGB.ResumeLayout(false);
+            this.NetworkSettingsGB.PerformLayout();
             this.SerialSettingsGB.ResumeLayout(false);
             this.SerialSettingsGB.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ResendTb)).EndInit();
@@ -2018,8 +2033,6 @@ namespace Gurux.DLMS.AMI.UI
             ((System.ComponentModel.ISupportInitialize)(this.PhysicalServerAddressTB)).EndInit();
             this.TerminalSettingsGB.ResumeLayout(false);
             this.TerminalSettingsGB.PerformLayout();
-            this.NetworkSettingsGB.ResumeLayout(false);
-            this.NetworkSettingsGB.PerformLayout();
             this.DeviceTab.ResumeLayout(false);
             this.AdvancedTab.ResumeLayout(false);
             this.AdvancedTab.PerformLayout();
@@ -2185,5 +2198,6 @@ namespace Gurux.DLMS.AMI.UI
         private System.Windows.Forms.DateTimePicker WaitTimeTB;
         private System.Windows.Forms.ComboBox InterfaceCb;
         private System.Windows.Forms.Label InterfaceLbl;
+        private System.Windows.Forms.CheckBox DynamicCb;
     }
 }

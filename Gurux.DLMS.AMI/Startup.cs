@@ -115,28 +115,76 @@ namespace Gurux.DLMS.AMI
                             Helpers.CheckStatus(response);
                             devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
                         }
+                        //If device is unknown.
                         if (devs.Devices.Length == 0)
                         {
-                            //If device is unknown.
-                            Console.WriteLine("Unknown Meter: " + ldn.Value);
-                            return;
+                            if (listener.DefaultDeviceTemplate == 0)
+                            {
+                                string str = "Unknown Meter try to connect to the Gurux.DLMS.AMI server: " + ldn.Value;
+                                Console.WriteLine(str);
+                                AddSystemError info = new AddSystemError();
+                                info.Error = new GXSystemError()
+                                {
+                                    Error = str
+                                };
+                                using (HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/SystemError/AddSystemError", info).Result)
+                                {
+                                    Helpers.CheckStatus(response);
+                                }
+                                if (reader != null)
+                                {
+                                    reader.Close();
+                                }
+                                return;
+                            }
+                            ListDeviceTemplates lt = new ListDeviceTemplates() { Ids = new UInt64[] { listener.DefaultDeviceTemplate } };
+                            using (HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/template/ListDeviceTemplates", lt).Result)
+                            {
+                                Helpers.CheckStatus(response);
+                                ListDeviceTemplatesResponse ret = response.Content.ReadAsAsync<ListDeviceTemplatesResponse>().Result;
+                                if (ret.Devices.Length != 1)
+                                {
+                                    throw new Exception("DefaultDeviceTemplate value is invalid: " + listener.DefaultDeviceTemplate);
+                                }
+                                dev = new GXDevice();
+                                GXDevice.Copy(dev, ret.Devices[0]);
+                                dev.Name = Convert.ToString(ldn.Value);
+                                dev.TemplateId = listener.DefaultDeviceTemplate;
+                                dev.Manufacturer = ret.Devices[0].Name;
+                            }
+                            dev.Dynamic = true;
+                            UpdateDevice update = new UpdateDevice();
+                            update.Device = dev;
+                            using (HttpResponseMessage response = cl.PostAsJsonAsync(ServerAddress + "/api/device/UpdateDevice", update).Result)
+                            {
+                                Helpers.CheckStatus(response);
+                                UpdateDeviceResponse r = response.Content.ReadAsAsync<UpdateDeviceResponse>().Result;
+                                dev.Id = r.DeviceId;
+                            }
+                            using (HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/device/ListDevices", new ListDevices() { Ids = new UInt64[] { dev.Id } }).Result)
+                            {
+                                Helpers.CheckStatus(response);
+                                devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
+                            }
                         }
-                        else if (devs.Devices.Length != 1)
+                        if (devs.Devices.Length != 1)
                         {
                             throw new Exception("There are multiple devices with same name: " + ldn.Value);
                         }
                         else
                         {
                             dev = devs.Devices[0];
-                            Console.WriteLine("Reading frame counter.");
-                            GXDLMSData fc = new GXDLMSData(listener.InvocationCounter);
-                            reader.Read(fc, 2);
-                            dev.InvocationCounter = 1 + Convert.ToUInt32(fc.Value);
-                            reader.Release();
-                            Console.WriteLine("Device ID: " + dev.Id + " LDN: " + (string)ldn.Value);
-                            Console.WriteLine("Frame counter: " + dev.FrameCounter);
+                            if (dev.Security != Security.None)
+                            {
+                                Console.WriteLine("Reading frame counter.");
+                                GXDLMSData fc = new GXDLMSData(listener.InvocationCounter);
+                                reader.Read(fc, 2);
+                                dev.InvocationCounter = 1 + Convert.ToUInt32(fc.Value);
+                                Console.WriteLine("Device ID: " + dev.Id + " LDN: " + (string)ldn.Value);
+                                Console.WriteLine("Frame counter: " + dev.FrameCounter);
+                            }
                             GetNextTaskResponse ret;
-                            using (HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/task/GetNextTask", new GetNextTask() { DeviceId = dev.Id }).Result)
+                            using (HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/task/GetNextTask", new GetNextTask() { Listener = true, DeviceId = dev.Id }).Result)
                             {
                                 Helpers.CheckStatus(response);
                                 ret = response.Content.ReadAsAsync<GetNextTaskResponse>().Result;
@@ -148,34 +196,54 @@ namespace Gurux.DLMS.AMI
                             else
                             {
                                 Console.WriteLine("Task count: " + ret.Tasks.Length);
-                                client = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress, (Authentication)dev.Authentication, dev.Password, dev.InterfaceType);
-                                client.UtcTimeZone = dev.UtcTimeZone;
-                                client.Standard = (Standard)dev.Standard;
-                                if (dev.Conformance != 0)
+                                if (client.ClientAddress != dev.ClientAddress || dev.Security != Security.None)
                                 {
-                                    client.ProposedConformance = (Conformance)dev.Conformance;
+                                    reader.Release();
+                                    client = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress, (Authentication)dev.Authentication, dev.Password, dev.InterfaceType);
+                                    client.UtcTimeZone = dev.UtcTimeZone;
+                                    client.Standard = (Standard)dev.Standard;
+                                    if (dev.Conformance != 0)
+                                    {
+                                        client.ProposedConformance = (Conformance)dev.Conformance;
+                                    }
+                                    client.Priority = dev.Priority;
+                                    client.ServiceClass = dev.ServiceClass;
+                                    client.Ciphering.SystemTitle = GXCommon.HexToBytes(dev.ClientSystemTitle);
+                                    client.Ciphering.BlockCipherKey = GXCommon.HexToBytes(dev.BlockCipherKey);
+                                    client.Ciphering.AuthenticationKey = GXCommon.HexToBytes(dev.AuthenticationKey);
+                                    client.ServerSystemTitle = GXCommon.HexToBytes(dev.DeviceSystemTitle);
+                                    client.Ciphering.InvocationCounter = dev.InvocationCounter;
+                                    client.Ciphering.Security = (Security)dev.Security;
+                                    reader = new GXDLMSReader(client, media, TraceLevel.Verbose, null);
+                                    reader.InitializeConnection();
                                 }
-                                client.Priority = dev.Priority;
-                                client.ServiceClass = dev.ServiceClass;
-                                client.Ciphering.SystemTitle = GXCommon.HexToBytes(dev.ClientSystemTitle);
-                                client.Ciphering.BlockCipherKey = GXCommon.HexToBytes(dev.BlockCipherKey);
-                                client.Ciphering.AuthenticationKey = GXCommon.HexToBytes(dev.AuthenticationKey);
-                                client.ServerSystemTitle = GXCommon.HexToBytes(dev.DeviceSystemTitle);
-                                client.Ciphering.InvocationCounter = dev.InvocationCounter;
-                                client.Ciphering.Security = (Security)dev.Security;
-                                reader = new GXDLMSReader(client, media, TraceLevel.Verbose, null);
                                 List<GXValue> values = new List<GXValue>();
                                 foreach (GXTask task in ret.Tasks)
                                 {
                                     GXDLMSObject obj = GXDLMSClient.CreateObject((ObjectType)task.Object.ObjectType);
                                     obj.LogicalName = task.Object.LogicalName;
-                                    if (task.TaskType == TaskType.Read)
-                                    {
-                                        Reader.Reader.Read(null, httpClient, reader, task, media, obj);
-                                    }
                                     try
                                     {
-                                        Reader.Reader.Read(null, httpClient, reader, task, media, obj);
+                                        if (task.TaskType == TaskType.Write)
+                                        {
+                                            if (obj.LogicalName == "0.0.1.1.0.255" && task.Index == 2)
+                                            {
+                                                client.UpdateValue(obj, task.Index, GXDateTime.ToUnixTime(DateTime.UtcNow));
+                                            }
+                                            else
+                                            {
+                                                client.UpdateValue(obj, task.Index, GXDLMSTranslator.XmlToValue(task.Data));
+                                            }
+                                            reader.Write(obj, task.Index);
+                                        }
+                                        else if (task.TaskType == TaskType.Action)
+                                        {
+                                            reader.Method(obj, task.Index, GXDLMSTranslator.XmlToValue(task.Data), DataType.None);
+                                        }
+                                        else if (task.TaskType == TaskType.Read)
+                                        {
+                                            Reader.Reader.Read(null, httpClient, reader, task, media, obj);
+                                        }
                                     }
                                     catch (Exception ex)
                                     {
@@ -210,7 +278,7 @@ namespace Gurux.DLMS.AMI
             {
                 if (reader != null)
                 {
-                    reader.Release();
+                    reader.Close();
                 }
             }
         }
@@ -350,9 +418,15 @@ namespace Gurux.DLMS.AMI
                 }
                 else
                 {
+                    h.Connection.UpdateTable<GXSystemError>();
+                    h.Connection.UpdateTable<GXError>();
                     h.Connection.UpdateTable<GXReaderInfo>();
                     h.Connection.UpdateTable<GXObjectTemplate>();
+                    h.Connection.UpdateTable<GXAttributeTemplate>();
+                    h.Connection.UpdateTable<GXDeviceTemplate>();
                     h.Connection.UpdateTable<GXObject>();
+                    h.Connection.UpdateTable<GXAttribute>();
+                    h.Connection.UpdateTable<GXDevice>();
                 }
                 h.Connection.Insert(GXInsertArgs.Insert(new GXSystemError()
                 {

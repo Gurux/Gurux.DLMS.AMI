@@ -163,15 +163,15 @@ namespace DBService.Controllers
             lock (host)
             {
                 GXSelectArgs arg = GXSelectArgs.Select<GXTask>(c => c.Id, q => q.Start == DateTime.MinValue);
+                arg.Joins.AddInnerJoin<GXTask, GXObject>(a => a.Object, b => b.Id);
+                arg.Joins.AddInnerJoin<GXObject, GXDevice>(a => a.DeviceId, b => b.Id);
                 if (request.DeviceId != 0)
                 {
-                    arg.Joins.AddInnerJoin<GXTask, GXObject>(a => a.Object, b => b.Id);
-                    arg.Joins.AddInnerJoin<GXObject, GXDevice>(a => a.DeviceId, b => b.Id);
                     arg.Where.And<GXDevice>(q => q.Id == request.DeviceId);
                 }
-                else
+                if (!request.Listener)
                 {
-                    arg.Joins.AddInnerJoin<GXTask, GXObject>(a => a.Object, b => b.Id);
+                    arg.Where.And<GXDevice>(q => q.Dynamic == false);
                 }
                 arg.OrderBy.Add<GXTask>(q => q.Id);
                 GXSelectArgs onProgress = GXSelectArgs.Select<GXObject>(c => c.DeviceId, q => q.Removed == DateTime.MinValue);

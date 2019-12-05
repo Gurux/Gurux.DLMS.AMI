@@ -29,6 +29,8 @@
 // This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
+using System;
+
 namespace Gurux.DLMS.AMI.Internal
 {
     /// <summary>
@@ -81,5 +83,14 @@ namespace Gurux.DLMS.AMI.Internal
         /// Server address.
         /// </summary>
         public string InvocationCounter { get; set; }
+
+        /// <summary>
+        /// Default device template ID.
+        /// </summary>
+        /// <remarks>
+        /// New meter with this device template is created when a new meter is making connection to the Gurux.DLMS.AMI server.
+        /// New devices are not created automatically if value is zero.
+        /// </remarks>
+        public UInt64 DefaultDeviceTemplate { get; set; }
     }
 }

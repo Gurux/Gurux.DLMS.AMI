@@ -763,7 +763,12 @@ namespace Gurux.DLMS.AMI.Reader
                 GXReplyData reply = new GXReplyData();
                 try
                 {
-                    ReadDataBlock(Client.ReleaseRequest(), reply);
+
+                    if (Client.InterfaceType == InterfaceType.WRAPPER ||
+                        Client.Ciphering.Security != Security.None)
+                    {
+                        ReadDataBlock(Client.ReleaseRequest(), reply);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -789,8 +794,9 @@ namespace Gurux.DLMS.AMI.Reader
                     GXReplyData reply = new GXReplyData();
                     try
                     {
-                        if (Client.InterfaceType == InterfaceType.WRAPPER ||
-                            Client.Ciphering.Security != Security.None)
+                        if ((Client.ConnectionState & ConnectionState.Dlms) != 0 &&
+                            (Client.InterfaceType == InterfaceType.WRAPPER ||
+                            Client.Ciphering.Security != Security.None))
                         {
                             ReadDataBlock(Client.ReleaseRequest(), reply);
                         }
@@ -801,7 +807,10 @@ namespace Gurux.DLMS.AMI.Reader
                         Console.WriteLine("Release failed. " + ex.Message);
                     }
                     reply.Clear();
-                    ReadDLMSPacket(Client.DisconnectRequest(), reply);
+                    if (Client.ConnectionState != 0)
+                    {
+                        ReadDLMSPacket(Client.DisconnectRequest(), reply);
+                    }
                     Media.Close();
                 }
                 catch

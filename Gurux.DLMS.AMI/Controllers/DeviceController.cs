@@ -88,9 +88,10 @@ namespace Gurux.DLMS.AMI.Controllers
                 host.Connection.Insert(GXInsertArgs.Insert(request.Device));
 
                 //Add default objects.
-                GXSelectArgs arg = GXSelectArgs.SelectAll<GXObjectTemplate>(q => q.DeviceTemplateId == request.Device.TemplateId);
+                GXSelectArgs arg = GXSelectArgs.SelectAll<GXObjectTemplate>(q => q.DeviceTemplateId == request.Device.TemplateId && q.Removed == DateTime.MinValue);
                 arg.Columns.Add<GXAttributeTemplate>();
                 arg.Joins.AddLeftJoin<GXObjectTemplate, GXAttributeTemplate>(o => o.Id, a => a.ObjectTemplateId);
+                arg.Where.And<GXAttributeTemplate>(q => q.Removed == DateTime.MinValue);
                 List<GXObjectTemplate> l = host.Connection.Select<GXObjectTemplate>(arg);
                 foreach (GXObjectTemplate it in l)
                 {

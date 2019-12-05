@@ -108,6 +108,10 @@ namespace Gurux.DLMS.AMI.UI
                 FrameCounterTb.ReadOnly = true;
                 UpdateSelectedMedia(templates[0].MediaType);
                 UpdateDeviceSettings(Device);
+                if (!(Device is GXDevice))
+                {
+                    DynamicCb.Visible = false;
+                }
             }
             else
             {
@@ -117,6 +121,14 @@ namespace Gurux.DLMS.AMI.UI
                 }
                 UpdateSelectedMedia(Device.MediaType);
                 UpdateDeviceSettings(Device);
+                if (Device is GXDevice)
+                {
+                    DynamicCb.Checked = ((GXDevice)Device).Dynamic;
+                }
+                else
+                {
+                    DynamicCb.Visible = false;
+                }
             }
             TemplatesCB.DrawMode = MediasCB.DrawMode = DrawMode.OwnerDrawFixed;
             UpdateMediaSettings();
@@ -899,23 +911,22 @@ namespace Gurux.DLMS.AMI.UI
             }
             else if (SelectedMedia is GXNet)
             {
-                if (validate && this.HostNameTB.Text.Length == 0)
+                int port = 0;
+                if (!DynamicCb.Checked)
                 {
-                    throw new Exception("Invalid host name.");
+                    if (validate && this.HostNameTB.Text.Length == 0)
+                    {
+                        throw new Exception("Invalid host name.");
+                    }
+                    if (!Int32.TryParse(this.PortTB.Text, out port))
+                    {
+                        if (validate)
+                        {
+                            throw new Exception("Invalid port number.");
+                        }
+                    }
                 }
                 ((GXNet)SelectedMedia).HostName = this.HostNameTB.Text;
-                int port;
-                if (!Int32.TryParse(this.PortTB.Text, out port))
-                {
-                    if (validate)
-                    {
-                        throw new Exception("Invalid port number.");
-                    }
-                    else
-                    {
-                        port = 0;
-                    }
-                }
                 ((GXNet)SelectedMedia).Port = port;
                 device.UseRemoteSerial = UseRemoteSerialCB.Checked;
                 ((GXNet)SelectedMedia).Protocol = (NetworkType)NetProtocolCB.SelectedItem;
@@ -1001,6 +1012,7 @@ namespace Gurux.DLMS.AMI.UI
             if (device is GXDevice)
             {
                 ((GXDevice)device).TemplateId = ((GXDeviceTemplate)TemplatesCB.SelectedItem).Id;
+                ((GXDevice)Device).Dynamic = DynamicCb.Checked;
             }
         }
 
@@ -1735,6 +1747,11 @@ namespace Gurux.DLMS.AMI.UI
             }
             LogicalServerAddressLbl.Visible = LogicalServerAddressTB.Visible = type == InterfaceType.HDLC;
 
+        }
+
+        private void DynamicCb_CheckedChanged(object sender, EventArgs e)
+        {
+            PortTB.Enabled = HostNameTB.Enabled = !DynamicCb.Checked;
         }
     }
 }
