@@ -88,7 +88,7 @@ There can be only one scheduler or scheduler tasks are generated several times. 
 
 Listener settings
 =========================== 
-Listener port tells on what TCP/IP port Gurux.DLMS.AMI service expects incoming connections. In coming connections are used in GPRS network when dynamic connections are used.
+Listener port tells on what TCP/IP port Gurux.DLMS.AMI service expects incoming connections. Incoming connections are used in GPRS network when dynamic connections are used.
  
 Notify settings
 =========================== 

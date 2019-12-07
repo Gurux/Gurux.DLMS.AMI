@@ -421,12 +421,12 @@ namespace Gurux.DLMS.AMI
                     h.Connection.UpdateTable<GXSystemError>();
                     h.Connection.UpdateTable<GXError>();
                     h.Connection.UpdateTable<GXReaderInfo>();
-                    h.Connection.UpdateTable<GXObjectTemplate>();
+                    //TODO: h.Connection.UpdateTable<GXObjectTemplate>();
                     h.Connection.UpdateTable<GXAttributeTemplate>();
-                    h.Connection.UpdateTable<GXDeviceTemplate>();
-                    h.Connection.UpdateTable<GXObject>();
+                    //TODO: h.Connection.UpdateTable<GXDeviceTemplate>();
+                    //TODO: h.Connection.UpdateTable<GXObject>();
                     h.Connection.UpdateTable<GXAttribute>();
-                    h.Connection.UpdateTable<GXDevice>();
+                    //TODO: h.Connection.UpdateTable<GXDevice>();
                 }
                 h.Connection.Insert(GXInsertArgs.Insert(new GXSystemError()
                 {
