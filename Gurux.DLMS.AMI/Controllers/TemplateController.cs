@@ -32,9 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Gurux.Common;
 using Gurux.Service.Orm;
-using Gurux.DLMS;
 using Gurux.DLMS.AMI.Messages.DB;
 using Gurux.DLMS.AMI.Messages.Enums;
 using Gurux.DLMS.AMI.Messages.Rest;

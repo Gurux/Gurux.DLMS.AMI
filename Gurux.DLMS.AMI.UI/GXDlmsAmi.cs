@@ -430,11 +430,33 @@ namespace Gurux.DLMS.AMI.UI
                         new UpdateDeviceTemplate() { Device = d }).Result)
                     {
                         Helpers.CheckStatus(response);
-                        ListDeviceTemplatesResponse devs = response.Content.ReadAsAsync<ListDeviceTemplatesResponse>().Result;
+                        UpdateDeviceTemplateResponse res = response.Content.ReadAsAsync<UpdateDeviceTemplateResponse>().Result;
+                        if (it is GXDeviceTemplate)
+                        {
+                            ((GXDeviceTemplate)it).Id = res.DeviceId;
+                        }
                     }
                 }
             }
             templates = GetDeviceTemplates();
+            for(int pos = 0; pos != devices.Length; ++pos)
+            {
+                GXDLMSMeter it = devices[pos];
+                if (it is GXDeviceTemplate)
+                {
+                    GXDeviceTemplate m = (GXDeviceTemplate)it;
+                    //Update device, object and attribute IDs.
+                    foreach (GXDeviceTemplate dt in templates)
+                    {
+                        if (dt.Id == m.Id)
+                        {
+                            m.Objects.Clear();
+                            m.Objects.AddRange(dt.Objects);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         private void UpdateValue(GXDLMSSettings s, GXObject o, KeyValuePair<GXDLMSObject, byte> it)
