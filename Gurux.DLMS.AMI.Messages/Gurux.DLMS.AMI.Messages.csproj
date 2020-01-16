@@ -4,7 +4,7 @@
     <AssemblyName>Gurux.DLMS.AMI.Messages</AssemblyName>
     <Company>Gurux Ltd</Company>
     <Authors>Gurux Ltd</Authors>
-    <Copyright>Copyright (c) 1998-2019 Gurux Ltd. All rights reserved.</Copyright>
+    <Copyright>Copyright (c) 1998-2020 Gurux Ltd. All rights reserved.</Copyright>
     <PackageProjectUrl>www.gurux.fi/index.php?q=Gurux.DLMS.AMI</PackageProjectUrl>
     <Description>Gurux.DLMS.AMI.Messages implements interfaces that are needed for Gurux DLMS AMI.</Description>
     <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">0.0.1-local</Version>
@@ -27,7 +27,7 @@
   </ItemGroup>
  <ItemGroup>
    <PackageReference Include="Gurux.Common" Version="8.1.1907.301" />
-   <PackageReference Include="Gurux.DLMS" Version="9.0.1912.401" />
+   <PackageReference Include="Gurux.DLMS" Version="9.0.2001.1501" />
    <PackageReference Include="Gurux.Service" Version="1.1.1912.901" />
  </ItemGroup>
  <ItemGroup>
