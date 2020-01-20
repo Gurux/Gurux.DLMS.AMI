@@ -24,7 +24,7 @@ We are updating documentation on [Gurux web page](http://www.gurux.org/Gurux.DLM
 
 Starting with Gurux.AMI
 =========================== 
-Gurux.AMI is using .Net Core 2.2. First you must install it to your pc.
+Gurux.AMI is using .Net Core 3.1. First you must install it to your pc.
 Then you need to [download ](http://www.gurux.org/Downloads/Gurux.DLMS.AMI.zip "download") GuruxAMI or compile it by yourself.
 You can get source codes from [GitHub](https://github.org/Gurux/Gurux.DLMS.AMI "GitHub")
 If you downloaded the app you need to unzip the file first.

@@ -34,7 +34,8 @@ using System;
 namespace Gurux.DLMS.AMI.Internal
 {
     /// <summary>
-    /// Listener settings.
+    /// Listener settings. Listener is used with dynamic TCP/IP connections
+    /// where the meter makes the connection to the server.
     /// </summary>
     public class ListenerOptions
     {

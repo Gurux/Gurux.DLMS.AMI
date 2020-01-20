@@ -37,7 +37,6 @@ using Gurux.DLMS.AMI.Messages.Rest;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
 using Gurux.DLMS.AMI.Internal;
 
@@ -64,17 +63,69 @@ namespace Gurux.DLMS.AMI.Reader
             return GetAttributeIndex(obj, 2);
         }
 
-        internal static void Read(ILogger _logger, HttpClient client, GXDLMSReader reader, GXTask task, IGXMedia net, GXDLMSObject obj)
+        /// <summary>
+        /// Get capture period of the profile generic.
+        /// </summary>
+        private static int GetCapturePeriod(GXObject obj)
+        {
+            int index = GetAttributeIndex(obj, 4);
+            if (index == -1)
+            {
+                return -1;
+            }
+            return Convert.ToInt32(obj.Attributes[index].Value);
+        }
+
+        /// <summary>
+        /// Get last read time.
+        /// </summary>
+        private static DateTime GetReadTime(GXObject obj)
+        {
+            int index = GetAttributeIndex(obj, 4);
+            if (index == -1)
+            {
+                return DateTime.MinValue;
+            }
+            return obj.Attributes[index].Read;
+        }
+
+        /// <summary>
+        /// Is profile generic object sorted using date time.
+        /// </summary>
+        private static bool IsSortedByDateTime(GXObject obj)
+        {
+            int index = GetAttributeIndex(obj, 3);
+            if (index == -1)
+            {
+                return false;
+            }
+            try
+            {
+                GXArray tmp = GXDLMSTranslator.XmlToValue(obj.Attributes[index].Value) as GXArray;
+                if (tmp != null)
+                {
+                    //If interface type is clock.
+                    return (UInt16)((GXStructure)tmp[0])[0] == 8;
+                }
+            }
+            catch(Exception)
+            {
+                //It's OK if this fails.
+            }
+            return false;
+        }
+
+        internal static void Read(ILogger _logger, System.Net.Http.HttpClient client, GXDLMSReader reader, GXTask task, IGXMedia net, GXDLMSObject obj)
         {
             AddValue v;
-            HttpResponseMessage response;
+            System.Net.Http.HttpResponseMessage response;
             if (_logger != null)
             {
                 _logger.LogInformation("Reading: " + obj.ToString());
             }
             Console.WriteLine("Reading: " + obj.ToString());
             object val;
-            if (obj.ObjectType == ObjectType.ProfileGeneric && task.Index == 2 && task.Object.Attributes[GetBufferIndex(task.Object)].Read != DateTime.MinValue)
+            if (obj.ObjectType == ObjectType.ProfileGeneric && task.Index == 2 && GetReadTime(task.Object) != DateTime.MinValue && IsSortedByDateTime(task.Object))
             {
                 //Read profile generic using range.
                 DateTime now = DateTime.Now;
@@ -122,6 +173,7 @@ namespace Gurux.DLMS.AMI.Reader
                     DateTime latest = task.Object.Attributes[GetBufferIndex(task.Object)].Read;
                     DateTime first = latest;
                     Boolean read = false;
+                    int period = -1;
                     foreach (GXStructure row in (GXArray)val)
                     {
                         DateTime dt = DateTime.MinValue;
@@ -149,7 +201,15 @@ namespace Gurux.DLMS.AMI.Reader
                             //Some meters are returning null as date time to save bytes...
                             if (pos == 0 && row[pos] == null)
                             {
-                                row[pos] = latest.AddHours(1);
+                                if (period == -1)
+                                {
+                                    period = GetCapturePeriod(task.Object);
+                                    if (period == -1)
+                                    {
+                                        throw new Exception("Invalid capture period.");
+                                    }
+                                }
+                                row[pos] = latest.AddMinutes(period);
                             }
                         }
                         if (_logger != null)

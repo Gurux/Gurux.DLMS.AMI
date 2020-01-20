@@ -4,14 +4,14 @@
     <AssemblyName>Gurux.DLMS.AMI</AssemblyName>
     <Company>Gurux Ltd</Company>
     <Authors>Gurux Ltd</Authors>
-    <Copyright>Copyright (c) 1998-2019 Gurux Ltd. All rights reserved.</Copyright>
+    <Copyright>Copyright (c) 1998-2020 Gurux Ltd. All rights reserved.</Copyright>
     <PackageProjectUrl>www.gurux.fi/index.php?q=Gurux.DLMS.AMI</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <Description>Gurux.AMI offers meter reading application that you can schedule or order to read wanted objects from DLMS meters.</Description>
     <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">0.0.1-local</Version>
     <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/gurux/gurux.dlms.ami</RepositoryUrl>
     <PackageTags>Gurux Device Framework Network DLMS AMI</PackageTags>
@@ -32,22 +32,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.0" />
     <PackageReference Include="Gurux.Common" Version="8.1.1907.301" />
-    <PackageReference Include="Gurux.DLMS" Version="9.0.1912.401" />
-    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.1912.901" />
+    <PackageReference Include="Gurux.DLMS" Version="9.0.2001.1501" />
+    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2001.1601" />
     <PackageReference Include="Gurux.Net" Version="8.1.1909.601" />
     <PackageReference Include="Gurux.Serial" Version="8.1.1910.3102" />
     <PackageReference Include="Gurux.Service" Version="1.1.1912.901" />
     <PackageReference Include="Gurux.Terminal" Version="8.1.1909.1201" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
-    <PackageReference Include="MySql.Data" Version="8.0.18" />
+    <PackageReference Include="MySql.Data" Version="8.0.19" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.60" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\gurux_dlms_ami.png" Pack="true" PackagePath="\" />

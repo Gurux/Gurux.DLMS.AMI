@@ -32,6 +32,8 @@
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.Common;
+using Gurux.DLMS.AMI.Internal;
+using Gurux.DLMS.AMI.Notify;
 using Gurux.DLMS.Enums;
 using Gurux.DLMS.Objects;
 using Gurux.DLMS.Secure;
@@ -479,13 +481,14 @@ namespace Gurux.DLMS.AMI.Reader
                 Count = 5,
                 WaitTime = WaitTime,
             };
+            GXReplyData notify = new GXReplyData();
             lock (Media.Synchronous)
             {
                 while (!succeeded && pos != 3)
                 {
                     if (!reply.IsStreaming())
                     {
-                        WriteTrace("TX: " + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(data, true));
+                        WriteTrace("TX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(data, true));
                         Media.Send(data, null);
                     }
                     succeeded = Media.Receive(p);
@@ -508,8 +511,28 @@ namespace Gurux.DLMS.AMI.Reader
                 {
                     pos = 0;
                     //Loop until whole COSEM packet is received.
-                    while (!Client.GetData(p.Reply, reply))
+                    while (!Client.GetData(p.Reply, reply, notify))
                     {
+                        // If all data is received.
+                        if (notify.IsComplete && !notify.IsMoreData)
+                        {
+                            /*
+                            try
+                            {
+                                if (GXNotifyListener.Parser != null)
+                                {
+                                    GXAMIClient cl = new GXAMIClient();
+                                    GXNotifyListener.Parser.Parse(Media.ToString(), notify.Value, cl.GetData, cl.SetData);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                //TODO: Save error to the database.
+                            }
+                            */
+                            notify.Clear();
+                        }
+
                         //If Eop is not set read one byte at time.
                         if (p.Eop == null)
                         {
@@ -533,11 +556,11 @@ namespace Gurux.DLMS.AMI.Reader
                 }
                 catch (Exception ex)
                 {
-                    WriteTrace("RX: " + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
+                    WriteTrace("RX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
                     throw ex;
                 }
             }
-            WriteTrace("RX: " + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
+            WriteTrace("RX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
             if (reply.Error != 0)
             {
                 if (reply.Error == (short)ErrorCode.Rejected)
@@ -706,7 +729,7 @@ namespace Gurux.DLMS.AMI.Reader
         /// <summary>
         /// Read Profile Generic Columns by entry.
         /// </summary>
-        public object ReadRowsByEntry(GXDLMSProfileGeneric it, int index, int count)
+        public object ReadRowsByEntry(GXDLMSProfileGeneric it, UInt32 index, UInt32 count)
         {
             GXReplyData reply = new GXReplyData();
             ReadDataBlock(Client.ReadRowsByEntry(it, index, count), reply);

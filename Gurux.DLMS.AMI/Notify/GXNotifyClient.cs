@@ -29,29 +29,57 @@
 // This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
-namespace Gurux.DLMS.AMI.Internal
+
+using Gurux.DLMS.Enums;
+using System;
+
+namespace Gurux.DLMS.AMI.Notify
 {
-    /// <summary>
-    /// Notify settings.
-    /// </summary>
-    public class NotifyOptions
+    public class GXNotifyClient
     {
-        /// <summary>
-        /// Notify port. Server waits notify, event or push messages to this port.
-        /// </summary>
-        public int Port { get; set; }
+        public GXNotifyClient()
+        {
+            Notify = new GXReplyData();
+            Reply = new GXByteBuffer();
+            Client = new GXDLMSClient(true, -1, -1, Authentication.None, null, InterfaceType.WRAPPER);
+            DataReceived = DateTime.MinValue;
+        }
 
         /// <summary>
-        /// Expiration time in seconds.
+        /// Client used to parse received data.
         /// </summary>
-        /// <remarks>
-        /// Sometimes only part of the push message is received. Received data is clear after expiration time.
-        /// </remarks>
-        public int ExpirationTime { get; set; }
+        public GXDLMSClient Client
+        {
+            get;
+            set;
+        }
 
         /// <summary>
-        /// Nofify parser.
+        /// Received data is saved to reply buffer because whole message is not always received in one packet.
         /// </summary>
-        public string Parser { get; set; }
+        public GXByteBuffer Reply
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Received data. This is used if GBT is used and data is received on several data blocks.
+        /// </summary>
+        public GXReplyData Notify
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Time when last data was received.
+        /// </summary>
+        public DateTime DataReceived
+        {
+            get;
+            set;
+        }
+
     }
 }

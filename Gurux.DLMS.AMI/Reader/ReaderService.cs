@@ -41,7 +41,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Threading;
 using Gurux.Serial;
 using Microsoft.Extensions.Options;
@@ -56,7 +55,7 @@ namespace Gurux.DLMS.AMI.Reader
         AutoResetEvent closing = new AutoResetEvent(false);
         private DateTime lastUpdated = DateTime.MinValue;
         private readonly ILogger _logger;
-        private readonly HttpClient client = new HttpClient();
+        private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
         private readonly Guid _guid;
         private readonly int _threads;
         private readonly string _name;
@@ -99,7 +98,7 @@ namespace Gurux.DLMS.AMI.Reader
             _logger.LogInformation("Reader Service is working.");
             GetNextTaskResponse ret = null;
             GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
-            HttpResponseMessage response;
+            System.Net.Http.HttpResponseMessage response;
             while (!closing.WaitOne(1))
             {
                 try

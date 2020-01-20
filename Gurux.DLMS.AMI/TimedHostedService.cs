@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 
@@ -37,7 +37,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Gurux.DLMS.AMI.Internal;
@@ -48,7 +47,7 @@ namespace Gurux.DLMS.AMI
     {
         private readonly ILogger _logger;
         private Timer _timer;
-        private readonly HttpClient client = new HttpClient();
+        private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
         public TimedHostedService(ILogger<TimedHostedService> logger)
         {
@@ -70,7 +69,7 @@ namespace Gurux.DLMS.AMI
             {
                 DateTime now = DateTime.Now;
                 ListSchedulesResponse list = null;
-                using (HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/ListSchedules", new ListSchedules()))
+                using (System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/ListSchedules", new ListSchedules()))
                 {
                     Helpers.CheckStatus(response);
                     list = await response.Content.ReadAsAsync<ListSchedulesResponse>();
@@ -103,7 +102,7 @@ namespace Gurux.DLMS.AMI
                         UpdateScheduleExecutionTime us = new UpdateScheduleExecutionTime();
                         us.Id = it.Id;
                         us.Time = now;
-                        using (HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/UpdateScheduleExecutionTime", us))
+                        using (System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/UpdateScheduleExecutionTime", us))
                         {
                             Helpers.CheckStatus(response);
                             UpdateScheduleExecutionTime r = await response.Content.ReadAsAsync<UpdateScheduleExecutionTime>();
@@ -120,7 +119,7 @@ namespace Gurux.DLMS.AMI
                 {
                     AddTask at = new AddTask();
                     at.Actions = tasks.ToArray();
-                    using (HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/task/AddTask", at))
+                    using (System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/task/AddTask", at))
                     {
                         Helpers.CheckStatus(response);
                     }

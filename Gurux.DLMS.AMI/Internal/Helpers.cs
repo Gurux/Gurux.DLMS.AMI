@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,29 +19,50 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.Common;
 using Gurux.DLMS.AMI.Messages.Rest;
 using Gurux.Service.Rest;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Gurux.DLMS.AMI.Internal
 {
+    public static class HttpClientExtensions
+    {
+        public static Task<HttpResponseMessage> PostAsJsonAsync<T>(
+            this HttpClient httpClient, string url, T data)
+        {
+            var dataAsString = JsonConvert.SerializeObject(data);
+            var content = new StringContent(dataAsString);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            return httpClient.PostAsync(url, content);
+        }
+
+        public static async Task<T> ReadAsAsync<T>(this HttpContent content)
+        {
+            var dataAsString = await content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(dataAsString);
+        }
+    }
+
     class Helpers
     {
         public class SimpleHttpResponseException : Exception
