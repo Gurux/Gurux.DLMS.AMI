@@ -53,6 +53,16 @@ namespace DBService.Controllers
         }
 
         /// <summary>
+        /// Get available schedules.
+        /// </summary>
+        /// <returns>Available schedules.</returns>
+        [HttpGet]
+        public ActionResult<ListSchedulesResponse> Get()
+        {
+            return Post(new ListSchedules());
+        }
+
+        /// <summary>
         /// List Schedules.
         /// </summary>
         [HttpPost("ListSchedules")]
@@ -211,20 +221,17 @@ namespace DBService.Controllers
                     req.DeviceId = request.DeviceId;
                     req.Targets = TargetType.Object | TargetType.Attribute;
                     req.Objects = request.Objects;
-                    using (System.Net.Http.HttpClient cl = new System.Net.Http.HttpClient())
+                    using (System.Net.Http.HttpResponseMessage response = Helpers.client.PostAsJsonAsync(this.Request.Scheme + "://" + this.Request.Host + "/api/object/ListObjects", req).Result)
                     {
-                        using (System.Net.Http.HttpResponseMessage response = cl.PostAsJsonAsync(this.Request.Scheme + "://" + this.Request.Host + "/api/object/ListObjects", req).Result)
+                        Helpers.CheckStatus(response);
+                        ListObjectsResponse objs = response.Content.ReadAsAsync<ListObjectsResponse>().Result;
+                        foreach (GXObject obj in objs.Items)
                         {
-                            Helpers.CheckStatus(response);
-                            ListObjectsResponse objs = response.Content.ReadAsAsync<ListObjectsResponse>().Result;
-                            foreach (GXObject obj in objs.Items)
+                            if (obj.Attributes != null)
                             {
-                                if (obj.Attributes != null)
+                                foreach (GXAttribute a in obj.Attributes)
                                 {
-                                    foreach (GXAttribute a in obj.Attributes)
-                                    {
-                                        list.Add(new GXScheduleToAttribute() { ScheduleId = s, AttributeId = a.Id });
-                                    }
+                                    list.Add(new GXScheduleToAttribute() { ScheduleId = s, AttributeId = a.Id });
                                 }
                             }
                         }

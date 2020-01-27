@@ -55,7 +55,7 @@ namespace Gurux.DLMS.AMI.Reader
         AutoResetEvent closing = new AutoResetEvent(false);
         private DateTime lastUpdated = DateTime.MinValue;
         private readonly ILogger _logger;
-        private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+        private readonly System.Net.Http.HttpClient client = Helpers.client;
         private readonly Guid _guid;
         private readonly int _threads;
         private readonly string _name;
@@ -83,22 +83,27 @@ namespace Gurux.DLMS.AMI.Reader
             r.Name = _name;
             FileVersionInfo info = FileVersionInfo.GetVersionInfo(typeof(ReaderService).Assembly.Location);
             r.Version = info.FileVersion;
-            //Don't wait reply. It might that DB server is not up yet.
-            client.PostAsJsonAsync(Startup.ServerAddress + "/api/reader/AddReader", new AddReader() { Reader = r });
             for (int pos = 0; pos != _threads; ++pos)
             {
-                Thread t3 = new Thread(() => DoWork());
+                Thread t3 = new Thread(() => DoWork(pos == 0 ? r : null));
                 t3.Start();
             }
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        private async void DoWork()
+        private async void DoWork(object ínfo)
         {
-            _logger.LogInformation("Reader Service is working.");
             GetNextTaskResponse ret = null;
-            GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
             System.Net.Http.HttpResponseMessage response;
+            //Don't wait reply. It might that DB server is not up yet.
+            if (ínfo != null)
+            {
+                using (response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/reader/AddReader", new AddReader() { Reader = ínfo as GXReaderInfo }))
+                {
+                    Helpers.CheckStatus(response);
+                }
+            }
+            _logger.LogInformation("Reader Service is started.");
             while (!closing.WaitOne(1))
             {
                 try

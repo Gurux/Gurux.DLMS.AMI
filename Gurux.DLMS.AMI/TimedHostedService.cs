@@ -47,7 +47,6 @@ namespace Gurux.DLMS.AMI
     {
         private readonly ILogger _logger;
         private Timer _timer;
-        private readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
         public TimedHostedService(ILogger<TimedHostedService> logger)
         {
@@ -69,7 +68,7 @@ namespace Gurux.DLMS.AMI
             {
                 DateTime now = DateTime.Now;
                 ListSchedulesResponse list = null;
-                using (System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/ListSchedules", new ListSchedules()))
+                using (System.Net.Http.HttpResponseMessage response = await Helpers.client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/ListSchedules", new ListSchedules()))
                 {
                     Helpers.CheckStatus(response);
                     list = await response.Content.ReadAsAsync<ListSchedulesResponse>();
@@ -102,7 +101,7 @@ namespace Gurux.DLMS.AMI
                         UpdateScheduleExecutionTime us = new UpdateScheduleExecutionTime();
                         us.Id = it.Id;
                         us.Time = now;
-                        using (System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/UpdateScheduleExecutionTime", us))
+                        using (System.Net.Http.HttpResponseMessage response = await Helpers.client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/UpdateScheduleExecutionTime", us))
                         {
                             Helpers.CheckStatus(response);
                             UpdateScheduleExecutionTime r = await response.Content.ReadAsAsync<UpdateScheduleExecutionTime>();
@@ -119,7 +118,7 @@ namespace Gurux.DLMS.AMI
                 {
                     AddTask at = new AddTask();
                     at.Actions = tasks.ToArray();
-                    using (System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/task/AddTask", at))
+                    using (System.Net.Http.HttpResponseMessage response = await Helpers.client.PostAsJsonAsync(Startup.ServerAddress + "/api/task/AddTask", at))
                     {
                         Helpers.CheckStatus(response);
                     }

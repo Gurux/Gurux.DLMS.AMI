@@ -53,7 +53,7 @@ namespace Gurux.DLMS.AMI
 {
     public class Startup
     {
-        static readonly System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
+        static readonly System.Net.Http.HttpClient httpClient = Helpers.client;
 
         //Listener wait incoming connections from the meters.
         GXNet listener;
@@ -202,14 +202,7 @@ namespace Gurux.DLMS.AMI
                     h.Connection.CreateTable<GXSchedulerInfo>(false, false);
                     h.Connection.CreateTable<GXReaderInfo>(false, false);
                     h.Connection.CreateTable<GXDeviceToReader>(false, false);
-                    try
-                    {
-                        AddSchedule(h.Connection);
-                    }
-                    catch(Exception ex)
-                    {
-                        Console.WriteLine("Failed to add schedules: " + ex.Message);
-                    }
+                    AddSchedule(h.Connection);
                 }
                 else
                 {

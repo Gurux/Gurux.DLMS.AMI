@@ -65,6 +65,7 @@ namespace Gurux.DLMS.AMI.Internal
 
     class Helpers
     {
+        public static readonly System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
         public class SimpleHttpResponseException : Exception
         {
             public HttpStatusCode StatusCode { get; private set; }

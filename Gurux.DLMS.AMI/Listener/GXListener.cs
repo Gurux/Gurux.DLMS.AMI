@@ -89,7 +89,7 @@ namespace Gurux.DLMS.AMI.Notify
                    .Build();
                 ListenerOptions listener = config.GetSection("Listener").Get<ListenerOptions>();
 
-                System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
+                System.Net.Http.HttpClient httpClient = Helpers.client;
                 using (GXNet media = (GXNet)parameter)
                 {
                     GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
@@ -103,9 +103,8 @@ namespace Gurux.DLMS.AMI.Notify
                     //Find device.
                     GXDevice dev = null;
                     ListDevicesResponse devs = null;
-                    using (System.Net.Http.HttpClient cl = new System.Net.Http.HttpClient())
                     {
-                        using (System.Net.Http.HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/device/ListDevices", new ListDevices() { Name = (string)ldn.Value }).Result)
+                        using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/device/ListDevices", new ListDevices() { Name = (string)ldn.Value }).Result)
                         {
                             Helpers.CheckStatus(response);
                             devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
@@ -122,7 +121,7 @@ namespace Gurux.DLMS.AMI.Notify
                                 {
                                     Error = str
                                 };
-                                using (System.Net.Http.HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/SystemError/AddSystemError", info).Result)
+                                using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/SystemError/AddSystemError", info).Result)
                                 {
                                     Helpers.CheckStatus(response);
                                 }
@@ -133,7 +132,7 @@ namespace Gurux.DLMS.AMI.Notify
                                 return;
                             }
                             ListDeviceTemplates lt = new ListDeviceTemplates() { Ids = new UInt64[] { listener.DefaultDeviceTemplate } };
-                            using (System.Net.Http.HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/template/ListDeviceTemplates", lt).Result)
+                            using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/template/ListDeviceTemplates", lt).Result)
                             {
                                 Helpers.CheckStatus(response);
                                 ListDeviceTemplatesResponse ret = response.Content.ReadAsAsync<ListDeviceTemplatesResponse>().Result;
@@ -150,13 +149,13 @@ namespace Gurux.DLMS.AMI.Notify
                             dev.Dynamic = true;
                             UpdateDevice update = new UpdateDevice();
                             update.Device = dev;
-                            using (System.Net.Http.HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/device/UpdateDevice", update).Result)
+                            using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/device/UpdateDevice", update).Result)
                             {
                                 Helpers.CheckStatus(response);
                                 UpdateDeviceResponse r = response.Content.ReadAsAsync<UpdateDeviceResponse>().Result;
                                 dev.Id = r.DeviceId;
                             }
-                            using (System.Net.Http.HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/device/ListDevices", new ListDevices() { Ids = new UInt64[] { dev.Id } }).Result)
+                            using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/device/ListDevices", new ListDevices() { Ids = new UInt64[] { dev.Id } }).Result)
                             {
                                 Helpers.CheckStatus(response);
                                 devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
@@ -179,7 +178,7 @@ namespace Gurux.DLMS.AMI.Notify
                                 Console.WriteLine("Frame counter: " + dev.FrameCounter);
                             }
                             GetNextTaskResponse ret;
-                            using (System.Net.Http.HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/task/GetNextTask", new GetNextTask() { Listener = true, DeviceId = dev.Id }).Result)
+                            using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/task/GetNextTask", new GetNextTask() { Listener = true, DeviceId = dev.Id }).Result)
                             {
                                 Helpers.CheckStatus(response);
                                 ret = response.Content.ReadAsAsync<GetNextTaskResponse>().Result;
@@ -255,7 +254,7 @@ namespace Gurux.DLMS.AMI.Notify
                                             response.Content.ReadAsAsync<AddErrorResponse>();
                                         }
                                     }
-                                    using (System.Net.Http.HttpResponseMessage response = cl.PostAsJsonAsync(Startup.ServerAddress + "/api/task/TaskReady", new TaskReady() { Tasks = new GXTask[] { task } }).Result)
+                                    using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/task/TaskReady", new TaskReady() { Tasks = new GXTask[] { task } }).Result)
                                     {
                                         Helpers.CheckStatus(response);
                                     }
