@@ -10,7 +10,7 @@
     <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">0.0.1-local</Version>
     <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <TargetFrameworks>net46;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net46;netcoreapp3.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/gurux/gurux.dlms.ami</RepositoryUrl>
     <PackageTags>Gurux Device Framework Network DLMS AMI</PackageTags>
@@ -26,27 +26,13 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
  <ItemGroup>
-   <PackageReference Include="Gurux.Common" Version="8.1.1907.301" />
-   <PackageReference Include="Gurux.DLMS" Version="9.0.2001.1501" />
-   <PackageReference Include="Gurux.Service" Version="1.1.1912.901" />
+   <PackageReference Include="Gurux.Common" Version="8.1.2001.2404" />
+   <PackageReference Include="Gurux.DLMS" Version="9.0.2001.2301" />
+   <PackageReference Include="Gurux.Service" Version="1.1.2001.2701" />
  </ItemGroup>
  <ItemGroup>
    <Folder Include="Properties\" />
  </ItemGroup>
- <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
-   <PackageReference Include="Microsoft.AspNetCore.App">
-   <Version>2.1.1</Version>
-   </PackageReference>
-   <PackageReference Include="System.ComponentModel">
-     <Version>4.3.0</Version>
-   </PackageReference>
-   <PackageReference Include="System.ComponentModel.Primitives">
-     <Version>4.3.0</Version>
-   </PackageReference>
-   <PackageReference Include="System.Private.DataContractSerialization">
-     <Version>4.3.0</Version>
-   </PackageReference>
-  </ItemGroup>
   <ItemGroup>
     <None Include="..\gurux_dlms_ami.png" Pack="true" PackagePath="\" />
   </ItemGroup>
