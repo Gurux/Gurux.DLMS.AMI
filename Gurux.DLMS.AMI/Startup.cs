@@ -52,6 +52,8 @@ namespace Gurux.DLMS.AMI
 {
     public class Startup
     {
+        static readonly System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
+
         //Listener wait incoming connections from the meters.
         GXNet listener;
 
@@ -129,13 +131,10 @@ namespace Gurux.DLMS.AMI
             dt.Skip = DateTimeSkips.Year | DateTimeSkips.Month | DateTimeSkips.Day;
             d.Start = dt.ToFormatString();
             us.Schedules.Add(d);
-            using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
+            using (System.Net.Http.HttpResponseMessage response = await httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/UpdateSchedule", us))
             {
-                using (System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/UpdateSchedule", us))
-                {
-                    Helpers.CheckStatus(response);
-                    UpdateScheduleResponse r = await response.Content.ReadAsAsync<UpdateScheduleResponse>();
-                }
+                Helpers.CheckStatus(response);
+                UpdateScheduleResponse r = await response.Content.ReadAsAsync<UpdateScheduleResponse>();
             }
         }
 
@@ -206,7 +205,14 @@ namespace Gurux.DLMS.AMI
                     h.Connection.CreateTable<GXSchedulerInfo>(false, false);
                     h.Connection.CreateTable<GXReaderInfo>(false, false);
                     h.Connection.CreateTable<GXDeviceToReader>(false, false);
-                    AddSchedule();
+                    try
+                    {
+                        AddSchedule();
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine("Failed to add schedules: " + ex.Message);
+                    }
                 }
                 else
                 {
@@ -241,7 +247,7 @@ namespace Gurux.DLMS.AMI
                 services.AddHostedService<ReaderService>();
             }
 #if NETCOREAPP2_0 || NETCOREAPP2_1
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 #endif //NETCOREAPP2_0 || NETCOREAPP2_1
         }
 
