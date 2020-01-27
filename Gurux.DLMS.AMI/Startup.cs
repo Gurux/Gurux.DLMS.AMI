@@ -47,6 +47,7 @@ using Gurux.DLMS.AMI.Internal;
 using Gurux.DLMS.AMI.Notify;
 using Microsoft.Extensions.Hosting;
 using Gurux.DLMS.AMI.Reader;
+using System.Collections.Generic;
 
 namespace Gurux.DLMS.AMI
 {
@@ -112,30 +113,26 @@ namespace Gurux.DLMS.AMI
 
         public IConfiguration Configuration { get; }
 
-        private async void AddSchedule()
+        private void AddSchedule(GXDbConnection connection)
         {
+            List<GXSchedule> list = new List<GXSchedule>();
             GXSchedule m = new GXSchedule();
             m.Name = "Minutely";
             GXDateTime dt = new GXDateTime(DateTime.Now.Date);
             dt.Skip = DateTimeSkips.Year | DateTimeSkips.Month | DateTimeSkips.Day | DateTimeSkips.Hour | DateTimeSkips.Minute;
             m.Start = dt.ToFormatString();
-            UpdateSchedule us = new UpdateSchedule();
-            us.Schedules.Add(m);
+            list.Add(m);
             GXSchedule h = new GXSchedule();
             h.Name = "Hourly";
             dt.Skip = DateTimeSkips.Year | DateTimeSkips.Month | DateTimeSkips.Day | DateTimeSkips.Hour;
             h.Start = dt.ToFormatString();
-            us.Schedules.Add(h);
+            list.Add(h);
             GXSchedule d = new GXSchedule();
             d.Name = "Daily";
             dt.Skip = DateTimeSkips.Year | DateTimeSkips.Month | DateTimeSkips.Day;
             d.Start = dt.ToFormatString();
-            us.Schedules.Add(d);
-            using (System.Net.Http.HttpResponseMessage response = await httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/schedule/UpdateSchedule", us))
-            {
-                Helpers.CheckStatus(response);
-                UpdateScheduleResponse r = await response.Content.ReadAsAsync<UpdateScheduleResponse>();
-            }
+            list.Add(d);
+            connection.Insert(GXInsertArgs.InsertRange(list));
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -207,7 +204,7 @@ namespace Gurux.DLMS.AMI
                     h.Connection.CreateTable<GXDeviceToReader>(false, false);
                     try
                     {
-                        AddSchedule();
+                        AddSchedule(h.Connection);
                     }
                     catch(Exception ex)
                     {
