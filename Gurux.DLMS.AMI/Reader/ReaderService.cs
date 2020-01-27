@@ -93,6 +93,8 @@ namespace Gurux.DLMS.AMI.Reader
 
         private async void DoWork(object ínfo)
         {
+            //Give some time DB server to start up.
+            Thread.Sleep(1000);
             GetNextTaskResponse ret = null;
             System.Net.Http.HttpResponseMessage response;
             //Don't wait reply. It might that DB server is not up yet.
