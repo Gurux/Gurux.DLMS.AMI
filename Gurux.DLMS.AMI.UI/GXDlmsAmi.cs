@@ -129,7 +129,7 @@ namespace Gurux.DLMS.AMI.UI
             }
         }
 
-        public GXDLMSMeter[] AddDevices(GXDLMSMeter[] devices)
+        public GXDLMSMeterBase[] AddDevices(GXDLMSMeterBase[] devices)
         {
             if (add != null)
             {
@@ -151,14 +151,14 @@ namespace Gurux.DLMS.AMI.UI
                     {
                         Helpers.CheckStatus(response);
                         ListDevicesResponse devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
-                        meters.AddRange(devs.Devices);
+                        meters.AddRange(DevicesToMeters(devs.Devices));
                     }
                 }
                 return meters.ToArray();
             }
         }
 
-        public void AddObjects(GXDLMSMeter[] devices, GXDLMSObject[] objects)
+        public void AddObjects(GXDLMSMeterBase[] devices, GXDLMSObject[] objects)
         {
             throw new NotImplementedException();
         }
@@ -176,7 +176,7 @@ namespace Gurux.DLMS.AMI.UI
             return null;
         }
 
-        public void EditDevices(GXDLMSMeter[] devices)
+        public void EditDevices(GXDLMSMeterBase[] devices)
         {
             if (edit != null)
             {
@@ -195,14 +195,50 @@ namespace Gurux.DLMS.AMI.UI
             }
         }
 
-        public void EditObjects(GXDLMSMeter[] devices, GXDLMSObject[] objects)
+        public void EditObjects(GXDLMSMeterBase[] devices, GXDLMSObject[] objects)
         {
             throw new NotImplementedException();
         }
 
-        GXDLMSMeter[] IGXDataConcentrator.GetDevices(string name)
+        GXDLMSMeterBase[] IGXDataConcentrator.GetDevices(string name)
         {
             return GetDevices(name, TargetType.Device);
+        }
+
+        private static GXDevice MeterToDevice(GXDLMSMeter meter)
+        {
+            GXDevice d = new GXDevice();
+            GXDevice.Copy(d, meter);
+            d.Id = (UInt64) meter.Tag ;
+            return d;
+        }
+
+            private static GXDevice[] MetersToDevices(GXDLMSMeter[] meters)
+        {
+            List<GXDevice> devices = new List<GXDevice>();
+            foreach(GXDLMSMeter it in meters)
+            {
+                devices.Add(MeterToDevice(it));
+            }
+            return devices.ToArray();
+        }
+
+        private static GXDLMSMeter DeviceToMeter(GXDevice device)
+        {
+            GXDLMSMeter m = new GXDLMSMeter();
+            GXDevice.Copy(m, device);
+            m.Tag = device.Id;
+            return m;
+        }
+
+        private static GXDLMSMeter[] DevicesToMeters(GXDevice[] devices)
+        {
+            List<GXDLMSMeter> meters = new List<GXDLMSMeter>();
+            foreach (GXDevice it in devices)
+            {
+                meters.Add(DeviceToMeter(it));
+            }
+            return meters.ToArray();
         }
 
         public GXDLMSMeter[] GetDevices(string name = null, TargetType targets = TargetType.Device | TargetType.Object | TargetType.Attribute)
@@ -214,12 +250,12 @@ namespace Gurux.DLMS.AMI.UI
                 {
                     Helpers.CheckStatus(response);
                     ListDevicesResponse devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
-                    return devs.Devices;
+                    return DevicesToMeters(devs.Devices);
                 }
             }
         }
 
-        public List<KeyValuePair<GXDLMSMeter, string[]>> GetErrors(GXDLMSMeter[] devices)
+        public List<KeyValuePair<GXDLMSMeterBase, string[]>> GetErrors(GXDLMSMeterBase[] devices)
         {
             /*
             GXError[] errors = GetErrors2((GXDevice[]) devices);
@@ -239,10 +275,10 @@ namespace Gurux.DLMS.AMI.UI
             throw new NotImplementedException();
         }
 
-        public void MethodObjects(GXDLMSMeter[] devices, List<GXActionParameter> actions)
+        public void MethodObjects(GXDLMSMeterBase[] devices, List<GXActionParameter> actions)
         {
             List<GXTask> list = new List<GXTask>();
-            foreach (GXDLMSMeter m in devices)
+            foreach (GXDLMSMeterBase m in devices)
             {
                 foreach (GXActionParameter it in actions)
                 {
@@ -259,10 +295,10 @@ namespace Gurux.DLMS.AMI.UI
             AddTasks(list);
         }
 
-        public void ReadObjects(GXDLMSMeter[] meters, List<KeyValuePair<GXDLMSObject, byte>> objects)
+        public void ReadObjects(GXDLMSMeterBase[] meters, List<KeyValuePair<GXDLMSObject, byte>> objects)
         {
             List<GXTask> list = new List<GXTask>();
-            foreach (GXDLMSMeter m in meters)
+            foreach (GXDLMSMeterBase m in meters)
             {
                 foreach (KeyValuePair<GXDLMSObject, byte> it in objects)
                 {
@@ -277,45 +313,40 @@ namespace Gurux.DLMS.AMI.UI
                         {
                             ((GXDLMSAssociationShortName)it.Key).ObjectList.Clear();
                         }
-                        //If objects are not get yet.
-                        if (((GXDevice)m).Objects == null)
+                        using (HttpClient cl = new HttpClient())
                         {
-                            using (HttpClient cl = new HttpClient())
+                            using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/device/ListDevices"),
+                                new ListDevices() { Ids = new UInt64[] { (UInt64) ((GXDLMSMeter)m).Tag }, Targets = TargetType.Object }).Result)
                             {
-                                using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/device/ListDevices"),
-                                    new ListDevices() { Ids = new UInt64[] { ((GXDevice)m).Id }, Targets = TargetType.Object }).Result)
+                                Helpers.CheckStatus(response);
+                                ListDevicesResponse devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
+                                foreach (GXObject o in devs.Devices[0].Objects)
                                 {
-                                    Helpers.CheckStatus(response);
-                                    ListDevicesResponse devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
-                                    ((GXDevice)m).Objects = devs.Devices[0].Objects;
+                                    GXDLMSObject obj = GXDLMSClient.CreateObject((ObjectType)o.ObjectType);
+                                    obj.LogicalName = o.LogicalName;
+                                    obj.Description = o.Name;
+                                    obj.Version = o.Version;
+                                    if (o.Attributes != null)
+                                    {
+                                        foreach (GXAttribute a in o.Attributes)
+                                        {
+                                            obj.SetAccess(a.Index, (AccessMode)a.AccessLevel);
+                                            GXDLMSAttributeSettings att = obj.Attributes.Find(a.Index);
+                                            att.Static = a.ExpirationTime == 0xFFFFFFFF;
+                                            att.Type = (DataType)a.DataType;
+                                            att.UIType = (DataType)a.UIDataType;
+                                            att.Access = (AccessMode)a.AccessLevel;
+                                        }
+                                    }
+                                    if (it.Key is GXDLMSAssociationLogicalName)
+                                    {
+                                        ((GXDLMSAssociationLogicalName)it.Key).ObjectList.Add(obj);
+                                    }
+                                    else
+                                    {
+                                        ((GXDLMSAssociationShortName)it.Key).ObjectList.Add(obj);
+                                    }
                                 }
-                            }
-                        }
-                        foreach (GXObject o in ((GXDevice)m).Objects)
-                        {
-                            GXDLMSObject obj = GXDLMSClient.CreateObject((ObjectType)o.ObjectType);
-                            obj.LogicalName = o.LogicalName;
-                            obj.Description = o.Name;
-                            obj.Version = o.Version;
-                            if (o.Attributes != null)
-                            {
-                                foreach (GXAttribute a in o.Attributes)
-                                {
-                                    obj.SetAccess(a.Index, (AccessMode)a.AccessLevel);
-                                    GXDLMSAttributeSettings att = obj.Attributes.Find(a.Index);
-                                    att.Static = a.ExpirationTime == 0xFFFFFFFF;
-                                    att.Type = (DataType)a.DataType;
-                                    att.UIType = (DataType)a.UIDataType;
-                                    att.Access = (AccessMode)a.AccessLevel;
-                                }
-                            }
-                            if (it.Key is GXDLMSAssociationLogicalName)
-                            {
-                                ((GXDLMSAssociationLogicalName)it.Key).ObjectList.Add(obj);
-                            }
-                            else
-                            {
-                                ((GXDLMSAssociationShortName)it.Key).ObjectList.Add(obj);
                             }
                         }
                     }
@@ -323,7 +354,7 @@ namespace Gurux.DLMS.AMI.UI
                     {
                         GXTask t = new GXTask();
                         t.TaskType = TaskType.Read;
-                        t.Object = new GXObject() { DeviceId = ((GXDevice)m).Id, LogicalName = it.Key.LogicalName, ObjectType = (int)it.Key.ObjectType };
+                        t.Object = new GXObject() { DeviceId = (UInt64) ((GXDLMSMeter)m).Tag, LogicalName = it.Key.LogicalName, ObjectType = (int)it.Key.ObjectType };
                         t.Index = it.Value;
                         list.Add(t);
                     }
@@ -332,7 +363,7 @@ namespace Gurux.DLMS.AMI.UI
             AddTasks(list);
         }
 
-        public void RemoveDevices(GXDLMSMeter[] devices)
+        public void RemoveDevices(GXDLMSMeterBase[] devices)
         {
             if (remove != null)
             {
@@ -341,9 +372,9 @@ namespace Gurux.DLMS.AMI.UI
             using (HttpClient cl = new HttpClient())
             {
                 List<UInt64> list = new List<ulong>();
-                foreach (GXDevice it in devices)
+                foreach (GXDLMSMeter it in devices)
                 {
-                    list.Add(it.Id);
+                    list.Add((UInt64) it.Tag);
                 }
                 using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/device/DeviceDelete"), new DeviceDelete() { Ids = list.ToArray() }).Result)
                 {
@@ -353,16 +384,16 @@ namespace Gurux.DLMS.AMI.UI
             }
         }
 
-        public void RemoveObjects(GXDLMSMeter[] devices, GXDLMSObject[] objects)
+        public void RemoveObjects(GXDLMSMeterBase[] devices, GXDLMSObject[] objects)
         {
             throw new NotImplementedException();
         }
 
-        public void WriteObjects(GXDLMSMeter[] devices, List<KeyValuePair<GXDLMSObject, byte>> objects)
+        public void WriteObjects(GXDLMSMeterBase[] devices, List<KeyValuePair<GXDLMSObject, byte>> objects)
         {
             List<GXTask> list = new List<GXTask>();
             GXDLMSTranslator tr = new GXDLMSTranslator(TranslatorOutputType.SimpleXml);
-            foreach (GXDLMSMeter m in devices)
+            foreach (GXDLMSMeterBase m in devices)
             {
                 GXDLMSSettings s = new GXDLMSSettings();
                 s.Standard = m.Standard;
@@ -385,7 +416,7 @@ namespace Gurux.DLMS.AMI.UI
                         {
                             t.Data = GXDLMSTranslator.ValueToXml(it.Key.GetValues()[it.Value - 1]);
                         }
-                        t.Object = new GXObject() { DeviceId = ((GXDevice)m).Id, LogicalName = it.Key.LogicalName, ObjectType = (int)it.Key.ObjectType };
+                        t.Object = new GXObject() { DeviceId = (UInt64) ((GXDLMSMeter)m).Tag, LogicalName = it.Key.LogicalName, ObjectType = (int)it.Key.ObjectType };
                         t.Index = it.Value;
                         list.Add(t);
                     }
@@ -394,12 +425,12 @@ namespace Gurux.DLMS.AMI.UI
             AddTasks(list);
         }
 
-        public void AddDeviceTemplates(GXDLMSMeter[] devices)
+        public void AddDeviceTemplates(GXDLMSMeterBase[] devices)
         {
             using (HttpClient cl = new HttpClient())
             {
                 GXDeviceTemplate d = new GXDeviceTemplate();
-                foreach (GXDLMSMeter it in devices)
+                foreach (GXDLMSMeterBase it in devices)
                 {
                     GXDevice.Copy(d, it);
                     if (it is GXDeviceTemplate)
@@ -409,7 +440,7 @@ namespace Gurux.DLMS.AMI.UI
                     else
                     {
                         d.Objects = new List<GXObjectTemplate>();
-                        foreach (GXDLMSObject o in it.Objects)
+                        foreach (GXDLMSObject o in ((GXDLMSMeter)it).Objects)
                         {
                             GXObjectTemplate t = new GXObjectTemplate();
                             t.Attributes = new List<GXAttributeTemplate>();
@@ -439,9 +470,9 @@ namespace Gurux.DLMS.AMI.UI
                 }
             }
             templates = GetDeviceTemplates();
-            for(int pos = 0; pos != devices.Length; ++pos)
+            for (int pos = 0; pos != devices.Length; ++pos)
             {
-                GXDLMSMeter it = devices[pos];
+                GXDLMSMeterBase it = devices[pos];
                 if (it is GXDeviceTemplate)
                 {
                     GXDeviceTemplate m = (GXDeviceTemplate)it;
@@ -566,13 +597,13 @@ namespace Gurux.DLMS.AMI.UI
             }
         }
 
-        public void GetValues(GXDLMSMeter[] devices, List<KeyValuePair<GXDLMSObject, byte>> objects, bool readAll)
+        public void GetValues(GXDLMSMeterBase[] devices, List<KeyValuePair<GXDLMSObject, byte>> objects, bool readAll)
         {
             ListObjects req = new ListObjects();
             req.Targets = TargetType.Object | TargetType.Attribute;
-            foreach (GXDevice d in devices)
+            foreach (GXDLMSMeter d in devices)
             {
-                req.DeviceId = d.Id;
+                req.DeviceId = (UInt64) d.Tag;
                 List<GXObject> list = new List<GXObject>();
                 //Ignore this if we want to read all the objects.
                 if (!readAll)
@@ -920,7 +951,7 @@ namespace Gurux.DLMS.AMI.UI
             }
         }
 
-        public GXError[] GetErrors2(GXDevice[] devices)
+        public GXError[] GetErrors2(GXDLMSMeterBase[] devices)
         {
             List<UInt64> list = new List<UInt64>();
             if (devices != null)
@@ -990,7 +1021,7 @@ namespace Gurux.DLMS.AMI.UI
         /// Add a new device.
         /// </summary>
         /// <param name="devices">Device to add.</param>
-        public GXDLMSMeter AddDevice(IWin32Window owner)
+        public GXDLMSMeterBase AddDevice(IWin32Window owner)
         {
             if (templates == null)
             {
@@ -1000,7 +1031,7 @@ namespace Gurux.DLMS.AMI.UI
             DBDevicePropertiesForm dlg = new DBDevicePropertiesForm(templates, meter);
             if (dlg.ShowDialog(owner) == DialogResult.OK)
             {
-                return AddDevices(new GXDLMSMeter[] { meter })[0];
+                return AddDevices(new GXDLMSMeterBase[] { meter })[0];
             }
             return null;
         }
@@ -1009,7 +1040,7 @@ namespace Gurux.DLMS.AMI.UI
         /// Edit device.
         /// </summary>
         /// <param name="devices">Device to edit.</param>
-        public bool EditDevice(IWin32Window owner, GXDLMSMeter device)
+        public bool EditDevice(IWin32Window owner, GXDLMSMeterBase device)
         {
             if (templates == null)
             {
@@ -1018,7 +1049,7 @@ namespace Gurux.DLMS.AMI.UI
             DBDevicePropertiesForm dlg = new DBDevicePropertiesForm(templates, device);
             if (dlg.ShowDialog(owner) == DialogResult.OK)
             {
-                EditDevices(new GXDLMSMeter[] { device });
+                EditDevices(new GXDLMSMeterBase[] { device });
                 return true;
             }
             return false;
@@ -1090,7 +1121,7 @@ namespace Gurux.DLMS.AMI.UI
             }
         }
 
-        public void GetRowsByRange(GXDLMSMeter device, GXDLMSProfileGeneric pg, DateTime start, DateTime end)
+        public void GetRowsByRange(GXDLMSMeterBase device, GXDLMSProfileGeneric pg, DateTime start, DateTime end)
         {
             ListObjects req = new ListObjects();
             req.Targets = TargetType.Object | TargetType.Attribute;
@@ -1115,7 +1146,7 @@ namespace Gurux.DLMS.AMI.UI
             }
         }
 
-        public void GetRowsByEntry(GXDLMSMeter device, GXDLMSProfileGeneric pg, UInt64 index, UInt64 count)
+        public void GetRowsByEntry(GXDLMSMeterBase device, GXDLMSProfileGeneric pg, UInt64 index, UInt64 count)
         {
             ListObjects req = new ListObjects();
             req.Targets = TargetType.Object | TargetType.Attribute;

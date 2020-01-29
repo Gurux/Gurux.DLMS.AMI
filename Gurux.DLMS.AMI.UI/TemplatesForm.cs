@@ -276,7 +276,7 @@ namespace Gurux.DLMS.AMI.UI
                         if (dlg2.ShowDialog(panel1.Parent) == DialogResult.OK)
                         {
                             {
-                                ami.AddDeviceTemplates(new GXDLMSMeter[] { m });
+                                ami.AddDeviceTemplates(new GXDLMSMeterBase[] { m });
                                 ListViewItem li = TemplatesView.Items.Add(m.Name);
                                 li.Tag = m;
                                 li.Selected = true;

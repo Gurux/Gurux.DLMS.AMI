@@ -55,8 +55,8 @@ namespace Gurux.DLMS.AMI.UI
     {
         Form MediaPropertiesForm = null;
         IGXMedia SelectedMedia = null;
-        public GXDLMSMeter Device = null;
-        public DBDevicePropertiesForm(GXDeviceTemplate[] templates, GXDLMSMeter dev)
+        public GXDLMSMeterBase Device = null;
+        public DBDevicePropertiesForm(GXDeviceTemplate[] templates, GXDLMSMeterBase dev)
         {
             InitializeComponent();
             ServerAddressSizeCb.Items.Add("");
@@ -279,7 +279,7 @@ namespace Gurux.DLMS.AMI.UI
             this.MediasCB.SelectedItem = SelectedMedia;
         }
 
-        private void UpdateDeviceSettings(GXDLMSMeter device)
+        private void UpdateDeviceSettings(GXDLMSMeterBase device)
         {
             Device = device;
             foreach (GXDeviceTemplate it in this.TemplatesCB.Items)
@@ -741,7 +741,7 @@ namespace Gurux.DLMS.AMI.UI
             }
         }
 
-        private void UpdateSettings(GXDLMSMeter device, bool validate)
+        private void UpdateSettings(GXDLMSMeterBase device, bool validate)
         {
             string name = NameTB.Text.Trim();
             if (validate && name.Length == 0)
