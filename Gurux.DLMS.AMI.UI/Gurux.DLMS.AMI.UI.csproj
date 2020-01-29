@@ -21,8 +21,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Gurux.Common" Version="8.1.2001.2404" />
-    <PackageReference Include="Gurux.DLMS" Version="9.0.2001.2301" />
-    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2001.2701" />
+    <PackageReference Include="Gurux.DLMS" Version="9.0.2001.2902" />
+    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2001.2901" />
     <PackageReference Include="Gurux.Net" Version="8.1.2001.2702" />
     <PackageReference Include="Gurux.Serial" Version="8.1.2001.2703" />
     <PackageReference Include="Gurux.Terminal" Version="8.1.2001.2702" />
