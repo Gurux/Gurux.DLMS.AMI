@@ -42,7 +42,7 @@ namespace Gurux.DLMS.AMI.Messages.DB
     /// Device settings.
     /// </summary>
     [Description("Device settings.")]
-    public class GXDeviceTemplate : GXDLMSMeter, IUnique<UInt64>
+    public class GXDeviceTemplate : GXDLMSMeterBase, IUnique<UInt64>
     {
         /// <summary>
         /// Constructor.
