@@ -209,14 +209,14 @@ namespace Gurux.DLMS.AMI.UI
         {
             GXDevice d = new GXDevice();
             GXDevice.Copy(d, meter);
-            d.Id = (UInt64) meter.Tag ;
+            d.Id = (UInt64)meter.Tag;
             return d;
         }
 
-            private static GXDevice[] MetersToDevices(GXDLMSMeter[] meters)
+        private static GXDevice[] MetersToDevices(GXDLMSMeter[] meters)
         {
             List<GXDevice> devices = new List<GXDevice>();
-            foreach(GXDLMSMeter it in meters)
+            foreach (GXDLMSMeter it in meters)
             {
                 devices.Add(MeterToDevice(it));
             }
@@ -316,7 +316,7 @@ namespace Gurux.DLMS.AMI.UI
                         using (HttpClient cl = new HttpClient())
                         {
                             using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/device/ListDevices"),
-                                new ListDevices() { Ids = new UInt64[] { (UInt64) ((GXDLMSMeter)m).Tag }, Targets = TargetType.Object }).Result)
+                                new ListDevices() { Ids = new UInt64[] { (UInt64)((GXDLMSMeter)m).Tag }, Targets = TargetType.Object }).Result)
                             {
                                 Helpers.CheckStatus(response);
                                 ListDevicesResponse devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
@@ -354,7 +354,7 @@ namespace Gurux.DLMS.AMI.UI
                     {
                         GXTask t = new GXTask();
                         t.TaskType = TaskType.Read;
-                        t.Object = new GXObject() { DeviceId = (UInt64) ((GXDLMSMeter)m).Tag, LogicalName = it.Key.LogicalName, ObjectType = (int)it.Key.ObjectType };
+                        t.Object = new GXObject() { DeviceId = (UInt64)((GXDLMSMeter)m).Tag, LogicalName = it.Key.LogicalName, ObjectType = (int)it.Key.ObjectType };
                         t.Index = it.Value;
                         list.Add(t);
                     }
@@ -374,7 +374,7 @@ namespace Gurux.DLMS.AMI.UI
                 List<UInt64> list = new List<ulong>();
                 foreach (GXDLMSMeter it in devices)
                 {
-                    list.Add((UInt64) it.Tag);
+                    list.Add((UInt64)it.Tag);
                 }
                 using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/device/DeviceDelete"), new DeviceDelete() { Ids = list.ToArray() }).Result)
                 {
@@ -416,7 +416,7 @@ namespace Gurux.DLMS.AMI.UI
                         {
                             t.Data = GXDLMSTranslator.ValueToXml(it.Key.GetValues()[it.Value - 1]);
                         }
-                        t.Object = new GXObject() { DeviceId = (UInt64) ((GXDLMSMeter)m).Tag, LogicalName = it.Key.LogicalName, ObjectType = (int)it.Key.ObjectType };
+                        t.Object = new GXObject() { DeviceId = (UInt64)((GXDLMSMeter)m).Tag, LogicalName = it.Key.LogicalName, ObjectType = (int)it.Key.ObjectType };
                         t.Index = it.Value;
                         list.Add(t);
                     }
@@ -603,7 +603,7 @@ namespace Gurux.DLMS.AMI.UI
             req.Targets = TargetType.Object | TargetType.Attribute;
             foreach (GXDLMSMeter d in devices)
             {
-                req.DeviceId = (UInt64) d.Tag;
+                req.DeviceId = (UInt64)d.Tag;
                 List<GXObject> list = new List<GXObject>();
                 //Ignore this if we want to read all the objects.
                 if (!readAll)
