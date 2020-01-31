@@ -41,14 +41,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Gurux.DLMS.AMI.Internal;
 
-namespace Gurux.DLMS.AMI
+namespace Gurux.DLMS.AMI.Scheduler
 {
-    internal class TimedHostedService : IHostedService, IDisposable
+    internal class GXSchedulerService : IHostedService, IDisposable
     {
         private readonly ILogger _logger;
         private Timer _timer;
 
-        public TimedHostedService(ILogger<TimedHostedService> logger)
+        public GXSchedulerService(ILogger<GXSchedulerService> logger)
         {
             _logger = logger;
         }
@@ -63,7 +63,7 @@ namespace Gurux.DLMS.AMI
 
         private async void DoWork(object state)
         {
-            _logger.LogInformation("Timed Background Service is working.");
+            _logger.LogWarning("Timed Background Service is working.");
             try
             {
                 DateTime now = DateTime.Now;
@@ -83,7 +83,7 @@ namespace Gurux.DLMS.AMI
                     }
                     if (Equals(dt, now))
                     {
-                        Console.WriteLine("+");
+                        _logger.LogTrace("+");
                         foreach (GXObject obj in it.Objects)
                         {
                             foreach (GXAttribute a in obj.Attributes)
@@ -129,7 +129,6 @@ namespace Gurux.DLMS.AMI
                 _logger.LogInformation(ex.Message);
             }
         }
-
         bool Equals(GXDateTime t, DateTime t2)
         {
             if ((t.Skip & Gurux.DLMS.Enums.DateTimeSkips.Minute) == 0 &&
@@ -162,7 +161,7 @@ namespace Gurux.DLMS.AMI
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Timed Background Service is stopping.");
+            _logger.LogWarning("Timed Background Service is stopping.");
             _timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }

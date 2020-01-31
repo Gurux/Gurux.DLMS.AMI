@@ -30,10 +30,10 @@
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.DLMS.AMI.Internal;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 
@@ -73,7 +73,13 @@ namespace Gurux.DLMS.AMI
             return Host.CreateDefaultBuilder(args)
                .ConfigureWebHostDefaults(webBuilder =>
                {
-                   webBuilder.UseStartup<Startup>().UseUrls(address);
+                   webBuilder.UseStartup<Startup>().UseUrls(address)
+                   //Show traces on the console.
+                   .ConfigureLogging(logging =>
+                   {
+                       logging.ClearProviders();
+                       logging.AddConsole();
+                   });
                });
         }
 #endif //NETCOREAPP2_0 || NETCOREAPP2_1

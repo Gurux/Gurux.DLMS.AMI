@@ -40,6 +40,7 @@ using Gurux.DLMS.AMI.Messages.Rest;
 using Microsoft.AspNetCore.Mvc;
 using Gurux.DLMS.AMI;
 using Gurux.DLMS.Enums;
+using Microsoft.Extensions.Hosting;
 
 namespace DBService.Controllers
 {
@@ -47,11 +48,13 @@ namespace DBService.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
+        private readonly CancellationToken _cancellationToken;
         private readonly GXHost host;
 
-        public TaskController(GXHost value)
+        public TaskController(GXHost value, IHostApplicationLifetime applicationLifetime)
         {
             host = value;
+            _cancellationToken = applicationLifetime.ApplicationStopping;
         }
 
         /// <summary>
@@ -251,7 +254,7 @@ namespace DBService.Controllers
                 AutoResetEvent h = new AutoResetEvent(false);
                 try
                 {
-                    if (host.WaitChange(request.Change, h, request.WaitTime))
+                    if (host.WaitChange(request.Change, h, _cancellationToken.WaitHandle, request.WaitTime))
                     {
                         changed = host.GetChange(request.Change, request.Time, out when);
                     }

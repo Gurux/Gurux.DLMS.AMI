@@ -30,25 +30,29 @@
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 
+using Gurux.Common;
 using Gurux.DLMS.Enums;
+using Gurux.DLMS.Secure;
 using System;
 
 namespace Gurux.DLMS.AMI.Notify
 {
     public class GXNotifyClient
     {
-        public GXNotifyClient()
+        public GXNotifyClient(bool useLogicalNameReferencing, int interfaceType, string systemTitle, string blockCipherKey)
         {
             Notify = new GXReplyData();
             Reply = new GXByteBuffer();
-            Client = new GXDLMSClient(true, -1, -1, Authentication.None, null, InterfaceType.WRAPPER);
+            Client = new GXDLMSSecureClient(useLogicalNameReferencing, -1, -1, Authentication.None, null, (InterfaceType)interfaceType);
+            Client.Ciphering.SystemTitle = GXCommon.HexToBytes(systemTitle);
+            Client.Ciphering.BlockCipherKey = GXCommon.HexToBytes(blockCipherKey);
             DataReceived = DateTime.MinValue;
         }
 
         /// <summary>
         /// Client used to parse received data.
         /// </summary>
-        public GXDLMSClient Client
+        public GXDLMSSecureClient Client
         {
             get;
             set;

@@ -37,6 +37,43 @@ namespace Gurux.DLMS.AMI.Internal
     public class NotifyOptions
     {
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        public NotifyOptions()
+        {
+            NetworkType = 1;
+        }
+
+        /// <summary>
+        /// Is Notifier disabled.
+        /// </summary>
+        public bool Disabled { get; set; }
+        /// <summary>
+        /// Network type. UDP = 0 and TCP = 1.
+        /// </summary>
+        public int NetworkType { get; set; }
+
+        /// <summary>
+        /// Interface type.
+        /// </summary>
+        public int Interface { get; set; }
+
+        /// <summary>
+        /// Use logical name referencing.
+        /// </summary>
+        public bool UseLogicalNameReferencing { get; set; }
+
+        /// <summary>
+        /// System title of the server.
+        /// </summary>
+        public string SystemTitle { get; set; }
+
+        /// <summary>
+        /// Block cipher key key.
+        /// </summary>
+        public string BlockCipherKey { get; set; }
+
+        /// <summary>
         /// Notify port. Server waits notify, event or push messages to this port.
         /// </summary>
         public int Port { get; set; }

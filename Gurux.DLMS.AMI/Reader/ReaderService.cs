@@ -52,7 +52,7 @@ namespace Gurux.DLMS.AMI.Reader
 {
     internal class ReaderService : IHostedService, IDisposable
     {
-        AutoResetEvent closing = new AutoResetEvent(false);
+        private readonly CancellationToken _cancellationToken;
         private DateTime lastUpdated = DateTime.MinValue;
         private readonly ILogger _logger;
         private readonly System.Net.Http.HttpClient client = Helpers.client;
@@ -66,8 +66,9 @@ namespace Gurux.DLMS.AMI.Reader
         /// Constructor.
         /// </summary>
         /// <param name="logger"></param>
-        public ReaderService(ILogger<TimedHostedService> logger, IOptions<ReaderOptions> optionsAccessor)
+        public ReaderService(ILogger<ReaderService> logger, IOptions<ReaderOptions> optionsAccessor, IHostApplicationLifetime applicationLifetime)
         {
+            _cancellationToken = applicationLifetime.ApplicationStopping;
             _logger = logger;
             _guid = Guid.Parse(optionsAccessor.Value.Id);
             _threads = optionsAccessor.Value.Threads;
@@ -106,7 +107,7 @@ namespace Gurux.DLMS.AMI.Reader
                 }
             }
             _logger.LogInformation("Reader Service is started.");
-            while (!closing.WaitOne(1))
+            while (!_cancellationToken.IsCancellationRequested)
             {
                 try
                 {
@@ -266,6 +267,7 @@ namespace Gurux.DLMS.AMI.Reader
                                     DeviceId = dev.Id,
                                     Error = "Failed to " + task.TaskType + " " + task.Object.LogicalName + ":" + task.Index + ". " + ex.Message
                                 };
+                                _logger.LogError(error.Error.Error);
                                 using (response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/error/AddError", error))
                                 {
                                     Helpers.CheckStatus(response);
@@ -290,6 +292,7 @@ namespace Gurux.DLMS.AMI.Reader
                                         DeviceId = dev.Id,
                                         Error = "Failed to close the connection. " + ex.Message
                                     };
+                                    _logger.LogError(error.Error.Error);
                                     using (response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/error/AddError", error))
                                     {
                                         Helpers.CheckStatus(response);
@@ -318,17 +321,27 @@ namespace Gurux.DLMS.AMI.Reader
                                 }
                             }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
-                            Thread.Sleep(10000);
+                            if (!_cancellationToken.IsCancellationRequested)
+                            {
+                                _logger.LogError("Mikko 2. " + ex.ToString());
+                                break;
+                            }
+                            _cancellationToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(10));
                         }
                     }
                 }
                 catch (Exception ex)
                 {
+                    //If app is closing.
+                    if (_cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
                     if (ret == null)
                     {
-                        _logger.LogInformation("Failed to connect to the DB server.");
+                        _logger.LogError("Failed to connect to the DB server.");
                     }
                     else
                     {
@@ -352,13 +365,7 @@ namespace Gurux.DLMS.AMI.Reader
                             }
                         }
                     }
-                    _logger.LogInformation(ex.Message);
-                    Console.WriteLine(ex.Message);
-                    if (!(ex is GXDLMSException))
-                    {
-                        Console.WriteLine("+++++++++++++++++++++++++");
-                        Console.WriteLine(ex);
-                    }
+                    _logger.LogError(ex.Message);
                 }
             }
         }
@@ -376,8 +383,7 @@ namespace Gurux.DLMS.AMI.Reader
 
         public System.Threading.Tasks.Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Reader Service is stopping.");
-            closing.Set();
+            _logger.LogWarning("Reader Service is stopping.");
             return System.Threading.Tasks.Task.CompletedTask;
         }
 

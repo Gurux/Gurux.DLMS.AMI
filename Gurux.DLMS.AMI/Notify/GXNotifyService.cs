@@ -29,28 +29,61 @@
 // This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
-
-using Gurux.Common;
-using Gurux.DLMS.AMI.Internal;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Gurux.DLMS.AMI.Internal;
+using Gurux.Net;
+using Microsoft.Extensions.Options;
+using Gurux.Common;
 
 namespace Gurux.DLMS.AMI.Notify
 {
-    public class GXNotifyListener
+    internal class GXNotifyService : IHostedService, IDisposable
     {
+        bool _useLogicalNameReferencing;
+        string _systemTitle;
+        string _blockCipherKey;
+        int _interfaceType;
+        private readonly ILogger _logger;
+        //Notify wait push, events or notifies from the meters.
+        GXNet notify;
+
         static public int ExpirationTime = 0;
         /// <summary>
         /// Each client has own message queue.
         /// </summary>
         static Dictionary<string, GXNotifyClient> notifyMessages = new Dictionary<string, GXNotifyClient>();
 
+        public GXNotifyService(ILogger<GXNotifyService> logger, IOptions<NotifyOptions> optionsAccessor)
+        {
+            _useLogicalNameReferencing = optionsAccessor.Value.UseLogicalNameReferencing;
+            _systemTitle = optionsAccessor.Value.SystemTitle;
+            _blockCipherKey = optionsAccessor.Value.BlockCipherKey;
+            _interfaceType = optionsAccessor.Value.Interface;
+            _logger = logger;
+            notify = new GXNet((NetworkType)optionsAccessor.Value.NetworkType, optionsAccessor.Value.Port);
+            ExpirationTime = optionsAccessor.Value.ExpirationTime;
+            notify.OnReceived += OnNotifyReceived;
+            _logger.LogInformation("Listening notifications in port: " + notify.Port);
+            notify.Open();
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Notify service is starting.");
+            return Task.CompletedTask;
+        }
+
         /// <summary>
         /// Handle received notify message.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal static void OnNotifyReceived(object sender, ReceiveEventArgs e)
+        internal void OnNotifyReceived(object sender, ReceiveEventArgs e)
         {
             GXNotifyClient reply;
             lock (notifyMessages)
@@ -61,7 +94,7 @@ namespace Gurux.DLMS.AMI.Notify
                 }
                 else
                 {
-                    reply = new GXNotifyClient();
+                    reply = new GXNotifyClient(_useLogicalNameReferencing, _interfaceType, _systemTitle, _blockCipherKey);
                     notifyMessages.Add(e.SenderInfo, reply);
                 }
             }
@@ -83,6 +116,7 @@ namespace Gurux.DLMS.AMI.Notify
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex.Message);
                     //TODO: Save error to the database.
                     Console.WriteLine(ex.Message);
                 }
@@ -94,5 +128,24 @@ namespace Gurux.DLMS.AMI.Notify
             }
         }
 
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogWarning("Notify service is stopping.");
+            if (notify != null)
+            {
+                notify.OnReceived -= OnNotifyReceived;
+                notify.Close();
+            }
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            if (notify != null)
+            {
+                notify.Dispose();
+                notify = null;
+            }
+        }
     }
 }

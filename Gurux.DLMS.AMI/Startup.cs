@@ -48,18 +48,13 @@ using Gurux.DLMS.AMI.Notify;
 using Microsoft.Extensions.Hosting;
 using Gurux.DLMS.AMI.Reader;
 using System.Collections.Generic;
+using Gurux.DLMS.AMI.Scheduler;
 
 namespace Gurux.DLMS.AMI
 {
     public class Startup
     {
         static readonly System.Net.Http.HttpClient httpClient = Helpers.client;
-
-        //Listener wait incoming connections from the meters.
-        GXNet listener;
-
-        //Notify wait push, events or notifies from the meters.
-        GXNet notify;
 
         public static string ServerAddress
         {
@@ -70,43 +65,6 @@ namespace Gurux.DLMS.AMI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            int port = configuration.GetSection("Listener").Get<ListenerOptions>().Port;
-            if (port != 0)
-            {
-                listener = new GXNet(NetworkType.Tcp, port);
-                listener.OnClientConnected += GXListener.OnClientConnected;
-                Console.WriteLine("Listening port:" + listener.Port);
-                listener.Open();
-            }
-
-            NotifyOptions n = configuration.GetSection("Notify").Get<NotifyOptions>();
-            port = n.Port;
-            if (port != 0)
-            {
-                notify = new GXNet(NetworkType.Tcp, port);
-                GXNotifyListener.ExpirationTime = n.ExpirationTime;
-                notify.OnReceived += GXNotifyListener.OnNotifyReceived;
-                Console.WriteLine("Notifing port:" + notify.Port);
-                /*
-                if (!string.IsNullOrEmpty(n.Parser))
-                {
-                    string[] tmp = n.Parser.Split(";");
-                    //GXNotifyListener.Parser = new Gurux.DLMS.AMI.NotifyParser.GXNotifyParser();
-                    string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), tmp[0]);
-                    Assembly asm = Assembly.LoadFile(path);
-                    foreach (Type type in asm.GetTypes())
-                    {
-                        //if (!type.IsAbstract && type.IsClass && typeof(IGXNotifyParser).IsAssignableFrom(type))
-                        {
-                            GXNotifyListener.Parser = Activator.CreateInstance(type) as IGXNotifyParser;
-                            break;
-                        }
-                    }
-                    //GXNotifyListener.Parser = asm.CreateInstance(tmp[1]) as IGXNotifyParser;
-                }
-                */
-                notify.Open();
-            }
             ServerAddress = configuration.GetSection("Client").Get<ClientOptions>().Address;
             Console.WriteLine("RestAddress: " + ServerAddress);
         }
@@ -144,7 +102,7 @@ namespace Gurux.DLMS.AMI
 
             if (!Configuration.GetSection("Scheduler").Get<SchedulerOptions>().Disabled)
             {
-                services.AddHostedService<TimedHostedService>();
+                services.AddHostedService<GXSchedulerService>();
             }
 
             string settings = Configuration.GetSection("Database").Get<DatabaseOptions>().Settings;
@@ -227,12 +185,26 @@ namespace Gurux.DLMS.AMI
                     return h;
                 });
             }
-            services.Configure<ReaderOptions>(Configuration.GetSection("Reader"));
+            services.Configure<ListenerOptions>(Configuration.GetSection("Listener"));
+            if (!Configuration.GetSection("Listener").Get<ListenerOptions>().Disabled)
+            {
+                services.AddHostedService<GXListenerService>();
+            }
+
+            services.Configure<NotifyOptions>(Configuration.GetSection("Notify"));
+            NotifyOptions n = Configuration.GetSection("Notify").Get<NotifyOptions>();
+            if (!n.Disabled && n.Port != 0)
+            {
+                services.AddHostedService<GXNotifyService>();
+            }
+            services.Configure<SchedulerOptions>(Configuration.GetSection("Scheduler"));
             if (!Configuration.GetSection("Scheduler").Get<SchedulerOptions>().Disabled)
             {
-                services.AddHostedService<TimedHostedService>();
+                services.AddHostedService<GXSchedulerService>();
             }
-            if (Configuration.GetSection("Reader").Get<ReaderOptions>().Threads != 0)
+            services.Configure<ReaderOptions>(Configuration.GetSection("Reader"));
+            ReaderOptions r = Configuration.GetSection("Reader").Get<ReaderOptions>();
+            if (r.Threads != 0 && !r.Disabled)
             {
                 services.AddHostedService<ReaderService>();
             }

@@ -40,9 +40,26 @@ namespace Gurux.DLMS.AMI.Internal
     public class ListenerOptions
     {
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ListenerOptions()
+        {
+            NetworkType = 1;
+        }
+
+        /// <summary>
+        /// Is Listener disabled.
+        /// </summary>
+        public bool Disabled { get; set; }
+        /// <summary>
         /// Listener port. Server waits meters to connect to this port..
         /// </summary>
         public int Port { get; set; }
+
+        /// <summary>
+        /// Network type. UDP = 1 and TCP = 2.
+        /// </summary>
+        public int NetworkType { get; set; }
 
         /// <summary>
         /// Interface type.
