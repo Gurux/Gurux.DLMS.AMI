@@ -70,6 +70,24 @@ namespace Gurux.DLMS.AMI.Notify
             notify.OnReceived += OnNotifyReceived;
             _logger.LogInformation("Listening notifications in port: " + notify.Port);
             notify.Open();
+            /*
+          if (!string.IsNullOrEmpty(n.Parser))
+          {
+              string[] tmp = n.Parser.Split(";");
+              //GXNotifyListener.Parser = new Gurux.DLMS.AMI.NotifyParser.GXNotifyParser();
+              string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), tmp[0]);
+              Assembly asm = Assembly.LoadFile(path);
+              foreach (Type type in asm.GetTypes())
+              {
+                  //if (!type.IsAbstract && type.IsClass && typeof(IGXNotifyParser).IsAssignableFrom(type))
+                  {
+                      GXNotifyListener.Parser = Activator.CreateInstance(type) as IGXNotifyParser;
+                      break;
+                  }
+              }
+              //GXNotifyListener.Parser = asm.CreateInstance(tmp[1]) as IGXNotifyParser;
+          }
+          */
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

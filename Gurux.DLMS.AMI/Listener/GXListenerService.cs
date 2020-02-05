@@ -53,27 +53,17 @@ namespace Gurux.DLMS.AMI.Notify
             _logger = logger;
             int port = optionsAccessor.Value.Port;
             listener = new GXNet((NetworkType)optionsAccessor.Value.NetworkType, port);
-            listener.OnClientConnected += GXListener.OnClientConnected;
+            if (listener.Protocol == NetworkType.Tcp)
+            {
+                listener.OnClientConnected += GXListener.OnClientConnected;
+            }
+            else
+            {
+                throw new Exception("UDP is not supported at the moment.");
+                //listener.OnReceived += GXListener.OnOnReceived;
+            }
             _logger.LogInformation("Listening incoming connections in port:" + listener.Port);
             listener.Open();
-            /*
-            if (!string.IsNullOrEmpty(n.Parser))
-            {
-                string[] tmp = n.Parser.Split(";");
-                //GXNotifyListener.Parser = new Gurux.DLMS.AMI.NotifyParser.GXNotifyParser();
-                string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), tmp[0]);
-                Assembly asm = Assembly.LoadFile(path);
-                foreach (Type type in asm.GetTypes())
-                {
-                    //if (!type.IsAbstract && type.IsClass && typeof(IGXNotifyParser).IsAssignableFrom(type))
-                    {
-                        GXNotifyListener.Parser = Activator.CreateInstance(type) as IGXNotifyParser;
-                        break;
-                    }
-                }
-                //GXNotifyListener.Parser = asm.CreateInstance(tmp[1]) as IGXNotifyParser;
-            }
-            */
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -87,7 +77,14 @@ namespace Gurux.DLMS.AMI.Notify
             _logger.LogWarning("Listener service is stopping.");
             if (listener != null)
             {
-                listener.OnClientConnected -= GXListener.OnClientConnected;
+                if (listener.Protocol == NetworkType.Tcp)
+                {
+                    listener.OnClientConnected -= GXListener.OnClientConnected;
+                }
+                else
+                {
+                    //listener.OnReceived -= GXListener.OnOnReceived;
+                }
                 listener.Close();
             }
             return Task.CompletedTask;

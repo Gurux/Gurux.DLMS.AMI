@@ -74,6 +74,24 @@ namespace Gurux.DLMS.AMI.Notify
                 Console.WriteLine(ex.Message);
             }
         }
+        internal static void OnOnReceived(object sender, Common.ReceiveEventArgs e)
+        {
+            Console.WriteLine("Client {0} is connected.", e.SenderInfo);
+            GXNet server = (GXNet)sender;
+            try
+            {
+                string[] tmp = e.SenderInfo.Split(":");
+                GXNet media = new GXNet(NetworkType.Udp, tmp[0], int.Parse(tmp[1]));
+                media.Open();
+                Thread thread = new Thread(new ParameterizedThreadStart(ReadMeter));
+                thread.Start(media);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// Read data from the meter.
@@ -81,17 +99,16 @@ namespace Gurux.DLMS.AMI.Notify
         private static void ReadMeter(object parameter)
         {
             GXDLMSReader reader = null;
-            try
+            System.Net.Http.HttpClient httpClient = Helpers.client;
+            using (GXNet media = (GXNet)parameter)
             {
-                var config = new ConfigurationBuilder()
-                   .SetBasePath(Directory.GetCurrentDirectory())
-                   .AddJsonFile("appsettings.json", optional: true)
-                   .Build();
-                ListenerOptions listener = config.GetSection("Listener").Get<ListenerOptions>();
-
-                System.Net.Http.HttpClient httpClient = Helpers.client;
-                using (GXNet media = (GXNet)parameter)
+                try
                 {
+                    var config = new ConfigurationBuilder()
+                       .SetBasePath(Directory.GetCurrentDirectory())
+                       .AddJsonFile("appsettings.json", optional: true)
+                       .Build();
+                    ListenerOptions listener = config.GetSection("Listener").Get<ListenerOptions>();
                     GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
                     GXDLMSSecureClient client = new GXDLMSSecureClient(listener.UseLogicalNameReferencing, listener.ClientAddress, listener.ServerAddress, (Authentication)listener.Authentication, listener.Password, (InterfaceType)listener.Interface);
                     reader = new GXDLMSReader(client, media, TraceLevel.Verbose, null);
@@ -124,10 +141,6 @@ namespace Gurux.DLMS.AMI.Notify
                                 using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/SystemError/AddSystemError", info).Result)
                                 {
                                     Helpers.CheckStatus(response);
-                                }
-                                if (reader != null)
-                                {
-                                    reader.Close();
                                 }
                                 return;
                             }
@@ -263,16 +276,31 @@ namespace Gurux.DLMS.AMI.Notify
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (reader != null)
+                catch (Exception ex)
                 {
-                    reader.Close();
+                    try
+                    {
+                        AddSystemError info = new AddSystemError();
+                        info.Error = new GXSystemError()
+                        {
+                            Error = ex.Message
+                        };
+                        using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/SystemError/AddSystemError", info).Result)
+                        {
+                            Helpers.CheckStatus(response);
+                        }
+                    }
+                    catch (Exception ex2)
+                    {
+
+                    }
+                }
+                finally
+                {
+                    if (reader != null)
+                    {
+                        reader.Close();
+                    }
                 }
             }
         }
