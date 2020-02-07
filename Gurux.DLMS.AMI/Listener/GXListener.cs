@@ -206,6 +206,7 @@ namespace Gurux.DLMS.AMI.Notify
                                 if (client.ClientAddress != dev.ClientAddress || dev.Security != Security.None)
                                 {
                                     reader.Release();
+                                    reader.Disconnect();
                                     client = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress, (Authentication)dev.Authentication, dev.Password, dev.InterfaceType);
                                     client.UtcTimeZone = dev.UtcTimeZone;
                                     client.Standard = (Standard)dev.Standard;
