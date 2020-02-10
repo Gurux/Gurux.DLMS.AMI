@@ -183,7 +183,7 @@ namespace Gurux.DLMS.AMI.Reader
                         {
                             cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, 16, dev.PhysicalAddress,
                                 Authentication.None, null, (InterfaceType)dev.InterfaceType);
-                            reader = new GXDLMSReader(cl, media, TraceLevel.Verbose, _logger);
+                            reader = new GXDLMSReader(cl, media, _logger);
                             media.Open();
                             reader.InitializeConnection();
                             //Read Innovation counter.
@@ -223,7 +223,7 @@ namespace Gurux.DLMS.AMI.Reader
                         }
                         cl.Ciphering.InvocationCounter = dev.InvocationCounter;
                         cl.Ciphering.Security = (Security)dev.Security;
-                        reader = new GXDLMSReader(cl, media, TraceLevel.Verbose, _logger);
+                        reader = new GXDLMSReader(cl, media, _logger);
                         media.Open();
                         reader.InitializeConnection();
                         pos = 0;
@@ -325,7 +325,6 @@ namespace Gurux.DLMS.AMI.Reader
                         {
                             if (!_cancellationToken.IsCancellationRequested)
                             {
-                                _logger.LogError("Mikko 2. " + ex.ToString());
                                 break;
                             }
                             _cancellationToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(10));

@@ -41,6 +41,7 @@ using Gurux.DLMS.Objects;
 using Gurux.DLMS.Secure;
 using Gurux.Net;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -54,6 +55,8 @@ namespace Gurux.DLMS.AMI.Notify
     /// </summary>
     public class GXListener
     {
+        internal static ILogger _logger;
+
         /// <summary>
         /// Client has made a connection to the server.
         /// </summary>
@@ -65,7 +68,7 @@ namespace Gurux.DLMS.AMI.Notify
             GXNet server = (GXNet)sender;
             try
             {
-                GXNet media = server.Attach(e.Info);
+                GXNet media = server.Attach(e);
                 Thread thread = new Thread(new ParameterizedThreadStart(ReadMeter));
                 thread.Start(media);
             }
@@ -80,9 +83,7 @@ namespace Gurux.DLMS.AMI.Notify
             GXNet server = (GXNet)sender;
             try
             {
-                string[] tmp = e.SenderInfo.Split(":");
-                GXNet media = new GXNet(NetworkType.Udp, tmp[0], int.Parse(tmp[1]));
-                media.Open();
+                GXNet media = server.Attach(e);
                 Thread thread = new Thread(new ParameterizedThreadStart(ReadMeter));
                 thread.Start(media);
             }
@@ -111,7 +112,7 @@ namespace Gurux.DLMS.AMI.Notify
                     ListenerOptions listener = config.GetSection("Listener").Get<ListenerOptions>();
                     GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
                     GXDLMSSecureClient client = new GXDLMSSecureClient(listener.UseLogicalNameReferencing, listener.ClientAddress, listener.ServerAddress, (Authentication)listener.Authentication, listener.Password, (InterfaceType)listener.Interface);
-                    reader = new GXDLMSReader(client, media, TraceLevel.Verbose, null);
+                    reader = new GXDLMSReader(client, media, _logger);
                     GXDLMSData ldn = new GXDLMSData("0.0.42.0.0.255");
                     ldn.SetUIDataType(2, DataType.String);
                     reader.InitializeConnection();
@@ -174,7 +175,7 @@ namespace Gurux.DLMS.AMI.Notify
                                 devs = response.Content.ReadAsAsync<ListDevicesResponse>().Result;
                             }
                         }
-                        if (devs.Devices.Length != 1)
+                        else if (devs.Devices.Length != 1)
                         {
                             throw new Exception("There are multiple devices with same name: " + ldn.Value);
                         }
@@ -222,7 +223,7 @@ namespace Gurux.DLMS.AMI.Notify
                                     client.ServerSystemTitle = GXCommon.HexToBytes(dev.DeviceSystemTitle);
                                     client.Ciphering.InvocationCounter = dev.InvocationCounter;
                                     client.Ciphering.Security = (Security)dev.Security;
-                                    reader = new GXDLMSReader(client, media, TraceLevel.Verbose, null);
+                                    reader = new GXDLMSReader(client, media, _logger);
                                     reader.InitializeConnection();
                                 }
                                 List<GXValue> values = new List<GXValue>();

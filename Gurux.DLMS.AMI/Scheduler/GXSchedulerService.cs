@@ -131,28 +131,28 @@ namespace Gurux.DLMS.AMI.Scheduler
         }
         bool Equals(GXDateTime t, DateTime t2)
         {
-            if ((t.Skip & Gurux.DLMS.Enums.DateTimeSkips.Minute) == 0 &&
+            if ((t.Skip & Enums.DateTimeSkips.Minute) == 0 &&
                 t.Value.Minute != t2.Minute)
             {
                 return false;
             }
-            if ((t.Skip & Gurux.DLMS.Enums.DateTimeSkips.Hour) == 0 &&
+            if ((t.Skip & Enums.DateTimeSkips.Hour) == 0 &&
                 t.Value.Hour != t2.Hour)
             {
                 return false;
             }
-            if ((t.Skip & Gurux.DLMS.Enums.DateTimeSkips.Day) == 0 &&
+            if ((t.Skip & Enums.DateTimeSkips.Day) == 0 &&
                 t.Value.Day != t2.Day)
             {
                 return false;
             }
-            if ((t.Skip & Gurux.DLMS.Enums.DateTimeSkips.Month) == 0 &&
+            if ((t.Skip & Enums.DateTimeSkips.Month) == 0 &&
                 t.Value.Month != t2.Month)
             {
                 return false;
             }
-            if ((t.Skip & Gurux.DLMS.Enums.DateTimeSkips.Year) == 0 &&
-                t.Value.Month != t2.Year)
+            if ((t.Skip & Enums.DateTimeSkips.Year) == 0 &&
+                t.Value.Year != t2.Year)
             {
                 return false;
             }

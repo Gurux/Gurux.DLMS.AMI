@@ -52,6 +52,7 @@ namespace Gurux.DLMS.AMI.Notify
         {
             _logger = logger;
             int port = optionsAccessor.Value.Port;
+            GXListener._logger = logger;
             listener = new GXNet((NetworkType)optionsAccessor.Value.NetworkType, port);
             if (listener.Protocol == NetworkType.Tcp)
             {
@@ -59,8 +60,7 @@ namespace Gurux.DLMS.AMI.Notify
             }
             else
             {
-                throw new Exception("UDP is not supported at the moment.");
-                //listener.OnReceived += GXListener.OnOnReceived;
+                listener.OnReceived += GXListener.OnOnReceived;
             }
             _logger.LogInformation("Listening incoming connections in port:" + listener.Port);
             listener.Open();
@@ -83,7 +83,7 @@ namespace Gurux.DLMS.AMI.Notify
                 }
                 else
                 {
-                    //listener.OnReceived -= GXListener.OnOnReceived;
+                    listener.OnReceived -= GXListener.OnOnReceived;
                 }
                 listener.Close();
             }
