@@ -184,9 +184,9 @@ namespace Gurux.DLMS.AMI.UI
             }
             using (HttpClient cl = new HttpClient())
             {
-                foreach (GXDevice it in devices)
+                foreach (GXDLMSMeter it in devices)
                 {
-                    using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/device/UpdateDevice"), new UpdateDevice() { Device = it }).Result)
+                    using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/device/UpdateDevice"), new UpdateDevice() { Device = MeterToDevice(it) }).Result)
                     {
                         Helpers.CheckStatus(response);
                         UpdateDeviceResponse devs = response.Content.ReadAsAsync<UpdateDeviceResponse>().Result;
@@ -1086,16 +1086,31 @@ namespace Gurux.DLMS.AMI.UI
                 else if (target is GXDLMSObject)
                 {
                     //Add only Device ID and logical name and object type. This will make packet smaller.
-                    req.DeviceId = (((GXDLMSObject)target).Parent.Tag as GXDevice).Id;
+                    req.DeviceId = (UInt64)(((GXDLMSObject)target).Parent.Tag as GXDLMSMeter).Tag;
                     req.Objects = new GXObject[] { new GXObject() {
                         ObjectType = (int)((GXDLMSObject)target).ObjectType,
                         LogicalName = ((GXDLMSObject)target).LogicalName } };
                 }
                 else if (target is GXDLMSObjectCollection)
                 {
-                    req.DeviceId = (((GXDLMSObjectCollection)target).Tag as GXDevice).Id;
+                    req.DeviceId = (UInt64) (((GXDLMSObjectCollection)target).Tag as GXDLMSMeter).Tag;
                     List<GXObject> objects = new List<GXObject>();
                     foreach (GXDLMSObject it in (GXDLMSObjectCollection)target)
+                    {
+                        objects.Add(new GXObject()
+                        {
+                            ObjectType = (int)it.ObjectType,
+                            LogicalName = it.LogicalName
+                        });
+                    }
+                    req.Objects = objects.ToArray();
+                }
+                else if (target is GXDLMSMeter)
+                {
+                    GXDLMSMeter m = target as GXDLMSMeter;
+                    req.DeviceId = (UInt64)m.Tag;
+                    List<GXObject> objects = new List<GXObject>();
+                    foreach (GXDLMSObject it in m.Objects)
                     {
                         objects.Add(new GXObject()
                         {
