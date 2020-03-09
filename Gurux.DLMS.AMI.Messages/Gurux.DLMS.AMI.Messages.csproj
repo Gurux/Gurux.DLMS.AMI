@@ -26,9 +26,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
  <ItemGroup>
-   <PackageReference Include="Gurux.Common" Version="8.1.2001.2404" />
-   <PackageReference Include="Gurux.DLMS" Version="9.0.2002.702" />
-   <PackageReference Include="Gurux.Service" Version="1.1.2001.2701" />
+   <PackageReference Include="Gurux.Common" Version="8.1.2002.1903" />
+   <PackageReference Include="Gurux.DLMS" Version="9.0.2003.601" />
+   <PackageReference Include="Gurux.Service" Version="1.1.2002.1901" />
  </ItemGroup>
  <ItemGroup>
    <Folder Include="Properties\" />
