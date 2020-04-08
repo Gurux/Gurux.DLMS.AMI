@@ -20,12 +20,12 @@
     <PackageIcon>gurux_dlms_ami.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Gurux.Common" Version="8.1.2001.2404" />
-    <PackageReference Include="Gurux.DLMS" Version="9.0.2002.702" />
-    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2002.1001" />
-    <PackageReference Include="Gurux.Net" Version="8.1.2002.1001" />
-    <PackageReference Include="Gurux.Serial" Version="8.1.2001.2703" />
-    <PackageReference Include="Gurux.Terminal" Version="8.1.2001.2702" />
+    <PackageReference Include="Gurux.Common" Version="8.1.2002.1903" />
+    <PackageReference Include="Gurux.DLMS" Version="9.0.2004.801" />
+    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2004.801" />
+    <PackageReference Include="Gurux.Net" Version="8.1.2002.1902" />
+    <PackageReference Include="Gurux.Serial" Version="8.1.2002.1901" />
+    <PackageReference Include="Gurux.Terminal" Version="8.1.2002.1901" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
  </ItemGroup>
 
