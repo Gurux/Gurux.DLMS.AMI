@@ -20,6 +20,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <PackageLicenseExpression>GPL-2.0-only</PackageLicenseExpression>
     <PackageIcon>gurux_dlms_ami.png</PackageIcon>
+    <UserSecretsId>4c920440-d1d6-4523-b16a-491ed1551654</UserSecretsId>
   </PropertyGroup>
 
  <ItemGroup>
@@ -27,7 +28,7 @@
   </ItemGroup>
  <ItemGroup>
    <PackageReference Include="Gurux.Common" Version="8.1.2002.1903" />
-   <PackageReference Include="Gurux.DLMS" Version="9.0.2004.1401" />
+   <PackageReference Include="Gurux.DLMS" Version="9.0.2004.2001" />
    <PackageReference Include="Gurux.Service" Version="1.1.2002.1901" />
  </ItemGroup>
  <ItemGroup>
