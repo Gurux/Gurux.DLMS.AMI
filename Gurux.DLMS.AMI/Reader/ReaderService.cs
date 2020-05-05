@@ -73,7 +73,7 @@ namespace Gurux.DLMS.AMI.Reader
             _guid = Guid.Parse(optionsAccessor.Value.Id);
             _threads = optionsAccessor.Value.Threads;
             _name = optionsAccessor.Value.Name;
-            _waitTime = optionsAccessor.Value.TaskWaitTime;
+            _waitTime = optionsAccessor.Value.TaskWaitTime * 1000;
         }
 
         public System.Threading.Tasks.Task StartAsync(CancellationToken cancellationToken)
