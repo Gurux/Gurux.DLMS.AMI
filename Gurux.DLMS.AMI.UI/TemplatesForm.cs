@@ -107,7 +107,11 @@ namespace Gurux.DLMS.AMI.UI
                                 ListViewItem li = PropertiesView.Items.Add(it.Name);
                                 li.SubItems.Add(it.LogicalName);
                                 li.SubItems.Add(((ObjectType)it.ObjectType).ToString());
-                                li.SubItems.Add(a.Index.ToString() + ": " + ((IGXDLMSBase)obj).GetNames()[a.Index - 1]);
+                                if (string.IsNullOrEmpty(a.Name))
+                                {
+                                    a.Name = ((IGXDLMSBase)obj).GetNames()[a.Index - 1];
+                                }
+                                li.SubItems.Add(a.Index.ToString() + ": " + a.Name);
                                 li.SubItems.Add(a.DataType == 0 ? "" : ((DataType)a.DataType).ToString());
                                 li.SubItems.Add(a.UIDataType == 0 ? "" : ((DataType)a.UIDataType).ToString());
                                 if (a.ExpirationTime == 0xFFFFFFFF)
@@ -253,6 +257,7 @@ namespace Gurux.DLMS.AMI.UI
                                 for (int pos = 2; pos <= ((IGXDLMSBase)value).GetAttributeCount(); ++pos)
                                 {
                                     GXAttributeTemplate a = new GXAttributeTemplate();
+                                    a.Name = names[pos - 1];
                                     a.Index = pos;
                                     a.AccessLevel = (int)value.GetAccess(pos);
                                     a.DataType = (int)((IGXDLMSBase)value).GetDataType(pos);
