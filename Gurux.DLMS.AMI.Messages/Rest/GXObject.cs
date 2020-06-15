@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.Common;
@@ -43,7 +43,7 @@ namespace Gurux.DLMS.AMI.Messages.Rest
     /// </summary>
     [DataContract]
     [Description("Add COSEM object.")]
-    [Example("/api/ObjectAddObject", "{\r\t\"Items\" : {\"DeviceId\" : 1, \"TemplateId\" : 1}\r}", "www.gurux.fi/Gurux.DLMS.AMI.Object")]
+    [Example("/api/Object/AddObject", "{\r\t\"Items\" : {\"DeviceId\" : 1, \"TemplateId\" : 1}\r}", "www.gurux.fi/Gurux.DLMS.AMI.Object")]
     public class AddObject : IGXRequest<AddObjectResponse>
     {
         /// <summary>
@@ -210,6 +210,34 @@ namespace Gurux.DLMS.AMI.Messages.Rest
     [DataContract]
     [Description("Delete COSEM object response.")]
     public class ObjectDeleteResponse
+    {
+    }
+
+    /// <summary>
+    /// Update data type of the attribute.
+    /// </summary>
+    [DataContract]
+    [Description("Update data type of the attribute.")]
+    public class UpdateDatatype : IGXRequest<AddObjectResponse>
+    {
+        /// <summary>
+        /// Updated attributes.
+        /// </summary>
+        [Description("Updated attributes.")]
+        [DataMember]
+        public GXAttribute[] Items
+        {
+            get;
+            set;
+        }
+    }
+
+    /// <summary>
+    /// Update data type of the attribute reply.
+    /// </summary>
+    [DataContract]
+    [Description("Update data type of the attribute reply.")]
+    public class UpdateDatatypeResponse
     {
     }
 }
