@@ -209,7 +209,7 @@ namespace Gurux.DLMS.AMI.Notify
                                     reader.Release();
                                     reader.Disconnect();
                                     client = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress, (Authentication)dev.Authentication, dev.Password, dev.InterfaceType);
-                                    client.UtcTimeZone = dev.UtcTimeZone;
+                                    client.UseUtc2NormalTime = dev.UtcTimeZone;
                                     client.Standard = (Standard)dev.Standard;
                                     if (dev.Conformance != 0)
                                     {
@@ -251,7 +251,30 @@ namespace Gurux.DLMS.AMI.Notify
                                         }
                                         else if (task.TaskType == TaskType.Read)
                                         {
+                                            //Reading the meter.
+                                            if (task.Object.Attributes[0].DataType != 0)
+                                            {
+                                                obj.SetDataType(task.Index, (DataType)task.Object.Attributes[0].DataType);
+                                            }
+                                            if (task.Object.Attributes[0].UIDataType != 0)
+                                            {
+                                                obj.SetUIDataType(task.Index, (DataType)task.Object.Attributes[0].UIDataType);
+                                            }
                                             Reader.Reader.Read(null, httpClient, reader, task, media, obj);
+                                            if (task.Object.Attributes[0].DataType == 0)
+                                            {
+                                                task.Object.Attributes[0].DataType = (int)obj.GetDataType(task.Index);
+                                                if (task.Object.Attributes[0].UIDataType == 0)
+                                                {
+                                                    task.Object.Attributes[0].UIDataType = (int)obj.GetUIDataType(task.Index);
+                                                }
+                                                UpdateDatatype u = new UpdateDatatype() { Items = new GXAttribute[] { task.Object.Attributes[0] } };
+                                                using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/Object/UpdateDatatype", u).Result)
+                                                {
+                                                    Helpers.CheckStatus(response);
+                                                }
+                                            }
+
                                         }
                                     }
                                     catch (Exception ex)

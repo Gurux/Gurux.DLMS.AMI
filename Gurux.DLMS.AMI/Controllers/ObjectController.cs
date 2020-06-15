@@ -218,5 +218,24 @@ namespace DBService.Controllers
             }
             return new ObjectDeleteResponse();
         }
+
+        /// <summary>
+        /// Update data type of the attribute.
+        /// </summary>
+        [HttpPost("UpdateDatatype")]
+        public ActionResult<UpdateDatatypeResponse> Post(UpdateDatatype request)
+        {
+            if (request.Items != null && request.Items.Length != 0)
+            {
+                DateTime now = DateTime.Now;
+                foreach (GXAttribute it in request.Items)
+                {
+                    it.Updated = now;
+                }
+                host.Connection.Update(GXUpdateArgs.UpdateRange(request.Items, c => new { c.DataType, c.Updated }));
+                host.SetChange(TargetType.Object, now);
+            }
+            return new UpdateDatatypeResponse();
+        }
     }
 }
