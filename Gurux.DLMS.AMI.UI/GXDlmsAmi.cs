@@ -285,9 +285,9 @@ namespace Gurux.DLMS.AMI.UI
                     {
                         GXTask t = new GXTask();
                         t.TaskType = TaskType.Action;
-                        t.Object = new GXObject() { DeviceId = ((GXDevice)m).Id, LogicalName = it.Target.LogicalName, ObjectType = (int)it.Target.ObjectType };
+                        t.Object = new GXObject() { DeviceId = (UInt64)((GXDLMSMeter)m).Tag, LogicalName = it.Target.LogicalName, ObjectType = (int)it.Target.ObjectType };
                         t.Index = it.Index;
-                        t.Data = GXDLMSTranslator.ValueToXml(it.Data);
+                        t.Data = (string)it.Data;
                         list.Add(t);
                     }
                 }
