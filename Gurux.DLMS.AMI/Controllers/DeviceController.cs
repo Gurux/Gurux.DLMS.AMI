@@ -104,6 +104,7 @@ namespace Gurux.DLMS.AMI.Controllers
                         Name = it.Name,
                         LogicalName = it.LogicalName,
                         ShortName = it.ShortName,
+                        Version = it.Version,
                     };
                     host.Connection.Insert(GXInsertArgs.Insert(obj));
                     foreach (GXAttributeTemplate ait in it.Attributes)
