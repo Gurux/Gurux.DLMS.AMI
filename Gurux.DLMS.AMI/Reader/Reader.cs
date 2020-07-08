@@ -39,6 +39,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Gurux.DLMS.AMI.Internal;
+using System.Diagnostics;
 
 namespace Gurux.DLMS.AMI.Reader
 {
@@ -162,6 +163,10 @@ namespace Gurux.DLMS.AMI.Reader
             else if (val is GXDateTime)
             {
                 val = ((GXDateTime)val).ToFormatString();
+            }
+            else if (val is string)
+            {
+                val = (val as string).Replace("\0", "");
             }
             if (obj.ObjectType == ObjectType.ProfileGeneric && task.Index == 2)
             {
