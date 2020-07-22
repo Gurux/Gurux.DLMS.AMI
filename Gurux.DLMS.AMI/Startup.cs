@@ -49,12 +49,14 @@ using Microsoft.Extensions.Hosting;
 using Gurux.DLMS.AMI.Reader;
 using System.Collections.Generic;
 using Gurux.DLMS.AMI.Scheduler;
+using Microsoft.Extensions.Logging;
 
 namespace Gurux.DLMS.AMI
 {
     public class Startup
     {
         static readonly System.Net.Http.HttpClient httpClient = Helpers.client;
+        ILogger<Startup> _logger = null;
 
         public static string ServerAddress
         {
@@ -142,6 +144,7 @@ namespace Gurux.DLMS.AMI
                 {
                     Connection = new GXDbConnection(connection, null)
                 };
+                h.Connection.OnSqlExecuted += Connection_OnSqlExecuted;
                 if (!h.Connection.TableExist<GXDevice>())
                 {
                     Console.WriteLine("Creating tables.");
@@ -213,6 +216,14 @@ namespace Gurux.DLMS.AMI
 #endif //NETCOREAPP2_0 || NETCOREAPP2_1
         }
 
+        private void Connection_OnSqlExecuted(object instance, string sql)
+        {
+            if (_logger != null && _logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("GXSQL: " + sql);
+            }
+        }
+
 #if NETCOREAPP2_0 || NETCOREAPP2_1
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
@@ -230,8 +241,9 @@ namespace Gurux.DLMS.AMI
         }
 #else
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            _logger = logger;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
