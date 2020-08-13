@@ -122,6 +122,10 @@ namespace DBService.Controllers
         [HttpPost("UpdateSchedule")]
         public ActionResult<UpdateScheduleResponse> Post(UpdateSchedule request)
         {
+            if (request.Schedules == null || request.Schedules.Count == 0)
+            {
+                return BadRequest("Schedules array is empty.");
+            }
             UpdateScheduleResponse ret = new UpdateScheduleResponse();
             List<UInt64> list = new List<UInt64>();
             List<GXScheduleToAttribute> list2 = new List<GXScheduleToAttribute>();
@@ -167,6 +171,10 @@ namespace DBService.Controllers
         [HttpPost("UpdateScheduleExecutionTime")]
         public ActionResult<UpdateScheduleExecutionTimeResponse> Post(UpdateScheduleExecutionTime request)
         {
+            if (request.Id == 0)
+            {
+                return BadRequest("Request ID is zero.");
+            }
             GXSchedule s = host.Connection.SelectById<GXSchedule>(request.Id);
             s.ExecutionTime = request.Time;
             host.Connection.Update(GXUpdateArgs.Update(s, c => c.ExecutionTime));
@@ -211,6 +219,10 @@ namespace DBService.Controllers
         [HttpPost("AddScheduleTarget")]
         public ActionResult<AddScheduleTargetResponse> Post(AddScheduleTarget request)
         {
+            if (request.Schedules == null || request.Schedules.Length == 0)
+            {
+                return BadRequest("Schedules array is empty.");
+            }
             AddScheduleTargetResponse ret = new AddScheduleTargetResponse();
             List<GXScheduleToAttribute> list = new List<GXScheduleToAttribute>();
             foreach (UInt64 s in request.Schedules)
@@ -256,6 +268,14 @@ namespace DBService.Controllers
         [HttpPost("DeleteScheduleTarget")]
         public ActionResult<DeleteScheduleTargetResponse> Post(DeleteScheduleTarget request)
         {
+            if (request.Schedules == null || request.Schedules.Length == 0)
+            {
+                return BadRequest("Schedules array is empty.");
+            }
+            if (request.Attributes == null || request.Attributes.Length == 0)
+            {
+                return BadRequest("Attributes array is empty.");
+            }
             List<GXScheduleToAttribute> list = new List<GXScheduleToAttribute>();
             foreach (UInt64 s in request.Schedules)
             {

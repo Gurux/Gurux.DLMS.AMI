@@ -126,6 +126,10 @@ namespace DBService.Controllers
                 }
                 arg.Where.And<GXAttribute>(q => q.Removed == DateTime.MinValue);
                 GXSelectArgs devices = GXSelectArgs.Select<GXObject>(q => q.DeviceId);
+                if (request.DeviceId != 0)
+                {
+                    devices.Where.And<GXObject>(q => q.DeviceId == request.DeviceId);
+                }
                 arg.Where.And<GXObject>(q => GXSql.In(q.DeviceId, devices));
                 ret.Items = host.Connection.Select<GXObject>(arg).ToArray();
                 //Delete Removed attributes.

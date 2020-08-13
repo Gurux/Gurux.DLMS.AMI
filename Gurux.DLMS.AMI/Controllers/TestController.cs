@@ -60,6 +60,10 @@ namespace Gurux.DLMS.AMI.Controllers
         [HttpPost("AddTestDevice")]
         public ActionResult<AddTestDeviceResponse> Post(AddTestDevice request)
         {
+            if (request.Device == null)
+            {
+                return BadRequest("Device template is NULL.");
+            }
             if (request.Device.TemplateId == 0)
             {
                 return BadRequest("Device template ID is unknown.");
