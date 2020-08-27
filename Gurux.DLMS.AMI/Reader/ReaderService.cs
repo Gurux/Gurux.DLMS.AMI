@@ -222,7 +222,7 @@ namespace Gurux.DLMS.AMI.Reader
                             cl.ServerSystemTitle = null;
                         }
                         cl.Ciphering.InvocationCounter = dev.InvocationCounter;
-                        cl.Ciphering.Security = (Security)dev.Security;
+                        cl.Ciphering.Security = (byte)dev.Security;
                         reader = new GXDLMSReader(cl, media, _logger);
                         media.Open();
                         reader.InitializeConnection();

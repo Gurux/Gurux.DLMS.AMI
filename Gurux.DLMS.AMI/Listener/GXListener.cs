@@ -222,7 +222,7 @@ namespace Gurux.DLMS.AMI.Notify
                                     client.Ciphering.AuthenticationKey = GXCommon.HexToBytes(dev.AuthenticationKey);
                                     client.ServerSystemTitle = GXCommon.HexToBytes(dev.DeviceSystemTitle);
                                     client.Ciphering.InvocationCounter = dev.InvocationCounter;
-                                    client.Ciphering.Security = (Security)dev.Security;
+                                    client.Ciphering.Security = (byte)dev.Security;
                                     reader = new GXDLMSReader(client, media, _logger);
                                     reader.InitializeConnection();
                                 }

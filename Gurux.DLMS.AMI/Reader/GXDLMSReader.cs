@@ -808,7 +808,7 @@ namespace Gurux.DLMS.AMI.Reader
                 {
 
                     if (Client.InterfaceType == InterfaceType.WRAPPER ||
-                        Client.Ciphering.Security != Security.None)
+                        Client.Ciphering.Security != (byte) Security.None)
                     {
                         ReadDataBlock(Client.ReleaseRequest(), reply);
                     }
@@ -839,7 +839,7 @@ namespace Gurux.DLMS.AMI.Reader
                     {
                         if ((Client.ConnectionState & ConnectionState.Dlms) != 0 &&
                             (Client.InterfaceType == InterfaceType.WRAPPER ||
-                            Client.Ciphering.Security != Security.None))
+                            Client.Ciphering.Security != (byte)Security.None))
                         {
                             ReadDataBlock(Client.ReleaseRequest(), reply);
                         }
