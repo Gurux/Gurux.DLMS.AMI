@@ -235,7 +235,7 @@ namespace Gurux.DLMS.AMI.Messages.Rest
     /// </summary>
     [DataContract]
     [Description("Delete tasks.")]
-    [Example("/api/Task/DeleteTask", "{\"Ids\": {1}}", "www.gurux.fi/Gurux.DLMS.AMI.Task")]
+    [Example("/api/Task/TaskDelete", "{\"Ids\": [1, 2, 3]}", "www.gurux.fi/Gurux.DLMS.AMI.Task")]
     public class DeleteTask : IGXRequest<DeleteTaskResponse>
     {
         /// <summary>

@@ -279,11 +279,12 @@ namespace DBService.Controllers
         [HttpPost("TaskDelete")]
         public ActionResult<DeleteTaskResponse> Post(DeleteTask request)
         {
-            if (request.Ids != null)
+            if (request.Ids == null)
             {
-                host.Connection.Delete(GXDeleteArgs.Delete<GXTask>(q => request.Ids.Contains(q.Id)));
-                host.SetChange(TargetType.Tasks, DateTime.Now);
+                return BadRequest("Task list is null.");
             }
+            host.Connection.Delete(GXDeleteArgs.Delete<GXTask>(q => request.Ids.Contains(q.Id)));
+            host.SetChange(TargetType.Tasks, DateTime.Now);
             return new DeleteTaskResponse();
         }
     }
