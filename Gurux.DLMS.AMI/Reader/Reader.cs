@@ -109,7 +109,7 @@ namespace Gurux.DLMS.AMI.Reader
                     return (UInt16)((GXStructure)tmp[0])[0] == 8;
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 //It's OK if this fails.
             }
@@ -128,6 +128,9 @@ namespace Gurux.DLMS.AMI.Reader
             object val;
             if (obj.ObjectType == ObjectType.ProfileGeneric && task.Index == 2 && GetReadTime(task.Object) != DateTime.MinValue && IsSortedByDateTime(task.Object))
             {
+                //Add date time object so GXDLMSClient is not thrown an Capture objects not read-exception.
+                GXKeyValuePair<GXDLMSObject, GXDLMSCaptureObject> p = new GXKeyValuePair<GXDLMSObject, GXDLMSCaptureObject>(new GXDLMSClock(), new GXDLMSCaptureObject(2, 0));
+                ((GXDLMSProfileGeneric)obj).CaptureObjects.Add(p);
                 //Read profile generic using range.
                 DateTime now = DateTime.Now;
                 now = now.AddSeconds(-now.Second);
