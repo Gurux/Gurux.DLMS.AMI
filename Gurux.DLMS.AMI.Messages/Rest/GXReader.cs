@@ -174,4 +174,44 @@ namespace Gurux.DLMS.AMI.Messages.Rest
             set;
         }
     }
+
+    /// <summary>
+    /// Add device to readers or remove device from readers.
+    /// </summary>
+    [DataContract]
+    [Description("Add device to readers or remove device from readers.")]
+    [Example("/api/Reader/AddReaderToDevices", "{Readers: {1}, Devices: {1}}", "www.gurux.fi/Gurux.DLMS.AMI.Reader")]
+    public class ReaderDevicesUpdate : IGXRequest<ReaderDevicesUpdateResponse>
+    {
+        /// <summary>
+        /// List of readers IDs to add or remove.
+        /// </summary>
+        [DataMember]
+        [Description("List of readers IDs to add or remove.")]
+        public UInt64[] Readers
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// List of device IDs to add or remove.
+        /// </summary>
+        [DataMember]
+        [Description("List of device IDs to add or remove.")]
+        public UInt64[] Devices
+        {
+            get;
+            set;
+        }
+    }
+
+    /// <summary>
+    /// ReaderDevicesUpdate response.
+    /// </summary>
+    [DataContract]
+    [Description("ReaderDevicesUpdate response.")]
+    public class ReaderDevicesUpdateResponse
+    {
+    }
 }
