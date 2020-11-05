@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.Common;
@@ -136,4 +136,42 @@ namespace Gurux.DLMS.AMI.Messages.Rest
     {
     }
 
+    /// <summary>
+    /// Get devices that are mapped for given readers.
+    /// </summary>
+    [DataContract]
+    [Description("Get devices that are mapped for given readers.")]
+    [Example("/api/Reader/ReaderDevices", "{Ids: {1}}", "www.gurux.fi/Gurux.DLMS.AMI.Reader")]
+    public class ReaderDevices : IGXRequest<ReaderDeviceResponse>
+    {
+        /// <summary>
+        /// List of Readers IDs.
+        /// </summary>
+        [DataMember]
+        [Description("List of Readers IDs.")]
+        public UInt64[] Ids
+        {
+            get;
+            set;
+        }
+    }
+
+    /// <summary>
+    /// Returns devices that are mapped for given readers.
+    /// </summary>
+    [DataContract]
+    [Description("Returns devices that are mapped for given readers.")]
+    public class ReaderDeviceResponse
+    {
+        /// <summary>
+        /// List of devices.
+        /// </summary>
+        [DataMember]
+        [Description("List of devices.")]
+        public GXDevice[] Devices
+        {
+            get;
+            set;
+        }
+    }
 }
