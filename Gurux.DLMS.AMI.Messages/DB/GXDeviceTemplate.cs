@@ -194,12 +194,24 @@ namespace Gurux.DLMS.AMI.Messages.DB
             set;
         }
 
+
+
         /// <summary>
         /// Extra info is used to save future extra info.
         /// </summary>
         [DataMember]
         [Description("Extra info is used to save future extra info.")]
         public UInt32 ExtraInfo
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Supporterd interfaces.
+        /// </summary>
+        [Description("Supporterd interfaces.")]
+        public int SupporterdInterfaces
         {
             get;
             set;
