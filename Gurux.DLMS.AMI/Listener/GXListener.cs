@@ -289,7 +289,6 @@ namespace Gurux.DLMS.AMI.Notify
                                         using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/error/AddError", error).Result)
                                         {
                                             Helpers.CheckStatus(response);
-                                            response.Content.ReadAsAsync<AddErrorResponse>();
                                         }
                                     }
                                     using (System.Net.Http.HttpResponseMessage response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/task/TaskReady", new TaskReady() { Tasks = new GXTask[] { task } }).Result)
@@ -315,7 +314,7 @@ namespace Gurux.DLMS.AMI.Notify
                             Helpers.CheckStatus(response);
                         }
                     }
-                    catch (Exception ex2)
+                    catch (Exception)
                     {
 
                     }

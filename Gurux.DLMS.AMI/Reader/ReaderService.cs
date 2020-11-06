@@ -60,6 +60,7 @@ namespace Gurux.DLMS.AMI.Reader
         private readonly int _threads;
         private readonly string _name;
         private readonly int _waitTime;
+        private readonly int _aliveTime;
 
 
         /// <summary>
@@ -74,8 +75,31 @@ namespace Gurux.DLMS.AMI.Reader
             _threads = optionsAccessor.Value.Threads;
             _name = optionsAccessor.Value.Name;
             _waitTime = optionsAccessor.Value.TaskWaitTime * 1000;
+            _aliveTime = optionsAccessor.Value.AliveTime;
         }
 
+        /// <summary>
+        /// Send notify that reader is alive.
+        /// </summary>
+        /// <param name="value"></param>
+        private async void ListenerAlive(GXReaderInfo value)
+        {
+            //Give some time DB server to start up.
+            Thread.Sleep(1000);
+            System.Net.Http.HttpResponseMessage response;
+            while(!_cancellationToken.IsCancellationRequested)
+            {
+                using (response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/reader/AddReader", new AddReader() { Reader = value }))
+                {
+                    Helpers.CheckStatus(response);
+                }
+                if (_aliveTime == 0)
+                {
+                    break;
+                }
+                Thread.Sleep(_aliveTime * 60000);
+            }
+        }
         public System.Threading.Tasks.Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Reader Service is starting.");
@@ -84,28 +108,22 @@ namespace Gurux.DLMS.AMI.Reader
             r.Name = _name;
             FileVersionInfo info = FileVersionInfo.GetVersionInfo(typeof(ReaderService).Assembly.Location);
             r.Version = info.FileVersion;
+            Thread t = new Thread(() => ListenerAlive(r));
+            t.Start();
             for (int pos = 0; pos != _threads; ++pos)
             {
-                Thread t3 = new Thread(() => DoWork(pos == 0 ? r : null));
-                t3.Start();
+                t = new Thread(() => DoWork());
+                t.Start();
             }
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        private async void DoWork(object ínfo)
+        private async void DoWork()
         {
             //Give some time DB server to start up.
             Thread.Sleep(1000);
             GetNextTaskResponse ret = null;
             System.Net.Http.HttpResponseMessage response;
-            //Don't wait reply. It might that DB server is not up yet.
-            if (ínfo != null)
-            {
-                using (response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/reader/AddReader", new AddReader() { Reader = ínfo as GXReaderInfo }))
-                {
-                    Helpers.CheckStatus(response);
-                }
-            }
             _logger.LogInformation("Reader Service is started.");
             while (!_cancellationToken.IsCancellationRequested)
             {
@@ -340,7 +358,7 @@ namespace Gurux.DLMS.AMI.Reader
                                 }
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             if (!_cancellationToken.IsCancellationRequested)
                             {

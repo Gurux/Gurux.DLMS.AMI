@@ -168,6 +168,8 @@ namespace DBService.Controllers
                 GXSelectArgs arg = GXSelectArgs.Select<GXTask>(c => c.Id, q => q.Start == DateTime.MinValue);
                 arg.Joins.AddInnerJoin<GXTask, GXObject>(a => a.Object, b => b.Id);
                 arg.Joins.AddInnerJoin<GXObject, GXDevice>(a => a.DeviceId, b => b.Id);
+                //Don't get meters that are mapped to other readers.
+                arg.Joins.AddLeftJoin<GXDevice, GXDeviceToReader>(a => a.Id, b => b.DeviceId);
                 if (request.DeviceId != 0)
                 {
                     arg.Where.And<GXDevice>(q => q.Id == request.DeviceId);

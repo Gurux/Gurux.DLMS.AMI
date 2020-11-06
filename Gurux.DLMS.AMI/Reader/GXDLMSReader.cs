@@ -411,7 +411,7 @@ namespace Gurux.DLMS.AMI.Reader
                         Console.WriteLine(sb.ToString());
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //Continue reading.
                 }

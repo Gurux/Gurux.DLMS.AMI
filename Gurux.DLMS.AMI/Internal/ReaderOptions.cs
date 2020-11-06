@@ -56,8 +56,14 @@ namespace Gurux.DLMS.AMI.Internal
         /// How long reader waits new task before give up. This is given in seconds.
         /// </summary>
         /// <remarks>
-        /// This value is needed because server migh restarted and we don't want to wait new task until session is time-outed.
+        /// This value is needed because server migh restarted and
+        /// we don't want to wait new task until session is time-outed.
         /// </remarks>
         public int TaskWaitTime { get; set; }
+        /// <summary>
+        /// How often reader sends alive message to the server in minutes.
+        /// If value is zero only start message is sent and no alive messages are sent.
+        /// </summary>
+        public int AliveTime { get; set; }
     }
 }
