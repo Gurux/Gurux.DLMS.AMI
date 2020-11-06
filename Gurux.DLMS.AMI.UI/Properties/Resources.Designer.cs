@@ -61,11 +61,20 @@ namespace Gurux.DLMS.AMI.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure that you want to remove all errors from the device?.
+        ///   Looks up a localized string similar to Certificate Files (*.pem)|*.pem|All files (*.*)|*.*.
         /// </summary>
-        internal static string ErrorRemoveWarning {
+        internal static string CertificateFilterTxt {
             get {
-                return ResourceManager.GetString("ErrorRemoveWarning", resourceCulture);
+                return ResourceManager.GetString("CertificateFilterTxt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure that you want to remove selected certificate(s)?.
+        /// </summary>
+        internal static string CertificateRemove {
+            get {
+                return ResourceManager.GetString("CertificateRemove", resourceCulture);
             }
         }
         
@@ -79,6 +88,15 @@ namespace Gurux.DLMS.AMI.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gurux GXDLMSDirector.
+        /// </summary>
+        internal static string GXDLMSDirectorTxt {
+            get {
+                return ResourceManager.GetString("GXDLMSDirectorTxt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Help is not available..
         /// </summary>
         internal static string HelpNotAvailable {
@@ -88,7 +106,7 @@ namespace Gurux.DLMS.AMI.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to InvalidASCII.
+        ///   Looks up a localized string similar to Invalid ASCII characters..
         /// </summary>
         internal static string InvalidASCII {
             get {
@@ -102,15 +120,6 @@ namespace Gurux.DLMS.AMI.UI.Properties {
         internal static string MeterRemoveWarning {
             get {
                 return ResourceManager.GetString("MeterRemoveWarning", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Are you sure that you want to remove selected objects?.
-        /// </summary>
-        internal static string ObjectsRemoveWarning {
-            get {
-                return ResourceManager.GetString("ObjectsRemoveWarning", resourceCulture);
             }
         }
         

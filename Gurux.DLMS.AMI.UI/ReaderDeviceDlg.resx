@@ -117,37 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CertificateFilterTxt" xml:space="preserve">
-    <value>Certificate Files (*.pem)|*.pem|All files (*.*)|*.*</value>
-  </data>
-  <data name="CertificateRemove" xml:space="preserve">
-    <value>Are you sure that you want to remove selected certificate(s)?</value>
-  </data>
-  <data name="FilterTxt" xml:space="preserve">
-    <value>Gurux GXDLMSDirector files (*.gxc)|*.gxc|All files (*.*)|*.*</value>
-  </data>
-  <data name="GXDLMSDirectorTxt" xml:space="preserve">
-    <value>Gurux GXDLMSDirector</value>
-  </data>
-  <data name="HelpNotAvailable" xml:space="preserve">
-    <value>Help is not available.</value>
-  </data>
-  <data name="InvalidASCII" xml:space="preserve">
-    <value>Invalid ASCII characters.</value>
-  </data>
-  <data name="MeterRemoveWarning" xml:space="preserve">
-    <value>Are you sure that you want to remove selected meters?</value>
-  </data>
-  <data name="ScheduleRemoveWarning" xml:space="preserve">
-    <value>Are you sure that you want to remove selected schedules?</value>
-  </data>
-  <data name="SystemErrorRemoveWarning" xml:space="preserve">
-    <value>Are you sure that you want to remove all system errors?</value>
-  </data>
-  <data name="TaskRemoveWarning" xml:space="preserve">
-    <value>Are you sure that you want to remove selected tasks?</value>
-  </data>
-  <data name="TemplateRemoveWarning" xml:space="preserve">
-    <value>Are you sure that you want to remove selected templates?</value>
-  </data>
 </root>

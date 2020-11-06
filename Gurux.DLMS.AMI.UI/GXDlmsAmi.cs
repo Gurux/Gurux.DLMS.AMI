@@ -1055,6 +1055,10 @@ namespace Gurux.DLMS.AMI.UI
             return false;
         }
 
+        /// <summary>
+        /// Get available readers.
+        /// </summary>
+        /// <returns>Collection of available readers.</returns>
         public GXReaderInfo[] GetReaders()
         {
             using (HttpClient cl = new HttpClient())
@@ -1065,6 +1069,89 @@ namespace Gurux.DLMS.AMI.UI
                     Helpers.CheckStatus(response);
                     ListReadersResponse ret = response.Content.ReadAsAsync<ListReadersResponse>().Result;
                     return ret.Readers;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get devices that are mapped to readers.
+        /// </summary>
+        /// <param name="readers">List of readers.</param>
+        /// <returns>Collection of available readers.</returns>
+        public GXDevice[] GetDevices(GXReaderInfo[] readers)
+        {
+            List<UInt64> list = new List<UInt64>();
+            foreach (GXReaderInfo it in readers)
+            {
+                list.Add(it.Id);
+            }
+            using (HttpClient cl = new HttpClient())
+            {
+                ReaderDevices req = new ReaderDevices();
+                req.Ids = list.ToArray();
+                using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/reader/ReaderDevices"), req).Result)
+                {
+                    Helpers.CheckStatus(response);
+                    ReaderDeviceResponse ret = response.Content.ReadAsAsync<ReaderDeviceResponse>().Result;
+                    return ret.Devices;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add devices to readers.
+        /// </summary>
+        /// <param name="readers">List of readers.</param>
+        /// <returns>Collection of available readers.</returns>
+        public void AddDevicesToReaders(GXReaderInfo[] readers, GXDLMSMeter[] devices)
+        {
+            ReaderDevicesUpdate req = new ReaderDevicesUpdate();
+            List<UInt64> list = new List<UInt64>();
+            foreach (GXReaderInfo it in readers)
+            {
+                list.Add(it.Id);
+            }
+            req.Readers = list.ToArray();
+            list.Clear();
+            foreach (GXDLMSMeter it in devices)
+            {
+                list.Add(MeterToDevice(it).Id);
+            }
+            req.Devices = list.ToArray();
+            using (HttpClient cl = new HttpClient())
+            {
+                using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/reader/AddDevicesToReaders"), req).Result)
+                {
+                    Helpers.CheckStatus(response);
+                }
+            }
+        }
+
+        /// <summary>
+        ///  Remove devices from readers.
+        /// </summary>
+        /// <param name="readers">List of readers.</param>
+        /// <returns>Collection of available readers.</returns>
+        public void RemoveDevicesFromReaders(GXReaderInfo[] readers, GXDevice[] devices)
+        {
+            ReaderDevicesUpdate req = new ReaderDevicesUpdate();
+            List<UInt64> list = new List<UInt64>();
+            foreach (GXReaderInfo it in readers)
+            {
+                list.Add(it.Id);
+            }
+            req.Readers = list.ToArray();
+            list.Clear();
+            foreach (GXDevice it in devices)
+            {
+                list.Add(it.Id);
+            }
+            req.Devices = list.ToArray();
+            using (HttpClient cl = new HttpClient())
+            {
+                using (HttpResponseMessage response = cl.PostAsJsonAsync(GetServerAddress("/api/reader/RemoveDevicesFromReaders"), req).Result)
+                {
+                    Helpers.CheckStatus(response);
                 }
             }
         }
@@ -1093,7 +1180,7 @@ namespace Gurux.DLMS.AMI.UI
                 }
                 else if (target is GXDLMSObjectCollection)
                 {
-                    req.DeviceId = (UInt64) (((GXDLMSObjectCollection)target).Tag as GXDLMSMeter).Tag;
+                    req.DeviceId = (UInt64)(((GXDLMSObjectCollection)target).Tag as GXDLMSMeter).Tag;
                     List<GXObject> objects = new List<GXObject>();
                     foreach (GXDLMSObject it in (GXDLMSObjectCollection)target)
                     {

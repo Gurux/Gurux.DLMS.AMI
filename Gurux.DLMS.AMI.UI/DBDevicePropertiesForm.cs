@@ -35,10 +35,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Gurux.Serial;
-using Gurux.DLMS;
 using Gurux.Net;
 using System.Reflection;
-using System.IO.Ports;
 using Gurux.DLMS.ManufacturerSettings;
 using Gurux.Terminal;
 using Gurux.DLMS.Enums;
@@ -46,13 +44,15 @@ using Gurux.Common;
 using System.IO;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using System.Xml;
 using Gurux.DLMS.AMI.Messages.DB;
+using Gurux.DLMS.ASN;
+using Gurux.DLMS.ASN.Enums;
 
 namespace Gurux.DLMS.AMI.UI
 {
     partial class DBDevicePropertiesForm : Form
     {
+        string path;
         Form MediaPropertiesForm = null;
         IGXMedia SelectedMedia = null;
         public GXDLMSMeterBase Device = null;
@@ -88,8 +88,6 @@ namespace Gurux.DLMS.AMI.UI
             NetworkSettingsGB.Width = this.Width - NetworkSettingsGB.Left;
             CustomSettings.Bounds = SerialSettingsGB.Bounds = TerminalSettingsGB.Bounds = NetworkSettingsGB.Bounds;
             Device = dev;
-            StartProtocolCB.Items.Add(StartProtocolType.IEC);
-            StartProtocolCB.Items.Add(StartProtocolType.DLMS);
             if (templates == null || templates.Length == 0)
             {
                 throw new Exception("No templates added.");
@@ -435,7 +433,6 @@ namespace Gurux.DLMS.AMI.UI
                 }
             }
             UseRemoteSerialCB.Checked = device.UseRemoteSerial;
-            StartProtocolCB.SelectedItem = device.StartProtocol;
             PhysicalServerAddressTB.Value = Convert.ToDecimal(device.PhysicalAddress);
             LogicalServerAddressTB.Value = Convert.ToDecimal(device.LogicalAddress);
             this.ClientAddTB.Value = Convert.ToDecimal(Convert.ToUInt32(device.ClientAddress));
@@ -464,10 +461,16 @@ namespace Gurux.DLMS.AMI.UI
             this.UseLNCB.Checked = device.UseLogicalNameReferencing;
             this.UseLNCB.CheckedChanged += new System.EventHandler(this.UseLNCB_CheckedChanged);
             ShowConformance((Conformance)device.Conformance);
-
+            //Handle old way.
+            if (device.InterfaceType == InterfaceType.HDLC && device.StartProtocol == StartProtocolType.IEC)
+            {
+                device.InterfaceType = InterfaceType.HdlcWithModeE;
+            }
             InterfaceCb.SelectedItem = device.InterfaceType;
             MaxInfoTXTb.Text = device.MaxInfoTX.ToString();
             MaxInfoRXTb.Text = device.MaxInfoRX.ToString();
+            MACSourceAddressTb.Value = device.MACSourceAddress;
+            MACTargetAddressTb.Value = device.MacDestinationAddress;
             WindowSizeTXTb.Text = device.WindowSizeTX.ToString();
             WindowSizeRXTb.Text = device.WindowSizeRX.ToString();
             InactivityTimeoutTb.Text = device.InactivityTimeout.ToString();
@@ -968,7 +971,6 @@ namespace Gurux.DLMS.AMI.UI
             }
             device.UseLogicalNameReferencing = this.UseLNCB.Checked;
             device.LogicalAddress = Convert.ToInt32(LogicalServerAddressTB.Value);
-            device.StartProtocol = (StartProtocolType)this.StartProtocolCB.SelectedItem;
             device.Security = (Security)SecurityCB.SelectedItem;
             device.SystemTitle = GetAsHex(SystemTitleTB.Text, SystemTitleAsciiCb.Checked);
             device.BlockCipherKey = GetAsHex(BlockCipherKeyTB.Text, BlockCipherKeyAsciiCb.Checked);
@@ -1146,18 +1148,6 @@ namespace Gurux.DLMS.AMI.UI
                 if (man != null)
                 {
                     UseLNCB.Checked = Device.UseLogicalNameReferencing = man.UseLogicalNameReferencing;
-                    if (SelectedMedia is GXNet)
-                    {
-                        StartProtocolCB.Enabled = man.InterfaceType != InterfaceType.WRAPPER;
-                    }
-                    else
-                    {
-                        StartProtocolCB.Enabled = true;
-                    }
-                    if (!StartProtocolCB.Enabled)
-                    {
-                        StartProtocolCB.SelectedItem = StartProtocolType.DLMS;
-                    }
                 }
             }
         }
@@ -1184,9 +1174,40 @@ namespace Gurux.DLMS.AMI.UI
                 GXDeviceTemplate man = (GXDeviceTemplate)TemplatesCB.SelectedItem;
                 if (man != null)
                 {
-                    StartProtocolCB.SelectedItem = man.StartProtocol;
-                    this.ClientAddTB.Value = man.ClientAddress;
-                    this.AuthenticationCB.SelectedItem = man.Authentication;
+                    InterfaceType selected;
+                    if (InterfaceCb.SelectedItem != null)
+                    {
+                        selected = (InterfaceType)InterfaceCb.SelectedItem;
+                    }
+                    else
+                    {
+                        selected = Device.InterfaceType;
+                    }
+                    InterfaceCb.Items.Clear();
+                    if (man.SupporterdInterfaces != 0)
+                    {
+                        foreach (InterfaceType it in Enum.GetValues(typeof(InterfaceType)))
+                        {
+                            if ((man.SupporterdInterfaces & (1 << (int)it)) != 0)
+                            {
+                                InterfaceCb.Items.Add(it);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        InterfaceCb.Items.Add(InterfaceType.HDLC);
+                        InterfaceCb.Items.Add(InterfaceType.HdlcWithModeE);
+                        InterfaceCb.Items.Add(InterfaceType.WRAPPER);
+                    }
+                    InterfaceCb.SelectedItem = selected;
+                    //Select first item if interface is not available.
+                    if (InterfaceCb.SelectedItem == null)
+                    {
+                        InterfaceCb.SelectedItem = InterfaceCb.Items[0];
+                    }
+                    ClientAddTB.Value = man.ClientAddress;
+                    AuthenticationCB.SelectedItem = man.Authentication;
                     ServerAddressTypeCB.Items.Clear();
                     HDLCAddressType type = Device.HDLCAddressing;
                     AuthenticationCB.Items.Clear();
@@ -1288,40 +1309,6 @@ namespace Gurux.DLMS.AMI.UI
                     Device.MediaSettings = man.MediaSettings;
                     UpdateSelectedMedia(man.MediaType);
                     UpdateMediaSettings();
-                }
-            }
-            catch (Exception Ex)
-            {
-                MessageBox.Show(this, Ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void StartProtocolCB_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                foreach (object it in this.MediasCB.Items)
-                {
-                    if (it is GXSerial)
-                    {
-                        //Initialize serial settings.
-                        GXSerial serial = (GXSerial)it;
-                        if ((StartProtocolType)StartProtocolCB.SelectedItem == StartProtocolType.DLMS)
-                        {
-                            serial.BaudRate = 9600;
-                            serial.DataBits = 8;
-                            serial.Parity = Parity.None;
-                            serial.StopBits = StopBits.One;
-                        }
-                        else
-                        {
-                            serial.BaudRate = 300;
-                            serial.DataBits = 7;
-                            serial.Parity = Parity.Even;
-                            serial.StopBits = StopBits.One;
-                        }
-                        break;
-                    }
                 }
             }
             catch (Exception Ex)
@@ -1752,6 +1739,122 @@ namespace Gurux.DLMS.AMI.UI
         private void DynamicCb_CheckedChanged(object sender, EventArgs e)
         {
             PortTB.Enabled = HostNameTB.Enabled = !DynamicCb.Checked;
+        }
+
+        /// <summary>
+        /// Add new certificate.
+        /// </summary>
+        private void CertificateAddMnu_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.Multiselect = false;
+                if (string.IsNullOrEmpty(path))
+                {
+                    dlg.InitialDirectory = Directory.GetCurrentDirectory();
+                }
+                else
+                {
+                    System.IO.FileInfo fi = new System.IO.FileInfo(path);
+                    dlg.InitialDirectory = fi.DirectoryName;
+                    dlg.FileName = fi.Name;
+                }
+                dlg.Filter = Properties.Resources.CertificateFilterTxt;
+                dlg.DefaultExt = ".pem";
+                dlg.ValidateNames = true;
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    bool exists = false;
+                    if (File.Exists(dlg.FileName))
+                    {
+                        try
+                        {
+                            GXx509Certificate cert = GXx509Certificate.Load(dlg.FileName);
+                            foreach (ListViewItem it in CertificatesList.Items)
+                            {
+                                if (it.Tag is GXx509Certificate c)
+                                {
+                                    if (c.Subject == cert.Subject)
+                                    {
+                                        exists = true;
+                                        throw new Exception("Public key already exists.");
+                                    }
+                                }
+                            }
+                            ListViewItem li = new ListViewItem("Public Key");
+                            li.StateImageIndex = li.ImageIndex = 0;
+                            li.SubItems.Add(cert.Subject);
+                            li.SubItems.Add(cert.ValidFrom + "-" + cert.ValidTo);
+                            StringBuilder sb = new StringBuilder();
+                            foreach (KeyUsage it in Enum.GetValues(typeof(KeyUsage)))
+                            {
+                                if (((int)it & (int)cert.KeyUsage) != 0)
+                                {
+                                    sb.Append(it);
+                                    sb.Append(", ");
+                                }
+                            }
+                            if (sb.Length != 0)
+                            {
+                                sb.Length -= 2;
+                            }
+                            li.SubItems.Add(sb.ToString());
+                            CertificatesList.Items.Add(li).Tag = cert;
+                        }
+                        catch (Exception)
+                        {
+                            if (!exists)
+                            {
+                                //Check if this is private key.
+                                GXPkcs8 cert = GXPkcs8.Load(dlg.FileName);
+                                ListViewItem li = new ListViewItem("Private Key");
+                                li.StateImageIndex = li.ImageIndex = 1;
+                                foreach (ListViewItem it in CertificatesList.Items)
+                                {
+                                    if (it.Tag is GXPkcs8)
+                                    {
+                                        throw new Exception("Private key already exists. There can be only one private key.");
+                                    }
+                                }
+                                CertificatesList.Items.Add(li).Tag = cert;
+                            }
+                        }
+                        path = dlg.FileName;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Remove selected certificates.
+        /// </summary>
+        private void CertificateRemoveMnu_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (CertificatesList.SelectedItems.Count != 0)
+                {
+                    DialogResult ret = MessageBox.Show(this, Properties.Resources.CertificateRemove, Properties.Resources.GXDLMSDirectorTxt, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+                    if (ret != DialogResult.Yes)
+                    {
+                        return;
+                    }
+                    while (CertificatesList.SelectedItems.Count != 0)
+                    {
+                        ListViewItem it = CertificatesList.SelectedItems[0];
+                        it.Remove();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+            }
         }
     }
 }

@@ -61,6 +61,7 @@ namespace Gurux.DLMS.AMI.UI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DBDevicePropertiesForm));
             this.CancelBtn = new System.Windows.Forms.Button();
             this.OKBtn = new System.Windows.Forms.Button();
@@ -151,8 +152,6 @@ namespace Gurux.DLMS.AMI.UI
             this.label3 = new System.Windows.Forms.Label();
             this.ClientAddLbl = new System.Windows.Forms.Label();
             this.ClientAddTB = new System.Windows.Forms.NumericUpDown();
-            this.StartProtocolCB = new System.Windows.Forms.ComboBox();
-            this.StartProtocolLbl = new System.Windows.Forms.Label();
             this.LogicalServerAddressTB = new System.Windows.Forms.NumericUpDown();
             this.LogicalServerAddressLbl = new System.Windows.Forms.Label();
             this.PhysicalServerAddressTB = new System.Windows.Forms.NumericUpDown();
@@ -176,31 +175,16 @@ namespace Gurux.DLMS.AMI.UI
             this.TerminalPhoneNumberLbl = new System.Windows.Forms.Label();
             this.DeviceTab = new System.Windows.Forms.TabControl();
             this.AdvancedTab = new System.Windows.Forms.TabPage();
-            this.InactivityTimeoutTb = new System.Windows.Forms.TextBox();
-            this.InactivityTimeoutLbl = new System.Windows.Forms.Label();
-            this.ServiceClassCb = new System.Windows.Forms.ComboBox();
-            this.StandardCb = new System.Windows.Forms.ComboBox();
-            this.PriorityCb = new System.Windows.Forms.ComboBox();
-            this.ServiceClassLbl = new System.Windows.Forms.Label();
-            this.StandardLbl = new System.Windows.Forms.Label();
-            this.PriorityLbl = new System.Windows.Forms.Label();
-            this.UserIdTb = new System.Windows.Forms.TextBox();
-            this.UserIDLbl = new System.Windows.Forms.Label();
-            this.MaxPduTb = new System.Windows.Forms.TextBox();
-            this.MaxPduLbl = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.FrameSizeCb = new System.Windows.Forms.CheckBox();
-            this.WindowSizeRXTb = new System.Windows.Forms.TextBox();
-            this.WindowSizeRXLbl = new System.Windows.Forms.Label();
-            this.WindowSizeTXTb = new System.Windows.Forms.TextBox();
-            this.WindowSizeTXLbl = new System.Windows.Forms.Label();
-            this.MaxInfoRXTb = new System.Windows.Forms.TextBox();
-            this.MaxInfoRXLbl = new System.Windows.Forms.Label();
-            this.MaxInfoTXTb = new System.Windows.Forms.TextBox();
-            this.MaxInfoTXLbl = new System.Windows.Forms.Label();
-            this.ServerAddressSizeCb = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.UseUtcTimeZone = new System.Windows.Forms.CheckBox();
+            this.CertificatesTab = new System.Windows.Forms.TabPage();
+            this.CertificatesList = new System.Windows.Forms.ListView();
+            this.TypeCh = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SubjectCh = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ValidityCh = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.KeyUsageCh = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CertificateMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CertificateAddMnu = new System.Windows.Forms.ToolStripMenuItem();
+            this.CertificateRemoveMnu = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.GatewayTab = new System.Windows.Forms.TabPage();
             this.UseGatewayCb = new System.Windows.Forms.CheckBox();
             this.PhysicalDeviceAddressAsciiCb = new System.Windows.Forms.CheckBox();
@@ -213,6 +197,41 @@ namespace Gurux.DLMS.AMI.UI
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.conformanceHelpProvider = new System.Windows.Forms.HelpProvider();
+            this.HdlcFrameTab = new System.Windows.Forms.TabPage();
+            this.PlcFrame = new System.Windows.Forms.TabPage();
+            this.IgnoreTimeStatusCb = new System.Windows.Forms.CheckBox();
+            this.IgnoreTimeZoneCb = new System.Windows.Forms.CheckBox();
+            this.UseProtectedReleaseCb = new System.Windows.Forms.CheckBox();
+            this.InactivityTimeoutTb = new System.Windows.Forms.TextBox();
+            this.InactivityTimeoutLbl = new System.Windows.Forms.Label();
+            this.ServiceClassCb = new System.Windows.Forms.ComboBox();
+            this.StandardCb = new System.Windows.Forms.ComboBox();
+            this.PriorityCb = new System.Windows.Forms.ComboBox();
+            this.ServiceClassLbl = new System.Windows.Forms.Label();
+            this.StandardLbl = new System.Windows.Forms.Label();
+            this.PriorityLbl = new System.Windows.Forms.Label();
+            this.UserIdTb = new System.Windows.Forms.TextBox();
+            this.UserIDLbl = new System.Windows.Forms.Label();
+            this.MaxPduTb = new System.Windows.Forms.TextBox();
+            this.MaxPduLbl = new System.Windows.Forms.Label();
+            this.UseUtcTimeZone = new System.Windows.Forms.CheckBox();
+            this.HdlcGroup = new System.Windows.Forms.GroupBox();
+            this.FrameSizeCb = new System.Windows.Forms.CheckBox();
+            this.WindowSizeRXTb = new System.Windows.Forms.TextBox();
+            this.WindowSizeRXLbl = new System.Windows.Forms.Label();
+            this.WindowSizeTXTb = new System.Windows.Forms.TextBox();
+            this.WindowSizeTXLbl = new System.Windows.Forms.Label();
+            this.MaxInfoRXTb = new System.Windows.Forms.TextBox();
+            this.MaxInfoRXLbl = new System.Windows.Forms.Label();
+            this.MaxInfoTXTb = new System.Windows.Forms.TextBox();
+            this.MaxInfoTXLbl = new System.Windows.Forms.Label();
+            this.ServerAddressSizeCb = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.PlcGroup = new System.Windows.Forms.GroupBox();
+            this.MACTargetAddressTb = new System.Windows.Forms.NumericUpDown();
+            this.MACSourceAddressTb = new System.Windows.Forms.NumericUpDown();
+            this.MACTargetAddressLbl = new System.Windows.Forms.Label();
+            this.MACSourceAddressLbl = new System.Windows.Forms.Label();
             this.SupportedServicesTab.SuspendLayout();
             this.SNSettings.SuspendLayout();
             this.LNSettings.SuspendLayout();
@@ -228,9 +247,16 @@ namespace Gurux.DLMS.AMI.UI
             this.TerminalSettingsGB.SuspendLayout();
             this.DeviceTab.SuspendLayout();
             this.AdvancedTab.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.CertificatesTab.SuspendLayout();
+            this.CertificateMenu.SuspendLayout();
             this.GatewayTab.SuspendLayout();
             this.XmlTab.SuspendLayout();
+            this.HdlcFrameTab.SuspendLayout();
+            this.PlcFrame.SuspendLayout();
+            this.HdlcGroup.SuspendLayout();
+            this.PlcGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MACTargetAddressTb)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MACSourceAddressTb)).BeginInit();
             this.SuspendLayout();
             // 
             // CancelBtn
@@ -967,8 +993,6 @@ namespace Gurux.DLMS.AMI.UI
             this.DeviceSettingsTab.Controls.Add(this.label3);
             this.DeviceSettingsTab.Controls.Add(this.ClientAddLbl);
             this.DeviceSettingsTab.Controls.Add(this.ClientAddTB);
-            this.DeviceSettingsTab.Controls.Add(this.StartProtocolCB);
-            this.DeviceSettingsTab.Controls.Add(this.StartProtocolLbl);
             this.DeviceSettingsTab.Controls.Add(this.LogicalServerAddressTB);
             this.DeviceSettingsTab.Controls.Add(this.LogicalServerAddressLbl);
             this.DeviceSettingsTab.Controls.Add(this.PhysicalServerAddressTB);
@@ -1155,7 +1179,7 @@ namespace Gurux.DLMS.AMI.UI
             this.InterfaceCb.FormattingEnabled = true;
             this.helpProvider1.SetHelpKeyword(this.InterfaceCb, "Manufacturer");
             this.helpProvider1.SetHelpNavigator(this.InterfaceCb, System.Windows.Forms.HelpNavigator.Topic);
-            this.InterfaceCb.Location = new System.Drawing.Point(350, 169);
+            this.InterfaceCb.Location = new System.Drawing.Point(109, 58);
             this.InterfaceCb.Name = "InterfaceCb";
             this.helpProvider1.SetShowHelp(this.InterfaceCb, true);
             this.InterfaceCb.Size = new System.Drawing.Size(104, 21);
@@ -1165,7 +1189,7 @@ namespace Gurux.DLMS.AMI.UI
             // InterfaceLbl
             // 
             this.InterfaceLbl.AutoSize = true;
-            this.InterfaceLbl.Location = new System.Drawing.Point(266, 173);
+            this.InterfaceLbl.Location = new System.Drawing.Point(8, 62);
             this.InterfaceLbl.Name = "InterfaceLbl";
             this.InterfaceLbl.Size = new System.Drawing.Size(52, 13);
             this.InterfaceLbl.TabIndex = 63;
@@ -1314,28 +1338,6 @@ namespace Gurux.DLMS.AMI.UI
             0,
             0,
             0});
-            // 
-            // StartProtocolCB
-            // 
-            this.StartProtocolCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.StartProtocolCB.FormattingEnabled = true;
-            this.helpProvider1.SetHelpKeyword(this.StartProtocolCB, "StartProtocol");
-            this.helpProvider1.SetHelpNavigator(this.StartProtocolCB, System.Windows.Forms.HelpNavigator.Topic);
-            this.StartProtocolCB.Location = new System.Drawing.Point(109, 58);
-            this.StartProtocolCB.Name = "StartProtocolCB";
-            this.helpProvider1.SetShowHelp(this.StartProtocolCB, true);
-            this.StartProtocolCB.Size = new System.Drawing.Size(137, 21);
-            this.StartProtocolCB.TabIndex = 2;
-            this.StartProtocolCB.SelectedIndexChanged += new System.EventHandler(this.StartProtocolCB_SelectedIndexChanged);
-            // 
-            // StartProtocolLbl
-            // 
-            this.StartProtocolLbl.AutoSize = true;
-            this.StartProtocolLbl.Location = new System.Drawing.Point(8, 61);
-            this.StartProtocolLbl.Name = "StartProtocolLbl";
-            this.StartProtocolLbl.Size = new System.Drawing.Size(74, 13);
-            this.StartProtocolLbl.TabIndex = 43;
-            this.StartProtocolLbl.Text = "Start Protocol:";
             // 
             // LogicalServerAddressTB
             // 
@@ -1579,8 +1581,11 @@ namespace Gurux.DLMS.AMI.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DeviceTab.Controls.Add(this.DeviceSettingsTab);
             this.DeviceTab.Controls.Add(this.AdvancedTab);
+            this.DeviceTab.Controls.Add(this.HdlcFrameTab);
+            this.DeviceTab.Controls.Add(this.PlcFrame);
             this.DeviceTab.Controls.Add(this.SupportedServicesTab);
             this.DeviceTab.Controls.Add(this.CipheringTab);
+            this.DeviceTab.Controls.Add(this.CertificatesTab);
             this.DeviceTab.Controls.Add(this.GatewayTab);
             this.DeviceTab.Controls.Add(this.XmlTab);
             this.DeviceTab.Location = new System.Drawing.Point(0, 0);
@@ -1592,6 +1597,9 @@ namespace Gurux.DLMS.AMI.UI
             // 
             // AdvancedTab
             // 
+            this.AdvancedTab.Controls.Add(this.IgnoreTimeStatusCb);
+            this.AdvancedTab.Controls.Add(this.IgnoreTimeZoneCb);
+            this.AdvancedTab.Controls.Add(this.UseProtectedReleaseCb);
             this.AdvancedTab.Controls.Add(this.InactivityTimeoutTb);
             this.AdvancedTab.Controls.Add(this.InactivityTimeoutLbl);
             this.AdvancedTab.Controls.Add(this.ServiceClassCb);
@@ -1604,7 +1612,6 @@ namespace Gurux.DLMS.AMI.UI
             this.AdvancedTab.Controls.Add(this.UserIDLbl);
             this.AdvancedTab.Controls.Add(this.MaxPduTb);
             this.AdvancedTab.Controls.Add(this.MaxPduLbl);
-            this.AdvancedTab.Controls.Add(this.groupBox1);
             this.AdvancedTab.Controls.Add(this.UseUtcTimeZone);
             this.helpProvider1.SetHelpKeyword(this.AdvancedTab, "advanced");
             this.helpProvider1.SetHelpNavigator(this.AdvancedTab, System.Windows.Forms.HelpNavigator.TopicId);
@@ -1617,268 +1624,84 @@ namespace Gurux.DLMS.AMI.UI
             this.AdvancedTab.Text = "Advanced";
             this.AdvancedTab.UseVisualStyleBackColor = true;
             // 
-            // InactivityTimeoutTb
+            // CertificatesTab
             // 
-            this.helpProvider1.SetHelpKeyword(this.InactivityTimeoutTb, "InactivityTimeout");
-            this.helpProvider1.SetHelpNavigator(this.InactivityTimeoutTb, System.Windows.Forms.HelpNavigator.Topic);
-            this.InactivityTimeoutTb.Location = new System.Drawing.Point(159, 161);
-            this.InactivityTimeoutTb.Name = "InactivityTimeoutTb";
-            this.helpProvider1.SetShowHelp(this.InactivityTimeoutTb, true);
-            this.InactivityTimeoutTb.Size = new System.Drawing.Size(93, 20);
-            this.InactivityTimeoutTb.TabIndex = 4;
-            this.InactivityTimeoutTb.TextChanged += new System.EventHandler(this.InactivityTimeoutTb_TextChanged);
+            this.CertificatesTab.Controls.Add(this.CertificatesList);
+            this.CertificatesTab.Location = new System.Drawing.Point(4, 22);
+            this.CertificatesTab.Name = "CertificatesTab";
+            this.CertificatesTab.Size = new System.Drawing.Size(472, 388);
+            this.CertificatesTab.TabIndex = 6;
+            this.CertificatesTab.Text = "Certificates";
+            this.CertificatesTab.UseVisualStyleBackColor = true;
             // 
-            // InactivityTimeoutLbl
+            // CertificatesList
             // 
-            this.InactivityTimeoutLbl.AutoSize = true;
-            this.InactivityTimeoutLbl.Location = new System.Drawing.Point(16, 165);
-            this.InactivityTimeoutLbl.Name = "InactivityTimeoutLbl";
-            this.InactivityTimeoutLbl.Size = new System.Drawing.Size(86, 13);
-            this.InactivityTimeoutLbl.TabIndex = 46;
-            this.InactivityTimeoutLbl.Text = "Inactivity timeout";
+            this.CertificatesList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.TypeCh,
+            this.SubjectCh,
+            this.ValidityCh,
+            this.KeyUsageCh});
+            this.CertificatesList.ContextMenuStrip = this.CertificateMenu;
+            this.CertificatesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CertificatesList.FullRowSelect = true;
+            this.CertificatesList.HideSelection = false;
+            this.CertificatesList.Location = new System.Drawing.Point(0, 0);
+            this.CertificatesList.MultiSelect = false;
+            this.CertificatesList.Name = "CertificatesList";
+            this.CertificatesList.Size = new System.Drawing.Size(472, 388);
+            this.CertificatesList.SmallImageList = this.imageList1;
+            this.CertificatesList.TabIndex = 25;
+            this.CertificatesList.UseCompatibleStateImageBehavior = false;
+            this.CertificatesList.View = System.Windows.Forms.View.Details;
             // 
-            // ServiceClassCb
+            // TypeCh
             // 
-            this.ServiceClassCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.helpProvider1.SetHelpKeyword(this.ServiceClassCb, "ServiceClass");
-            this.helpProvider1.SetHelpNavigator(this.ServiceClassCb, System.Windows.Forms.HelpNavigator.Topic);
-            this.ServiceClassCb.Location = new System.Drawing.Point(159, 217);
-            this.ServiceClassCb.Name = "ServiceClassCb";
-            this.helpProvider1.SetShowHelp(this.ServiceClassCb, true);
-            this.ServiceClassCb.Size = new System.Drawing.Size(93, 21);
-            this.ServiceClassCb.TabIndex = 52;
+            this.TypeCh.Text = "Type";
+            this.TypeCh.Width = 72;
             // 
-            // StandardCb
+            // SubjectCh
             // 
-            this.StandardCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.helpProvider1.SetHelpKeyword(this.StandardCb, "Standard");
-            this.helpProvider1.SetHelpNavigator(this.StandardCb, System.Windows.Forms.HelpNavigator.Topic);
-            this.StandardCb.Location = new System.Drawing.Point(159, 321);
-            this.StandardCb.Name = "StandardCb";
-            this.helpProvider1.SetShowHelp(this.StandardCb, true);
-            this.StandardCb.Size = new System.Drawing.Size(93, 21);
-            this.StandardCb.TabIndex = 59;
+            this.SubjectCh.Text = "Subject";
+            this.SubjectCh.Width = 100;
             // 
-            // PriorityCb
+            // ValidityCh
             // 
-            this.PriorityCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.helpProvider1.SetHelpKeyword(this.PriorityCb, "Priority");
-            this.helpProvider1.SetHelpNavigator(this.PriorityCb, System.Windows.Forms.HelpNavigator.Topic);
-            this.PriorityCb.Location = new System.Drawing.Point(159, 187);
-            this.PriorityCb.Name = "PriorityCb";
-            this.helpProvider1.SetShowHelp(this.PriorityCb, true);
-            this.PriorityCb.Size = new System.Drawing.Size(93, 21);
-            this.PriorityCb.TabIndex = 51;
+            this.ValidityCh.Text = "Validity";
+            this.ValidityCh.Width = 106;
             // 
-            // ServiceClassLbl
+            // KeyUsageCh
             // 
-            this.ServiceClassLbl.AutoSize = true;
-            this.ServiceClassLbl.Location = new System.Drawing.Point(16, 217);
-            this.ServiceClassLbl.Name = "ServiceClassLbl";
-            this.ServiceClassLbl.Size = new System.Drawing.Size(74, 13);
-            this.ServiceClassLbl.TabIndex = 50;
-            this.ServiceClassLbl.Text = "Service Class:";
+            this.KeyUsageCh.Text = "Key Usage";
+            this.KeyUsageCh.Width = 355;
             // 
-            // StandardLbl
+            // CertificateMenu
             // 
-            this.StandardLbl.AutoSize = true;
-            this.StandardLbl.Location = new System.Drawing.Point(16, 325);
-            this.StandardLbl.Name = "StandardLbl";
-            this.StandardLbl.Size = new System.Drawing.Size(53, 13);
-            this.StandardLbl.TabIndex = 58;
-            this.StandardLbl.Text = "Standard:";
+            this.CertificateMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CertificateAddMnu,
+            this.CertificateRemoveMnu});
+            this.CertificateMenu.Name = "contextMenuStrip1";
+            this.CertificateMenu.Size = new System.Drawing.Size(118, 48);
             // 
-            // PriorityLbl
+            // CertificateAddMnu
             // 
-            this.PriorityLbl.AutoSize = true;
-            this.PriorityLbl.Location = new System.Drawing.Point(16, 191);
-            this.PriorityLbl.Name = "PriorityLbl";
-            this.PriorityLbl.Size = new System.Drawing.Size(41, 13);
-            this.PriorityLbl.TabIndex = 48;
-            this.PriorityLbl.Text = "Priority:";
+            this.CertificateAddMnu.Name = "CertificateAddMnu";
+            this.CertificateAddMnu.Size = new System.Drawing.Size(117, 22);
+            this.CertificateAddMnu.Text = "Add..";
+            this.CertificateAddMnu.Click += new System.EventHandler(this.CertificateAddMnu_Click);
             // 
-            // UserIdTb
+            // CertificateRemoveMnu
             // 
-            this.helpProvider1.SetHelpKeyword(this.UserIdTb, "UserId");
-            this.helpProvider1.SetHelpNavigator(this.UserIdTb, System.Windows.Forms.HelpNavigator.Topic);
-            this.UserIdTb.Location = new System.Drawing.Point(159, 295);
-            this.UserIdTb.Name = "UserIdTb";
-            this.helpProvider1.SetShowHelp(this.UserIdTb, true);
-            this.UserIdTb.Size = new System.Drawing.Size(93, 20);
-            this.UserIdTb.TabIndex = 48;
+            this.CertificateRemoveMnu.Name = "CertificateRemoveMnu";
+            this.CertificateRemoveMnu.Size = new System.Drawing.Size(117, 22);
+            this.CertificateRemoveMnu.Text = "Remove";
+            this.CertificateRemoveMnu.Click += new System.EventHandler(this.CertificateRemoveMnu_Click);
             // 
-            // UserIDLbl
+            // imageList1
             // 
-            this.UserIDLbl.AutoSize = true;
-            this.UserIDLbl.Location = new System.Drawing.Point(16, 299);
-            this.UserIDLbl.Name = "UserIDLbl";
-            this.UserIDLbl.Size = new System.Drawing.Size(46, 13);
-            this.UserIDLbl.TabIndex = 54;
-            this.UserIDLbl.Text = "User ID:";
-            // 
-            // MaxPduTb
-            // 
-            this.helpProvider1.SetHelpKeyword(this.MaxPduTb, "MaxPdu");
-            this.helpProvider1.SetHelpNavigator(this.MaxPduTb, System.Windows.Forms.HelpNavigator.Topic);
-            this.MaxPduTb.Location = new System.Drawing.Point(159, 269);
-            this.MaxPduTb.Name = "MaxPduTb";
-            this.helpProvider1.SetShowHelp(this.MaxPduTb, true);
-            this.MaxPduTb.Size = new System.Drawing.Size(93, 20);
-            this.MaxPduTb.TabIndex = 47;
-            // 
-            // MaxPduLbl
-            // 
-            this.MaxPduLbl.AutoSize = true;
-            this.MaxPduLbl.Location = new System.Drawing.Point(16, 273);
-            this.MaxPduLbl.Name = "MaxPduLbl";
-            this.MaxPduLbl.Size = new System.Drawing.Size(77, 13);
-            this.MaxPduLbl.TabIndex = 48;
-            this.MaxPduLbl.Text = "Max PDU size:";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.FrameSizeCb);
-            this.groupBox1.Controls.Add(this.WindowSizeRXTb);
-            this.groupBox1.Controls.Add(this.WindowSizeRXLbl);
-            this.groupBox1.Controls.Add(this.WindowSizeTXTb);
-            this.groupBox1.Controls.Add(this.WindowSizeTXLbl);
-            this.groupBox1.Controls.Add(this.MaxInfoRXTb);
-            this.groupBox1.Controls.Add(this.MaxInfoRXLbl);
-            this.groupBox1.Controls.Add(this.MaxInfoTXTb);
-            this.groupBox1.Controls.Add(this.MaxInfoTXLbl);
-            this.groupBox1.Controls.Add(this.ServerAddressSizeCb);
-            this.groupBox1.Controls.Add(this.label5);
-            this.helpProvider1.SetHelpKeyword(this.groupBox1, "advanced");
-            this.helpProvider1.SetHelpNavigator(this.groupBox1, System.Windows.Forms.HelpNavigator.TopicId);
-            this.groupBox1.Location = new System.Drawing.Point(6, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.helpProvider1.SetShowHelp(this.groupBox1, true);
-            this.groupBox1.Size = new System.Drawing.Size(375, 149);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "HDLC settings";
-            // 
-            // FrameSizeCb
-            // 
-            this.FrameSizeCb.AutoSize = true;
-            this.helpProvider1.SetHelpString(this.FrameSizeCb, "Is password given in ASCII or Hex.");
-            this.FrameSizeCb.Location = new System.Drawing.Point(267, 23);
-            this.FrameSizeCb.Name = "FrameSizeCb";
-            this.helpProvider1.SetShowHelp(this.FrameSizeCb, true);
-            this.FrameSizeCb.Size = new System.Drawing.Size(95, 17);
-            this.FrameSizeCb.TabIndex = 58;
-            this.FrameSizeCb.Text = "Use frame size";
-            this.FrameSizeCb.UseVisualStyleBackColor = true;
-            this.FrameSizeCb.CheckedChanged += new System.EventHandler(this.FrameSizeCb_CheckedChanged);
-            // 
-            // WindowSizeRXTb
-            // 
-            this.helpProvider1.SetHelpKeyword(this.WindowSizeRXTb, "WindowSizeRX");
-            this.helpProvider1.SetHelpNavigator(this.WindowSizeRXTb, System.Windows.Forms.HelpNavigator.Topic);
-            this.WindowSizeRXTb.Location = new System.Drawing.Point(153, 97);
-            this.WindowSizeRXTb.Name = "WindowSizeRXTb";
-            this.helpProvider1.SetShowHelp(this.WindowSizeRXTb, true);
-            this.WindowSizeRXTb.Size = new System.Drawing.Size(93, 20);
-            this.WindowSizeRXTb.TabIndex = 3;
-            // 
-            // WindowSizeRXLbl
-            // 
-            this.WindowSizeRXLbl.AutoSize = true;
-            this.WindowSizeRXLbl.Location = new System.Drawing.Point(10, 101);
-            this.WindowSizeRXLbl.Name = "WindowSizeRXLbl";
-            this.WindowSizeRXLbl.Size = new System.Drawing.Size(116, 13);
-            this.WindowSizeRXLbl.TabIndex = 44;
-            this.WindowSizeRXLbl.Text = "Window size in receive";
-            // 
-            // WindowSizeTXTb
-            // 
-            this.helpProvider1.SetHelpKeyword(this.WindowSizeTXTb, "WindowSizeTX");
-            this.helpProvider1.SetHelpNavigator(this.WindowSizeTXTb, System.Windows.Forms.HelpNavigator.Topic);
-            this.WindowSizeTXTb.Location = new System.Drawing.Point(153, 71);
-            this.WindowSizeTXTb.Name = "WindowSizeTXTb";
-            this.helpProvider1.SetShowHelp(this.WindowSizeTXTb, true);
-            this.WindowSizeTXTb.Size = new System.Drawing.Size(93, 20);
-            this.WindowSizeTXTb.TabIndex = 2;
-            // 
-            // WindowSizeTXLbl
-            // 
-            this.WindowSizeTXLbl.AutoSize = true;
-            this.WindowSizeTXLbl.Location = new System.Drawing.Point(10, 75);
-            this.WindowSizeTXLbl.Name = "WindowSizeTXLbl";
-            this.WindowSizeTXLbl.Size = new System.Drawing.Size(117, 13);
-            this.WindowSizeTXLbl.TabIndex = 42;
-            this.WindowSizeTXLbl.Text = "Window size in transmit";
-            // 
-            // MaxInfoRXTb
-            // 
-            this.helpProvider1.SetHelpKeyword(this.MaxInfoRXTb, "MaxInfoRX");
-            this.helpProvider1.SetHelpNavigator(this.MaxInfoRXTb, System.Windows.Forms.HelpNavigator.Topic);
-            this.MaxInfoRXTb.Location = new System.Drawing.Point(153, 45);
-            this.MaxInfoRXTb.Name = "MaxInfoRXTb";
-            this.helpProvider1.SetShowHelp(this.MaxInfoRXTb, true);
-            this.MaxInfoRXTb.Size = new System.Drawing.Size(93, 20);
-            this.MaxInfoRXTb.TabIndex = 1;
-            // 
-            // MaxInfoRXLbl
-            // 
-            this.MaxInfoRXLbl.AutoSize = true;
-            this.MaxInfoRXLbl.Location = new System.Drawing.Point(10, 48);
-            this.MaxInfoRXLbl.Name = "MaxInfoRXLbl";
-            this.MaxInfoRXLbl.Size = new System.Drawing.Size(137, 13);
-            this.MaxInfoRXLbl.TabIndex = 40;
-            this.MaxInfoRXLbl.Text = "Max payload size in receive";
-            // 
-            // MaxInfoTXTb
-            // 
-            this.helpProvider1.SetHelpKeyword(this.MaxInfoTXTb, "MaxInfoTX");
-            this.helpProvider1.SetHelpNavigator(this.MaxInfoTXTb, System.Windows.Forms.HelpNavigator.Topic);
-            this.MaxInfoTXTb.Location = new System.Drawing.Point(153, 19);
-            this.MaxInfoTXTb.Name = "MaxInfoTXTb";
-            this.helpProvider1.SetShowHelp(this.MaxInfoTXTb, true);
-            this.MaxInfoTXTb.Size = new System.Drawing.Size(93, 20);
-            this.MaxInfoTXTb.TabIndex = 0;
-            // 
-            // MaxInfoTXLbl
-            // 
-            this.MaxInfoTXLbl.AutoSize = true;
-            this.MaxInfoTXLbl.Location = new System.Drawing.Point(10, 23);
-            this.MaxInfoTXLbl.Name = "MaxInfoTXLbl";
-            this.MaxInfoTXLbl.Size = new System.Drawing.Size(138, 13);
-            this.MaxInfoTXLbl.TabIndex = 38;
-            this.MaxInfoTXLbl.Text = "Max payload size in transmit";
-            // 
-            // ServerAddressSizeCb
-            // 
-            this.ServerAddressSizeCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.helpProvider1.SetHelpKeyword(this.ServerAddressSizeCb, "AddressSize");
-            this.helpProvider1.SetHelpNavigator(this.ServerAddressSizeCb, System.Windows.Forms.HelpNavigator.Topic);
-            this.ServerAddressSizeCb.Location = new System.Drawing.Point(153, 122);
-            this.ServerAddressSizeCb.Name = "ServerAddressSizeCb";
-            this.helpProvider1.SetShowHelp(this.ServerAddressSizeCb, true);
-            this.ServerAddressSizeCb.Size = new System.Drawing.Size(93, 21);
-            this.ServerAddressSizeCb.TabIndex = 57;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 126);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(102, 13);
-            this.label5.TabIndex = 56;
-            this.label5.Text = "Server address size:";
-            // 
-            // UseUtcTimeZone
-            // 
-            this.UseUtcTimeZone.AutoSize = true;
-            this.helpProvider1.SetHelpKeyword(this.UseUtcTimeZone, "UseUTC");
-            this.helpProvider1.SetHelpNavigator(this.UseUtcTimeZone, System.Windows.Forms.HelpNavigator.Topic);
-            this.UseUtcTimeZone.Location = new System.Drawing.Point(16, 246);
-            this.UseUtcTimeZone.Name = "UseUtcTimeZone";
-            this.helpProvider1.SetShowHelp(this.UseUtcTimeZone, true);
-            this.UseUtcTimeZone.Size = new System.Drawing.Size(183, 17);
-            this.UseUtcTimeZone.TabIndex = 6;
-            this.UseUtcTimeZone.Text = "Use UTC time zone, not standard";
-            this.UseUtcTimeZone.UseVisualStyleBackColor = true;
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
+            this.imageList1.Images.SetKeyName(0, "publicKey.png");
+            this.imageList1.Images.SetKeyName(1, "privateKey.png");
             // 
             // GatewayTab
             // 
@@ -1992,6 +1815,404 @@ namespace Gurux.DLMS.AMI.UI
             // 
             this.conformanceHelpProvider.HelpNamespace = "https://www.gurux.fi/Gurux.DLMS.Conformance";
             // 
+            // HdlcFrameTab
+            // 
+            this.HdlcFrameTab.Controls.Add(this.HdlcGroup);
+            this.HdlcFrameTab.Location = new System.Drawing.Point(4, 22);
+            this.HdlcFrameTab.Name = "HdlcFrameTab";
+            this.HdlcFrameTab.Padding = new System.Windows.Forms.Padding(3);
+            this.HdlcFrameTab.Size = new System.Drawing.Size(472, 388);
+            this.HdlcFrameTab.TabIndex = 7;
+            this.HdlcFrameTab.Text = "Frame";
+            this.HdlcFrameTab.UseVisualStyleBackColor = true;
+            // 
+            // PlcFrame
+            // 
+            this.PlcFrame.Controls.Add(this.PlcGroup);
+            this.PlcFrame.Location = new System.Drawing.Point(4, 22);
+            this.PlcFrame.Name = "PlcFrame";
+            this.PlcFrame.Size = new System.Drawing.Size(472, 388);
+            this.PlcFrame.TabIndex = 8;
+            this.PlcFrame.Text = "Frame";
+            this.PlcFrame.UseVisualStyleBackColor = true;
+            // 
+            // IgnoreTimeStatusCb
+            // 
+            this.IgnoreTimeStatusCb.AutoSize = true;
+            this.helpProvider1.SetHelpKeyword(this.IgnoreTimeStatusCb, "IgnoreTimeStatus");
+            this.helpProvider1.SetHelpNavigator(this.IgnoreTimeStatusCb, System.Windows.Forms.HelpNavigator.Topic);
+            this.helpProvider1.SetHelpString(this.IgnoreTimeStatusCb, "");
+            this.IgnoreTimeStatusCb.Location = new System.Drawing.Point(316, 89);
+            this.IgnoreTimeStatusCb.Name = "IgnoreTimeStatusCb";
+            this.helpProvider1.SetShowHelp(this.IgnoreTimeStatusCb, true);
+            this.IgnoreTimeStatusCb.Size = new System.Drawing.Size(115, 17);
+            this.IgnoreTimeStatusCb.TabIndex = 65;
+            this.IgnoreTimeStatusCb.Text = "Ignore Time Status";
+            this.IgnoreTimeStatusCb.UseVisualStyleBackColor = true;
+            // 
+            // IgnoreTimeZoneCb
+            // 
+            this.IgnoreTimeZoneCb.AutoSize = true;
+            this.helpProvider1.SetHelpKeyword(this.IgnoreTimeZoneCb, "IgnoreTimeZone");
+            this.helpProvider1.SetHelpNavigator(this.IgnoreTimeZoneCb, System.Windows.Forms.HelpNavigator.Topic);
+            this.helpProvider1.SetHelpString(this.IgnoreTimeZoneCb, "");
+            this.IgnoreTimeZoneCb.Location = new System.Drawing.Point(200, 89);
+            this.IgnoreTimeZoneCb.Name = "IgnoreTimeZoneCb";
+            this.helpProvider1.SetShowHelp(this.IgnoreTimeZoneCb, true);
+            this.IgnoreTimeZoneCb.Size = new System.Drawing.Size(110, 17);
+            this.IgnoreTimeZoneCb.TabIndex = 64;
+            this.IgnoreTimeZoneCb.Text = "Ignore Time Zone";
+            this.IgnoreTimeZoneCb.UseVisualStyleBackColor = true;
+            // 
+            // UseProtectedReleaseCb
+            // 
+            this.UseProtectedReleaseCb.AutoSize = true;
+            this.helpProvider1.SetHelpString(this.UseProtectedReleaseCb, "Is protected release used.");
+            this.UseProtectedReleaseCb.Location = new System.Drawing.Point(8, 196);
+            this.UseProtectedReleaseCb.Name = "UseProtectedReleaseCb";
+            this.helpProvider1.SetShowHelp(this.UseProtectedReleaseCb, true);
+            this.UseProtectedReleaseCb.Size = new System.Drawing.Size(130, 17);
+            this.UseProtectedReleaseCb.TabIndex = 75;
+            this.UseProtectedReleaseCb.Text = "Use protected release";
+            this.UseProtectedReleaseCb.UseVisualStyleBackColor = true;
+            // 
+            // InactivityTimeoutTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.InactivityTimeoutTb, "InactivityTimeout");
+            this.helpProvider1.SetHelpNavigator(this.InactivityTimeoutTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.InactivityTimeoutTb.Location = new System.Drawing.Point(151, 6);
+            this.InactivityTimeoutTb.Name = "InactivityTimeoutTb";
+            this.helpProvider1.SetShowHelp(this.InactivityTimeoutTb, true);
+            this.InactivityTimeoutTb.Size = new System.Drawing.Size(93, 20);
+            this.InactivityTimeoutTb.TabIndex = 60;
+            // 
+            // InactivityTimeoutLbl
+            // 
+            this.InactivityTimeoutLbl.AutoSize = true;
+            this.InactivityTimeoutLbl.Location = new System.Drawing.Point(8, 10);
+            this.InactivityTimeoutLbl.Name = "InactivityTimeoutLbl";
+            this.InactivityTimeoutLbl.Size = new System.Drawing.Size(86, 13);
+            this.InactivityTimeoutLbl.TabIndex = 69;
+            this.InactivityTimeoutLbl.Text = "Inactivity timeout";
+            // 
+            // ServiceClassCb
+            // 
+            this.ServiceClassCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.helpProvider1.SetHelpKeyword(this.ServiceClassCb, "ServiceClass");
+            this.helpProvider1.SetHelpNavigator(this.ServiceClassCb, System.Windows.Forms.HelpNavigator.Topic);
+            this.ServiceClassCb.Location = new System.Drawing.Point(151, 62);
+            this.ServiceClassCb.Name = "ServiceClassCb";
+            this.helpProvider1.SetShowHelp(this.ServiceClassCb, true);
+            this.ServiceClassCb.Size = new System.Drawing.Size(93, 21);
+            this.ServiceClassCb.TabIndex = 62;
+            // 
+            // StandardCb
+            // 
+            this.StandardCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.helpProvider1.SetHelpKeyword(this.StandardCb, "Standard");
+            this.helpProvider1.SetHelpNavigator(this.StandardCb, System.Windows.Forms.HelpNavigator.Topic);
+            this.StandardCb.Location = new System.Drawing.Point(151, 166);
+            this.StandardCb.Name = "StandardCb";
+            this.helpProvider1.SetShowHelp(this.StandardCb, true);
+            this.StandardCb.Size = new System.Drawing.Size(93, 21);
+            this.StandardCb.TabIndex = 68;
+            // 
+            // PriorityCb
+            // 
+            this.PriorityCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.helpProvider1.SetHelpKeyword(this.PriorityCb, "Priority");
+            this.helpProvider1.SetHelpNavigator(this.PriorityCb, System.Windows.Forms.HelpNavigator.Topic);
+            this.PriorityCb.Location = new System.Drawing.Point(151, 32);
+            this.PriorityCb.Name = "PriorityCb";
+            this.helpProvider1.SetShowHelp(this.PriorityCb, true);
+            this.PriorityCb.Size = new System.Drawing.Size(93, 21);
+            this.PriorityCb.TabIndex = 61;
+            // 
+            // ServiceClassLbl
+            // 
+            this.ServiceClassLbl.AutoSize = true;
+            this.ServiceClassLbl.Location = new System.Drawing.Point(8, 62);
+            this.ServiceClassLbl.Name = "ServiceClassLbl";
+            this.ServiceClassLbl.Size = new System.Drawing.Size(74, 13);
+            this.ServiceClassLbl.TabIndex = 72;
+            this.ServiceClassLbl.Text = "Service Class:";
+            // 
+            // StandardLbl
+            // 
+            this.StandardLbl.AutoSize = true;
+            this.StandardLbl.Location = new System.Drawing.Point(8, 170);
+            this.StandardLbl.Name = "StandardLbl";
+            this.StandardLbl.Size = new System.Drawing.Size(53, 13);
+            this.StandardLbl.TabIndex = 74;
+            this.StandardLbl.Text = "Standard:";
+            // 
+            // PriorityLbl
+            // 
+            this.PriorityLbl.AutoSize = true;
+            this.PriorityLbl.Location = new System.Drawing.Point(8, 36);
+            this.PriorityLbl.Name = "PriorityLbl";
+            this.PriorityLbl.Size = new System.Drawing.Size(41, 13);
+            this.PriorityLbl.TabIndex = 70;
+            this.PriorityLbl.Text = "Priority:";
+            // 
+            // UserIdTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.UserIdTb, "UserId");
+            this.helpProvider1.SetHelpNavigator(this.UserIdTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.UserIdTb.Location = new System.Drawing.Point(151, 140);
+            this.UserIdTb.Name = "UserIdTb";
+            this.helpProvider1.SetShowHelp(this.UserIdTb, true);
+            this.UserIdTb.Size = new System.Drawing.Size(93, 20);
+            this.UserIdTb.TabIndex = 67;
+            // 
+            // UserIDLbl
+            // 
+            this.UserIDLbl.AutoSize = true;
+            this.UserIDLbl.Location = new System.Drawing.Point(8, 144);
+            this.UserIDLbl.Name = "UserIDLbl";
+            this.UserIDLbl.Size = new System.Drawing.Size(46, 13);
+            this.UserIDLbl.TabIndex = 73;
+            this.UserIDLbl.Text = "User ID:";
+            // 
+            // MaxPduTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.MaxPduTb, "MaxPdu");
+            this.helpProvider1.SetHelpNavigator(this.MaxPduTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.MaxPduTb.Location = new System.Drawing.Point(151, 114);
+            this.MaxPduTb.Name = "MaxPduTb";
+            this.helpProvider1.SetShowHelp(this.MaxPduTb, true);
+            this.MaxPduTb.Size = new System.Drawing.Size(93, 20);
+            this.MaxPduTb.TabIndex = 66;
+            // 
+            // MaxPduLbl
+            // 
+            this.MaxPduLbl.AutoSize = true;
+            this.MaxPduLbl.Location = new System.Drawing.Point(8, 118);
+            this.MaxPduLbl.Name = "MaxPduLbl";
+            this.MaxPduLbl.Size = new System.Drawing.Size(77, 13);
+            this.MaxPduLbl.TabIndex = 71;
+            this.MaxPduLbl.Text = "Max PDU size:";
+            // 
+            // UseUtcTimeZone
+            // 
+            this.UseUtcTimeZone.AutoSize = true;
+            this.helpProvider1.SetHelpKeyword(this.UseUtcTimeZone, "UseUTC");
+            this.helpProvider1.SetHelpNavigator(this.UseUtcTimeZone, System.Windows.Forms.HelpNavigator.Topic);
+            this.UseUtcTimeZone.Location = new System.Drawing.Point(11, 89);
+            this.UseUtcTimeZone.Name = "UseUtcTimeZone";
+            this.helpProvider1.SetShowHelp(this.UseUtcTimeZone, true);
+            this.UseUtcTimeZone.Size = new System.Drawing.Size(183, 17);
+            this.UseUtcTimeZone.TabIndex = 63;
+            this.UseUtcTimeZone.Text = "Use UTC time zone, not standard";
+            this.UseUtcTimeZone.UseVisualStyleBackColor = true;
+            // 
+            // HdlcGroup
+            // 
+            this.HdlcGroup.Controls.Add(this.FrameSizeCb);
+            this.HdlcGroup.Controls.Add(this.WindowSizeRXTb);
+            this.HdlcGroup.Controls.Add(this.WindowSizeRXLbl);
+            this.HdlcGroup.Controls.Add(this.WindowSizeTXTb);
+            this.HdlcGroup.Controls.Add(this.WindowSizeTXLbl);
+            this.HdlcGroup.Controls.Add(this.MaxInfoRXTb);
+            this.HdlcGroup.Controls.Add(this.MaxInfoRXLbl);
+            this.HdlcGroup.Controls.Add(this.MaxInfoTXTb);
+            this.HdlcGroup.Controls.Add(this.MaxInfoTXLbl);
+            this.HdlcGroup.Controls.Add(this.ServerAddressSizeCb);
+            this.HdlcGroup.Controls.Add(this.label5);
+            this.helpProvider1.SetHelpKeyword(this.HdlcGroup, "advanced");
+            this.helpProvider1.SetHelpNavigator(this.HdlcGroup, System.Windows.Forms.HelpNavigator.Topic);
+            this.HdlcGroup.Location = new System.Drawing.Point(3, 6);
+            this.HdlcGroup.Name = "HdlcGroup";
+            this.helpProvider1.SetShowHelp(this.HdlcGroup, true);
+            this.HdlcGroup.Size = new System.Drawing.Size(375, 149);
+            this.HdlcGroup.TabIndex = 2;
+            this.HdlcGroup.TabStop = false;
+            this.HdlcGroup.Text = "HDLC settings";
+            // 
+            // FrameSizeCb
+            // 
+            this.FrameSizeCb.AutoSize = true;
+            this.helpProvider1.SetHelpString(this.FrameSizeCb, "Is password given in ASCII or Hex.");
+            this.FrameSizeCb.Location = new System.Drawing.Point(267, 23);
+            this.FrameSizeCb.Name = "FrameSizeCb";
+            this.helpProvider1.SetShowHelp(this.FrameSizeCb, true);
+            this.FrameSizeCb.Size = new System.Drawing.Size(95, 17);
+            this.FrameSizeCb.TabIndex = 58;
+            this.FrameSizeCb.Text = "Use frame size";
+            this.FrameSizeCb.UseVisualStyleBackColor = true;
+            // 
+            // WindowSizeRXTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.WindowSizeRXTb, "WindowSizeRX");
+            this.helpProvider1.SetHelpNavigator(this.WindowSizeRXTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.WindowSizeRXTb.Location = new System.Drawing.Point(153, 97);
+            this.WindowSizeRXTb.Name = "WindowSizeRXTb";
+            this.helpProvider1.SetShowHelp(this.WindowSizeRXTb, true);
+            this.WindowSizeRXTb.Size = new System.Drawing.Size(93, 20);
+            this.WindowSizeRXTb.TabIndex = 3;
+            // 
+            // WindowSizeRXLbl
+            // 
+            this.WindowSizeRXLbl.AutoSize = true;
+            this.WindowSizeRXLbl.Location = new System.Drawing.Point(10, 101);
+            this.WindowSizeRXLbl.Name = "WindowSizeRXLbl";
+            this.WindowSizeRXLbl.Size = new System.Drawing.Size(116, 13);
+            this.WindowSizeRXLbl.TabIndex = 44;
+            this.WindowSizeRXLbl.Text = "Window size in receive";
+            // 
+            // WindowSizeTXTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.WindowSizeTXTb, "WindowSizeTX");
+            this.helpProvider1.SetHelpNavigator(this.WindowSizeTXTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.WindowSizeTXTb.Location = new System.Drawing.Point(153, 71);
+            this.WindowSizeTXTb.Name = "WindowSizeTXTb";
+            this.helpProvider1.SetShowHelp(this.WindowSizeTXTb, true);
+            this.WindowSizeTXTb.Size = new System.Drawing.Size(93, 20);
+            this.WindowSizeTXTb.TabIndex = 2;
+            // 
+            // WindowSizeTXLbl
+            // 
+            this.WindowSizeTXLbl.AutoSize = true;
+            this.WindowSizeTXLbl.Location = new System.Drawing.Point(10, 75);
+            this.WindowSizeTXLbl.Name = "WindowSizeTXLbl";
+            this.WindowSizeTXLbl.Size = new System.Drawing.Size(117, 13);
+            this.WindowSizeTXLbl.TabIndex = 42;
+            this.WindowSizeTXLbl.Text = "Window size in transmit";
+            // 
+            // MaxInfoRXTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.MaxInfoRXTb, "MaxInfoRX");
+            this.helpProvider1.SetHelpNavigator(this.MaxInfoRXTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.MaxInfoRXTb.Location = new System.Drawing.Point(153, 45);
+            this.MaxInfoRXTb.Name = "MaxInfoRXTb";
+            this.helpProvider1.SetShowHelp(this.MaxInfoRXTb, true);
+            this.MaxInfoRXTb.Size = new System.Drawing.Size(93, 20);
+            this.MaxInfoRXTb.TabIndex = 1;
+            // 
+            // MaxInfoRXLbl
+            // 
+            this.MaxInfoRXLbl.AutoSize = true;
+            this.MaxInfoRXLbl.Location = new System.Drawing.Point(10, 48);
+            this.MaxInfoRXLbl.Name = "MaxInfoRXLbl";
+            this.MaxInfoRXLbl.Size = new System.Drawing.Size(137, 13);
+            this.MaxInfoRXLbl.TabIndex = 40;
+            this.MaxInfoRXLbl.Text = "Max payload size in receive";
+            // 
+            // MaxInfoTXTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.MaxInfoTXTb, "MaxInfoTX");
+            this.helpProvider1.SetHelpNavigator(this.MaxInfoTXTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.MaxInfoTXTb.Location = new System.Drawing.Point(153, 19);
+            this.MaxInfoTXTb.Name = "MaxInfoTXTb";
+            this.helpProvider1.SetShowHelp(this.MaxInfoTXTb, true);
+            this.MaxInfoTXTb.Size = new System.Drawing.Size(93, 20);
+            this.MaxInfoTXTb.TabIndex = 0;
+            // 
+            // MaxInfoTXLbl
+            // 
+            this.MaxInfoTXLbl.AutoSize = true;
+            this.MaxInfoTXLbl.Location = new System.Drawing.Point(10, 23);
+            this.MaxInfoTXLbl.Name = "MaxInfoTXLbl";
+            this.MaxInfoTXLbl.Size = new System.Drawing.Size(138, 13);
+            this.MaxInfoTXLbl.TabIndex = 38;
+            this.MaxInfoTXLbl.Text = "Max payload size in transmit";
+            // 
+            // ServerAddressSizeCb
+            // 
+            this.ServerAddressSizeCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.helpProvider1.SetHelpKeyword(this.ServerAddressSizeCb, "AddressSize");
+            this.helpProvider1.SetHelpNavigator(this.ServerAddressSizeCb, System.Windows.Forms.HelpNavigator.Topic);
+            this.ServerAddressSizeCb.Location = new System.Drawing.Point(153, 122);
+            this.ServerAddressSizeCb.Name = "ServerAddressSizeCb";
+            this.helpProvider1.SetShowHelp(this.ServerAddressSizeCb, true);
+            this.ServerAddressSizeCb.Size = new System.Drawing.Size(93, 21);
+            this.ServerAddressSizeCb.TabIndex = 57;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(10, 126);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(102, 13);
+            this.label5.TabIndex = 56;
+            this.label5.Text = "Server address size:";
+            // 
+            // PlcGroup
+            // 
+            this.PlcGroup.Controls.Add(this.MACTargetAddressTb);
+            this.PlcGroup.Controls.Add(this.MACSourceAddressTb);
+            this.PlcGroup.Controls.Add(this.MACTargetAddressLbl);
+            this.PlcGroup.Controls.Add(this.MACSourceAddressLbl);
+            this.helpProvider1.SetHelpKeyword(this.PlcGroup, "advanced");
+            this.helpProvider1.SetHelpNavigator(this.PlcGroup, System.Windows.Forms.HelpNavigator.Topic);
+            this.PlcGroup.Location = new System.Drawing.Point(6, 3);
+            this.PlcGroup.Name = "PlcGroup";
+            this.helpProvider1.SetShowHelp(this.PlcGroup, true);
+            this.PlcGroup.Size = new System.Drawing.Size(375, 149);
+            this.PlcGroup.TabIndex = 61;
+            this.PlcGroup.TabStop = false;
+            this.PlcGroup.Text = "PLC settings";
+            // 
+            // MACTargetAddressTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.MACTargetAddressTb, "ClientAddress");
+            this.helpProvider1.SetHelpNavigator(this.MACTargetAddressTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.MACTargetAddressTb.Hexadecimal = true;
+            this.MACTargetAddressTb.Location = new System.Drawing.Point(153, 45);
+            this.MACTargetAddressTb.Maximum = new decimal(new int[] {
+            4095,
+            0,
+            0,
+            0});
+            this.MACTargetAddressTb.Name = "MACTargetAddressTb";
+            this.helpProvider1.SetShowHelp(this.MACTargetAddressTb, true);
+            this.MACTargetAddressTb.Size = new System.Drawing.Size(105, 20);
+            this.MACTargetAddressTb.TabIndex = 42;
+            this.MACTargetAddressTb.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // MACSourceAddressTb
+            // 
+            this.helpProvider1.SetHelpKeyword(this.MACSourceAddressTb, "ClientAddress");
+            this.helpProvider1.SetHelpNavigator(this.MACSourceAddressTb, System.Windows.Forms.HelpNavigator.Topic);
+            this.MACSourceAddressTb.Hexadecimal = true;
+            this.MACSourceAddressTb.Location = new System.Drawing.Point(153, 19);
+            this.MACSourceAddressTb.Maximum = new decimal(new int[] {
+            4095,
+            0,
+            0,
+            0});
+            this.MACSourceAddressTb.Name = "MACSourceAddressTb";
+            this.helpProvider1.SetShowHelp(this.MACSourceAddressTb, true);
+            this.MACSourceAddressTb.Size = new System.Drawing.Size(105, 20);
+            this.MACSourceAddressTb.TabIndex = 41;
+            this.MACSourceAddressTb.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // MACTargetAddressLbl
+            // 
+            this.MACTargetAddressLbl.AutoSize = true;
+            this.MACTargetAddressLbl.Location = new System.Drawing.Point(10, 48);
+            this.MACTargetAddressLbl.Name = "MACTargetAddressLbl";
+            this.MACTargetAddressLbl.Size = new System.Drawing.Size(108, 13);
+            this.MACTargetAddressLbl.TabIndex = 40;
+            this.MACTargetAddressLbl.Text = "MAC Target Address:";
+            // 
+            // MACSourceAddressLbl
+            // 
+            this.MACSourceAddressLbl.AutoSize = true;
+            this.MACSourceAddressLbl.Location = new System.Drawing.Point(10, 23);
+            this.MACSourceAddressLbl.Name = "MACSourceAddressLbl";
+            this.MACSourceAddressLbl.Size = new System.Drawing.Size(111, 13);
+            this.MACSourceAddressLbl.TabIndex = 38;
+            this.MACSourceAddressLbl.Text = "MAC Source Address:";
+            // 
             // DBDevicePropertiesForm
             // 
             this.AcceptButton = this.OKBtn;
@@ -2036,12 +2257,20 @@ namespace Gurux.DLMS.AMI.UI
             this.DeviceTab.ResumeLayout(false);
             this.AdvancedTab.ResumeLayout(false);
             this.AdvancedTab.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.CertificatesTab.ResumeLayout(false);
+            this.CertificateMenu.ResumeLayout(false);
             this.GatewayTab.ResumeLayout(false);
             this.GatewayTab.PerformLayout();
             this.XmlTab.ResumeLayout(false);
             this.XmlTab.PerformLayout();
+            this.HdlcFrameTab.ResumeLayout(false);
+            this.PlcFrame.ResumeLayout(false);
+            this.HdlcGroup.ResumeLayout(false);
+            this.HdlcGroup.PerformLayout();
+            this.PlcGroup.ResumeLayout(false);
+            this.PlcGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MACTargetAddressTb)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MACSourceAddressTb)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2068,8 +2297,6 @@ namespace Gurux.DLMS.AMI.UI
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label ClientAddLbl;
         private System.Windows.Forms.NumericUpDown ClientAddTB;
-        private System.Windows.Forms.ComboBox StartProtocolCB;
-        private System.Windows.Forms.Label StartProtocolLbl;
         private System.Windows.Forms.NumericUpDown LogicalServerAddressTB;
         private System.Windows.Forms.Label LogicalServerAddressLbl;
         private System.Windows.Forms.NumericUpDown PhysicalServerAddressTB;
@@ -2145,36 +2372,12 @@ namespace Gurux.DLMS.AMI.UI
         private System.Windows.Forms.CheckBox PasswordAsciiCb;
         private System.Windows.Forms.GroupBox CustomSettings;
         private System.Windows.Forms.TabPage AdvancedTab;
-        private System.Windows.Forms.CheckBox UseUtcTimeZone;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox WindowSizeRXTb;
-        private System.Windows.Forms.Label WindowSizeRXLbl;
-        private System.Windows.Forms.TextBox WindowSizeTXTb;
-        private System.Windows.Forms.Label WindowSizeTXLbl;
-        private System.Windows.Forms.TextBox MaxInfoRXTb;
-        private System.Windows.Forms.Label MaxInfoRXLbl;
-        private System.Windows.Forms.TextBox MaxInfoTXTb;
-        private System.Windows.Forms.Label MaxInfoTXLbl;
         private System.Windows.Forms.HelpProvider helpProvider1;
         private System.Windows.Forms.HelpProvider conformanceHelpProvider;
-        private System.Windows.Forms.TextBox InactivityTimeoutTb;
-        private System.Windows.Forms.Label InactivityTimeoutLbl;
-        private System.Windows.Forms.TextBox MaxPduTb;
-        private System.Windows.Forms.Label MaxPduLbl;
-        private System.Windows.Forms.Label ServiceClassLbl;
-        private System.Windows.Forms.Label PriorityLbl;
-        private System.Windows.Forms.ComboBox ServiceClassCb;
-        private System.Windows.Forms.ComboBox PriorityCb;
-        private System.Windows.Forms.TextBox UserIdTb;
-        private System.Windows.Forms.Label UserIDLbl;
         private System.Windows.Forms.CheckBox UsePreEstablishedApplicationAssociations;
         private System.Windows.Forms.TextBox ServerSystemTitle;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox ServerSystemTitleAsciiCb;
-        private System.Windows.Forms.ComboBox ServerAddressSizeCb;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox StandardCb;
-        private System.Windows.Forms.Label StandardLbl;
         private System.Windows.Forms.TextBox FrameCounterTb;
         private System.Windows.Forms.Label FrameCounterLbl;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -2192,12 +2395,56 @@ namespace Gurux.DLMS.AMI.UI
         private System.Windows.Forms.Label NetworkIDLbl;
         private System.Windows.Forms.Label PhysicalDeviceAddressLbl;
         private System.Windows.Forms.CheckBox UseGatewayCb;
-        private System.Windows.Forms.CheckBox FrameSizeCb;
         private System.Windows.Forms.NumericUpDown ResendTb;
         private System.Windows.Forms.Label ResendLbl;
         private System.Windows.Forms.DateTimePicker WaitTimeTB;
         private System.Windows.Forms.ComboBox InterfaceCb;
         private System.Windows.Forms.Label InterfaceLbl;
         private System.Windows.Forms.CheckBox DynamicCb;
+        private System.Windows.Forms.TabPage CertificatesTab;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ContextMenuStrip CertificateMenu;
+        private System.Windows.Forms.ToolStripMenuItem CertificateAddMnu;
+        private System.Windows.Forms.ToolStripMenuItem CertificateRemoveMnu;
+        private System.Windows.Forms.ListView CertificatesList;
+        private System.Windows.Forms.ColumnHeader TypeCh;
+        private System.Windows.Forms.ColumnHeader SubjectCh;
+        private System.Windows.Forms.ColumnHeader ValidityCh;
+        private System.Windows.Forms.ColumnHeader KeyUsageCh;
+        private System.Windows.Forms.TabPage HdlcFrameTab;
+        private System.Windows.Forms.TabPage PlcFrame;
+        private System.Windows.Forms.CheckBox IgnoreTimeStatusCb;
+        private System.Windows.Forms.CheckBox IgnoreTimeZoneCb;
+        private System.Windows.Forms.CheckBox UseProtectedReleaseCb;
+        private System.Windows.Forms.TextBox InactivityTimeoutTb;
+        private System.Windows.Forms.Label InactivityTimeoutLbl;
+        private System.Windows.Forms.ComboBox ServiceClassCb;
+        private System.Windows.Forms.ComboBox StandardCb;
+        private System.Windows.Forms.ComboBox PriorityCb;
+        private System.Windows.Forms.Label ServiceClassLbl;
+        private System.Windows.Forms.Label StandardLbl;
+        private System.Windows.Forms.Label PriorityLbl;
+        private System.Windows.Forms.TextBox UserIdTb;
+        private System.Windows.Forms.Label UserIDLbl;
+        private System.Windows.Forms.TextBox MaxPduTb;
+        private System.Windows.Forms.Label MaxPduLbl;
+        private System.Windows.Forms.CheckBox UseUtcTimeZone;
+        private System.Windows.Forms.GroupBox HdlcGroup;
+        private System.Windows.Forms.CheckBox FrameSizeCb;
+        private System.Windows.Forms.TextBox WindowSizeRXTb;
+        private System.Windows.Forms.Label WindowSizeRXLbl;
+        private System.Windows.Forms.TextBox WindowSizeTXTb;
+        private System.Windows.Forms.Label WindowSizeTXLbl;
+        private System.Windows.Forms.TextBox MaxInfoRXTb;
+        private System.Windows.Forms.Label MaxInfoRXLbl;
+        private System.Windows.Forms.TextBox MaxInfoTXTb;
+        private System.Windows.Forms.Label MaxInfoTXLbl;
+        private System.Windows.Forms.ComboBox ServerAddressSizeCb;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox PlcGroup;
+        private System.Windows.Forms.NumericUpDown MACTargetAddressTb;
+        private System.Windows.Forms.NumericUpDown MACSourceAddressTb;
+        private System.Windows.Forms.Label MACTargetAddressLbl;
+        private System.Windows.Forms.Label MACSourceAddressLbl;
     }
 }
