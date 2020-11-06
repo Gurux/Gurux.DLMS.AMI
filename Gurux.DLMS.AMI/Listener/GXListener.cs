@@ -112,7 +112,7 @@ namespace Gurux.DLMS.AMI.Notify
                     ListenerOptions listener = config.GetSection("Listener").Get<ListenerOptions>();
                     GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
                     GXDLMSSecureClient client = new GXDLMSSecureClient(listener.UseLogicalNameReferencing, listener.ClientAddress, listener.ServerAddress, (Authentication)listener.Authentication, listener.Password, (InterfaceType)listener.Interface);
-                    reader = new GXDLMSReader(client, media, _logger);
+                    reader = new GXDLMSReader(client, media, _logger, listener.TraceLevel);
                     GXDLMSData ldn = new GXDLMSData("0.0.42.0.0.255");
                     ldn.SetUIDataType(2, DataType.String);
                     reader.InitializeConnection();
@@ -223,7 +223,7 @@ namespace Gurux.DLMS.AMI.Notify
                                     client.ServerSystemTitle = GXCommon.HexToBytes(dev.DeviceSystemTitle);
                                     client.Ciphering.InvocationCounter = dev.InvocationCounter;
                                     client.Ciphering.Security = (byte)dev.Security;
-                                    reader = new GXDLMSReader(client, media, _logger);
+                                    reader = new GXDLMSReader(client, media, _logger, listener.TraceLevel);
                                     reader.InitializeConnection();
                                 }
                                 List<GXValue> values = new List<GXValue>();
@@ -260,7 +260,7 @@ namespace Gurux.DLMS.AMI.Notify
                                             {
                                                 obj.SetUIDataType(task.Index, (DataType)task.Object.Attributes[0].UIDataType);
                                             }
-                                            Reader.Reader.Read(null, httpClient, reader, task, media, obj);
+                                            Reader.Reader.Read(null, httpClient, reader, task, obj);
                                             if (task.Object.Attributes[0].DataType == 0)
                                             {
                                                 task.Object.Attributes[0].DataType = (int)obj.GetDataType(task.Index);

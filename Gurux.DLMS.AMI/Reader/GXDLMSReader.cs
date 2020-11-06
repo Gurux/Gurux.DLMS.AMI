@@ -67,29 +67,11 @@ namespace Gurux.DLMS.AMI.Reader
         /// </summary>
         /// <param name="client">DLMS Client.</param>
         /// <param name="media">Media.</param>
-        public GXDLMSReader(GXDLMSSecureClient client, IGXMedia media, ILogger logger)
+        /// <param name="logger">Logger.</param>
+        /// <param name="trace">Trace level.</param>
+        public GXDLMSReader(GXDLMSSecureClient client, IGXMedia media, ILogger logger, TraceLevel trace)
         {
-            if (logger.IsEnabled(LogLevel.Trace) || logger.IsEnabled(LogLevel.Debug))
-            {
-                Trace = TraceLevel.Verbose;
-            }
-            else if (logger.IsEnabled(LogLevel.Information))
-            {
-                Trace = TraceLevel.Info;
-
-            }
-            else if (logger.IsEnabled(LogLevel.Warning))
-            {
-                Trace = TraceLevel.Warning;
-            }
-            else if (logger.IsEnabled(LogLevel.Error) || logger.IsEnabled(LogLevel.Critical))
-            {
-                Trace = TraceLevel.Error;
-            }
-            else
-            {
-                Trace = TraceLevel.Off;
-            }
+            Trace = trace;
             Media = media;
             Client = client;
             _logger = logger;

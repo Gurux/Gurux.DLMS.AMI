@@ -116,7 +116,7 @@ namespace Gurux.DLMS.AMI.Reader
             return false;
         }
 
-        internal static void Read(ILogger _logger, System.Net.Http.HttpClient client, GXDLMSReader reader, GXTask task, IGXMedia net, GXDLMSObject obj)
+        internal static void Read(ILogger _logger, System.Net.Http.HttpClient client, GXDLMSReader reader, GXTask task, GXDLMSObject obj)
         {
             AddValue v;
             System.Net.Http.HttpResponseMessage response;

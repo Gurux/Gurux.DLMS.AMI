@@ -189,7 +189,8 @@ namespace Gurux.DLMS.AMI
                 });
             }
             services.Configure<ListenerOptions>(Configuration.GetSection("Listener"));
-            if (!Configuration.GetSection("Listener").Get<ListenerOptions>().Disabled)
+            ListenerOptions listener = Configuration.GetSection("Listener").Get<ListenerOptions>();
+            if (!listener.Disabled)
             {
                 services.AddHostedService<GXListenerService>();
             }
@@ -207,6 +208,8 @@ namespace Gurux.DLMS.AMI
             }
             services.Configure<ReaderOptions>(Configuration.GetSection("Reader"));
             ReaderOptions r = Configuration.GetSection("Reader").Get<ReaderOptions>();
+            Console.WriteLine("Reader trace level is " + r.TraceLevel);
+            Console.WriteLine("Listener trace level is " + listener.TraceLevel);
             if (r.Threads != 0 && !r.Disabled)
             {
                 services.AddHostedService<ReaderService>();

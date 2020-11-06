@@ -30,6 +30,7 @@
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using System;
+using System.Diagnostics;
 
 namespace Gurux.DLMS.AMI.Internal
 {
@@ -110,5 +111,14 @@ namespace Gurux.DLMS.AMI.Internal
         /// New devices are not created automatically if value is zero.
         /// </remarks>
         public UInt64 DefaultDeviceTemplate { get; set; }
+
+        /// <summary>
+        /// Used trace level.
+        /// </summary>
+        public TraceLevel TraceLevel
+        {
+            get;
+            set;
+        }
     }
 }

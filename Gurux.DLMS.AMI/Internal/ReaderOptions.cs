@@ -29,6 +29,8 @@
 // This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
+using System.Diagnostics;
+
 namespace Gurux.DLMS.AMI.Internal
 {
     /// <summary>
@@ -65,5 +67,14 @@ namespace Gurux.DLMS.AMI.Internal
         /// If value is zero only start message is sent and no alive messages are sent.
         /// </summary>
         public int AliveTime { get; set; }
+        /// <summary>
+        /// Used trace level.
+        /// </summary>
+        public TraceLevel TraceLevel
+        {
+            get;
+            set;
+        }
+
     }
 }

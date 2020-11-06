@@ -61,6 +61,7 @@ namespace Gurux.DLMS.AMI.Reader
         private readonly string _name;
         private readonly int _waitTime;
         private readonly int _aliveTime;
+        private readonly TraceLevel _traceLevel;
 
 
         /// <summary>
@@ -76,6 +77,7 @@ namespace Gurux.DLMS.AMI.Reader
             _name = optionsAccessor.Value.Name;
             _waitTime = optionsAccessor.Value.TaskWaitTime * 1000;
             _aliveTime = optionsAccessor.Value.AliveTime;
+            _traceLevel = optionsAccessor.Value.TraceLevel;
         }
 
         /// <summary>
@@ -201,7 +203,7 @@ namespace Gurux.DLMS.AMI.Reader
                         {
                             cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, 16, dev.PhysicalAddress,
                                 Authentication.None, null, (InterfaceType)dev.InterfaceType);
-                            reader = new GXDLMSReader(cl, media, _logger);
+                            reader = new GXDLMSReader(cl, media, _logger, _traceLevel);
                             media.Open();
                             reader.InitializeConnection();
                             //Read Innovation counter.
@@ -241,7 +243,7 @@ namespace Gurux.DLMS.AMI.Reader
                         }
                         cl.Ciphering.InvocationCounter = dev.InvocationCounter;
                         cl.Ciphering.Security = (byte)dev.Security;
-                        reader = new GXDLMSReader(cl, media, _logger);
+                        reader = new GXDLMSReader(cl, media, _logger, _traceLevel);
                         media.Open();
                         reader.InitializeConnection();
                         pos = 0;
@@ -281,7 +283,7 @@ namespace Gurux.DLMS.AMI.Reader
                                     {
                                         obj.SetUIDataType(task.Index, (DataType)task.Object.Attributes[0].UIDataType);
                                     }
-                                    Reader.Read(_logger, client, reader, task, media, obj);
+                                    Reader.Read(_logger, client, reader, task, obj);
                                     if (task.Object.Attributes[0].DataType == 0)
                                     {
                                         task.Object.Attributes[0].DataType = (int)obj.GetDataType(task.Index);
