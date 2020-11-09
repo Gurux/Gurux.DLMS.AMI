@@ -197,11 +197,21 @@ namespace Gurux.DLMS.AMI.Reader
                             throw new Exception("Unknown media type '" + dev.MediaType + "'.");
                         }
                         media.Settings = dev.MediaSettings;
+                        int deviceAddress;
+                        if (dev.LogicalAddress != 0 &&
+                            (dev.InterfaceType == InterfaceType.HDLC || dev.InterfaceType == InterfaceType.HdlcWithModeE))
+                        {
+                            deviceAddress = GXDLMSClient.GetServerAddress(dev.LogicalAddress, dev.PhysicalAddress);
+                        }
+                        else
+                        {
+                            deviceAddress = dev.PhysicalAddress;
+                        }
                         GXDLMSReader reader;
                         //Read frame counter from the meter.
                         if (dev.Security != 0)
                         {
-                            cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, 16, dev.PhysicalAddress,
+                            cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, 16, deviceAddress,
                                 Authentication.None, null, (InterfaceType)dev.InterfaceType);
                             reader = new GXDLMSReader(cl, media, _logger, _traceLevel);
                             media.Open();
@@ -213,7 +223,8 @@ namespace Gurux.DLMS.AMI.Reader
                             reader.Disconnect();
                             media.Close();
                         }
-                        cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress,
+
+                        cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, deviceAddress,
                             (Authentication)dev.Authentication, dev.Password, (InterfaceType)dev.InterfaceType);
                         if (dev.HexPassword != null && dev.HexPassword.Length != 0)
                         {
