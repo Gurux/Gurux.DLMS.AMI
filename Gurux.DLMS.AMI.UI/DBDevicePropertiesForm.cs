@@ -461,11 +461,6 @@ namespace Gurux.DLMS.AMI.UI
             this.UseLNCB.Checked = device.UseLogicalNameReferencing;
             this.UseLNCB.CheckedChanged += new System.EventHandler(this.UseLNCB_CheckedChanged);
             ShowConformance((Conformance)device.Conformance);
-            //Handle old way.
-            if (device.InterfaceType == InterfaceType.HDLC && device.StartProtocol == StartProtocolType.IEC)
-            {
-                device.InterfaceType = InterfaceType.HdlcWithModeE;
-            }
             InterfaceCb.SelectedItem = device.InterfaceType;
             MaxInfoTXTb.Text = device.MaxInfoTX.ToString();
             MaxInfoRXTb.Text = device.MaxInfoRX.ToString();
