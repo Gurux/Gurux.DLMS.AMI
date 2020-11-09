@@ -244,6 +244,10 @@ namespace Gurux.DLMS.AMI.UI
                                 t.Password = GXDLMSTranslator.ToHex(CryptHelper.Decrypt(it.HexPassword, Password.Key));
                             }
                             List<GXObjectTemplate> list = new List<GXObjectTemplate>();
+                            if (it.Objects.Count == 0)
+                            {
+                                throw new Exception("There are no objects. Read the association view first.");
+                            }
                             foreach (GXDLMSObject value in it.Objects)
                             {
                                 string[] names = ((IGXDLMSBase)value).GetNames();
