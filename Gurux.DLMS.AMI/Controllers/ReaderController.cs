@@ -76,6 +76,12 @@ namespace DBService.Controllers
                 request.Reader.Detected = request.Reader.Generation = DateTime.Now;
                 host.Connection.Insert(GXInsertArgs.Insert(request.Reader));
             }
+            else if (i.Name != request.Reader.Name && !string.IsNullOrEmpty(request.Reader.Name))
+            {
+                //Update reader name.
+                i.Detected = DateTime.Now;
+                host.Connection.Update(GXUpdateArgs.Update(i, u => new { u.Detected, u.Name}));
+            }
             else
             {
                 i.Detected = DateTime.Now;

@@ -101,23 +101,25 @@ namespace Gurux.DLMS.AMI
 #if !NETCOREAPP2_0 && !NETCOREAPP2_1
             services.AddControllers();
 #endif//!NETCOREAPP2_0 && !NETCOREAPP2_1
-
-            if (!Configuration.GetSection("Scheduler").Get<SchedulerOptions>().Disabled)
-            {
-                services.AddHostedService<GXSchedulerService>();
-            }
-
             string settings = Configuration.GetSection("Database").Get<DatabaseOptions>().Settings;
             string type = Configuration.GetSection("Database").Get<DatabaseOptions>().Type;
-            Console.WriteLine("Database type: " + type);
-            Console.WriteLine("Connecting: " + settings);
+            bool disabled = Configuration.GetSection("Database").Get<DatabaseOptions>().Disabled;
+            if (disabled)
+            {
+                Console.WriteLine("Database service is disabled.");
+            }
+            else
+            {
+                Console.WriteLine("Database type: " + type);
+                Console.WriteLine("Connecting: " + settings);
+            }
             DbConnection connection;
-            if (string.IsNullOrEmpty(type))
+            if (disabled || string.IsNullOrEmpty(type))
             {
                 //Gurux.DLMS.AMI DB is defined elsewhere.
                 connection = null;
             }
-            if (string.Compare(type, "Oracle", true) == 0)
+            else if (string.Compare(type, "Oracle", true) == 0)
             {
                 connection = new OracleConnection(settings);
             }
@@ -194,6 +196,10 @@ namespace Gurux.DLMS.AMI
             {
                 services.AddHostedService<GXListenerService>();
             }
+            else
+            {
+                Console.WriteLine("Listener service is disabled.");
+            }
 
             services.Configure<NotifyOptions>(Configuration.GetSection("Notify"));
             NotifyOptions n = Configuration.GetSection("Notify").Get<NotifyOptions>();
@@ -201,10 +207,19 @@ namespace Gurux.DLMS.AMI
             {
                 services.AddHostedService<GXNotifyService>();
             }
+            else
+            {
+                Console.WriteLine("Notify service is disabled.");
+            }
             services.Configure<SchedulerOptions>(Configuration.GetSection("Scheduler"));
-            if (!Configuration.GetSection("Scheduler").Get<SchedulerOptions>().Disabled)
+            SchedulerOptions s = Configuration.GetSection("Scheduler").Get<SchedulerOptions>();
+            if (!s.Disabled)
             {
                 services.AddHostedService<GXSchedulerService>();
+            }
+            else
+            {
+                Console.WriteLine("Scheduler service is disabled.");
             }
             services.Configure<ReaderOptions>(Configuration.GetSection("Reader"));
             ReaderOptions r = Configuration.GetSection("Reader").Get<ReaderOptions>();
@@ -213,6 +228,10 @@ namespace Gurux.DLMS.AMI
             if (r.Threads != 0 && !r.Disabled)
             {
                 services.AddHostedService<ReaderService>();
+            }
+            else
+            {
+                Console.WriteLine("Reader '" + r.Name + "' ID: " + r.Id);
             }
 #if NETCOREAPP2_0 || NETCOREAPP2_1
             services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
