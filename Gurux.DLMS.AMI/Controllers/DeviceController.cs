@@ -60,11 +60,11 @@ namespace Gurux.DLMS.AMI.Controllers
         [HttpPost("UpdateDevice")]
         public ActionResult<UpdateDeviceResponse> Post(UpdateDevice request)
         {
-            if (request.Device.TemplateId == 0)
+            bool newDevice = request.Device.Id == 0;
+            if (newDevice && request.Device.TemplateId == 0)
             {
                 return BadRequest("Device template ID is unknown.");
             }
-            bool newDevice = request.Device.Id == 0;
             if (request.Device.DeviceSystemTitle != null)
             {
                 request.Device.DeviceSystemTitle = request.Device.DeviceSystemTitle.Replace(" ", "");
