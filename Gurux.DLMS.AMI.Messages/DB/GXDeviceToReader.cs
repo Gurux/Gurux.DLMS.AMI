@@ -38,7 +38,6 @@ namespace Gurux.DLMS.AMI.Messages.DB
     public class GXDeviceToReader
     {
         [DataMember]
-        [Index(Unique = true)]
         [ForeignKey(typeof(GXDevice), OnDelete = ForeignKeyDelete.Cascade)]
         public UInt64 DeviceId
         {
@@ -47,7 +46,6 @@ namespace Gurux.DLMS.AMI.Messages.DB
         }
 
         [DataMember]
-        [Index(Unique = true)]
         [ForeignKey(typeof(GXReaderInfo), OnDelete = ForeignKeyDelete.Cascade)]
         public UInt64 ReaderId
         {
