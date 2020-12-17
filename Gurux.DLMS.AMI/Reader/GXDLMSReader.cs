@@ -69,8 +69,10 @@ namespace Gurux.DLMS.AMI.Reader
         /// <param name="media">Media.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="trace">Trace level.</param>
-        public GXDLMSReader(GXDLMSSecureClient client, IGXMedia media, ILogger logger, TraceLevel trace)
+        public GXDLMSReader(GXDLMSSecureClient client, IGXMedia media, ILogger logger, TraceLevel trace, int wt, int retry)
         {
+            WaitTime = wt * 1000;
+            RetryCount = retry;
             Trace = trace;
             Media = media;
             Client = client;

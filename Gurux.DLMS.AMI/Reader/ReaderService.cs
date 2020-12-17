@@ -213,7 +213,7 @@ namespace Gurux.DLMS.AMI.Reader
                         {
                             cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, 16, deviceAddress,
                                 Authentication.None, null, (InterfaceType)dev.InterfaceType);
-                            reader = new GXDLMSReader(cl, media, _logger, _traceLevel);
+                            reader = new GXDLMSReader(cl, media, _logger, _traceLevel, dev.WaitTime, dev.ResendCount);
                             media.Open();
                             reader.InitializeConnection();
                             //Read Innovation counter.
@@ -254,7 +254,7 @@ namespace Gurux.DLMS.AMI.Reader
                         }
                         cl.Ciphering.InvocationCounter = dev.InvocationCounter;
                         cl.Ciphering.Security = (byte)dev.Security;
-                        reader = new GXDLMSReader(cl, media, _logger, _traceLevel);
+                        reader = new GXDLMSReader(cl, media, _logger, _traceLevel, dev.WaitTime, dev.ResendCount);
                         media.Open();
                         reader.InitializeConnection();
                         pos = 0;
