@@ -151,15 +151,23 @@ namespace DBService.Controllers
                     GXDeviceToReader it = new GXDeviceToReader();
                     it.ReaderId = request.Readers[pos];
                     it.DeviceId = request.Devices[pos];
+                    if (it.ReaderId == 0)
+                    {
+                        return BadRequest(Gurux.DLMS.AMI.Properties.Resources.ReaderIdIsZero);
+                    }
+                    if (it.DeviceId == 0)
+                    {
+                        return BadRequest(Gurux.DLMS.AMI.Properties.Resources.DeviceIdIsZero);
+                    }
                     list.Add(it);
                 }
                 host.Connection.Insert(GXInsertArgs.InsertRange(list));
                 host.SetChange(TargetType.Readers | TargetType.Device, DateTime.Now);
                 return new ReaderDevicesUpdateResponse();
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                return BadRequest("The device is already added to the selected reader.");
+                return BadRequest(ex);
             }
         }
 
