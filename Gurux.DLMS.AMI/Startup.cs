@@ -101,9 +101,10 @@ namespace Gurux.DLMS.AMI
 #if !NETCOREAPP2_0 && !NETCOREAPP2_1
             services.AddControllers();
 #endif//!NETCOREAPP2_0 && !NETCOREAPP2_1
-            string settings = Configuration.GetSection("Database").Get<DatabaseOptions>().Settings;
-            string type = Configuration.GetSection("Database").Get<DatabaseOptions>().Type;
-            bool disabled = Configuration.GetSection("Database").Get<DatabaseOptions>().Disabled;
+            DatabaseOptions db = Configuration.GetSection("Database").Get<DatabaseOptions>();
+            string settings = db.Settings;
+            string type = db.Type;
+            bool disabled = db.Disabled;
             if (disabled)
             {
                 Console.WriteLine("Database service is disabled.");
@@ -190,7 +191,6 @@ namespace Gurux.DLMS.AMI
                     return h;
                 });
             }
-            services.Configure<ListenerOptions>(Configuration.GetSection("Listener"));
             ListenerOptions listener = Configuration.GetSection("Listener").Get<ListenerOptions>();
             if (!listener.Disabled)
             {
@@ -201,7 +201,6 @@ namespace Gurux.DLMS.AMI
                 Console.WriteLine("Listener service is disabled.");
             }
 
-            services.Configure<NotifyOptions>(Configuration.GetSection("Notify"));
             NotifyOptions n = Configuration.GetSection("Notify").Get<NotifyOptions>();
             if (!n.Disabled && n.Port != 0)
             {
@@ -211,7 +210,6 @@ namespace Gurux.DLMS.AMI
             {
                 Console.WriteLine("Notify service is disabled.");
             }
-            services.Configure<SchedulerOptions>(Configuration.GetSection("Scheduler"));
             SchedulerOptions s = Configuration.GetSection("Scheduler").Get<SchedulerOptions>();
             if (!s.Disabled)
             {
@@ -221,7 +219,6 @@ namespace Gurux.DLMS.AMI
             {
                 Console.WriteLine("Scheduler service is disabled.");
             }
-            services.Configure<ReaderOptions>(Configuration.GetSection("Reader"));
             ReaderOptions r = Configuration.GetSection("Reader").Get<ReaderOptions>();
             Console.WriteLine("Reader trace level is " + r.TraceLevel);
             Console.WriteLine("Listener trace level is " + listener.TraceLevel);
