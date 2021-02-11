@@ -265,6 +265,7 @@ namespace Gurux.DLMS.AMI.Reader
                             try
                             {
                                 GXDLMSObject obj = GXDLMSClient.CreateObject((ObjectType)task.Object.ObjectType);
+                                obj.Version = task.Object.Version;
                                 obj.LogicalName = task.Object.LogicalName;
                                 obj.ShortName = task.Object.ShortName;
                                 if (task.TaskType == TaskType.Write)

@@ -230,6 +230,7 @@ namespace Gurux.DLMS.AMI.Notify
                                 foreach (GXTask task in ret.Tasks)
                                 {
                                     GXDLMSObject obj = GXDLMSClient.CreateObject((ObjectType)task.Object.ObjectType);
+                                    obj.Version = task.Object.Version;
                                     obj.LogicalName = task.Object.LogicalName;
                                     try
                                     {
