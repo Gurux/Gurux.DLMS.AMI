@@ -89,7 +89,7 @@ namespace Gurux.DLMS.AMI.Reader
             //Give some time DB server to start up.
             Thread.Sleep(1000);
             System.Net.Http.HttpResponseMessage response;
-            while(!_cancellationToken.IsCancellationRequested)
+            while (!_cancellationToken.IsCancellationRequested)
             {
                 using (response = await client.PostAsJsonAsync(Startup.ServerAddress + "/api/reader/AddReader", new AddReader() { Reader = value }))
                 {
@@ -253,7 +253,7 @@ namespace Gurux.DLMS.AMI.Reader
                             cl.ServerSystemTitle = null;
                         }
                         cl.Ciphering.InvocationCounter = dev.InvocationCounter;
-                        cl.Ciphering.Security = (byte)dev.Security;
+                        cl.Ciphering.Security = dev.Security;
                         reader = new GXDLMSReader(cl, media, _logger, _traceLevel, dev.WaitTime, dev.ResendCount);
                         media.Open();
                         reader.InitializeConnection();
