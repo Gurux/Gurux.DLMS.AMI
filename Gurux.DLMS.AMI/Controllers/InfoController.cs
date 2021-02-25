@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 using Gurux.DLMS.AMI.Messages.Rest;
@@ -96,6 +96,7 @@ namespace DBService.Controllers
             sb.Append("</tr>");
             sb.Append("</table>");
             sb.Append("<ul class=\"nav\">");
+            int pos = 1;
             foreach (var it in MessageMap)
             {
                 StringBuilder sb2 = new StringBuilder();
@@ -115,13 +116,16 @@ namespace DBService.Controllers
                 }
                 if (!string.IsNullOrEmpty(it.Value.Url))
                 {
+                    ++pos;
                     sb2.Append("<p/>");
                     sb2.Append("REST Example:");
                     sb2.Append("<hr/>");
-
                     sb2.Append("<p/>");
+                    //Add copy button.
+                    sb2.Append("<button style=\"float:right;\" onclick=\"CopyToClipboard('rest_msg" + pos.ToString() + "')\">Copy</button>");
                     sb2.Append("URL:");
                     sb2.Append("<br/>");
+                    sb2.Append("<div id=\"rest_msg" + pos.ToString() + "\">");
                     sb2.Append(this.Request.Scheme + "://" + this.Request.Host + it.Value.Url);
                     sb2.Append("<p/>");
                     sb2.Append("Body:");
@@ -134,6 +138,7 @@ namespace DBService.Controllers
                     {
                         sb2.Append("{<br/>}");
                     }
+                    sb2.Append("</div>");
                 }
                 sb.Append("<li>");
                 sb.Append("<a target =\"_blank\"" + ">" + "</a>");
@@ -146,10 +151,21 @@ namespace DBService.Controllers
                 sb.Append("</div>");
                 sb.Append("</li>");
                 sb.Append("<hr></hr>");
-                //< div class="description">
                 sb.Append("<p/>");
             }
             sb.Append("</ul>");
+            sb.AppendLine("<script>");
+            sb.AppendLine("function CopyToClipboard(containerid) {");
+            sb.AppendLine("var range = document.createRange();");
+            sb.AppendLine("range.selectNode(document.getElementById(containerid));");
+            sb.AppendLine("window.getSelection().removeAllRanges();");
+            sb.AppendLine("window.getSelection().addRange(range);");
+            sb.AppendLine("document.execCommand(\"copy\");");
+            sb.AppendLine("window.getSelection().removeAllRanges();");
+            sb.AppendLine("alert(\"REST request copied to the clipboard.\");");
+            sb.AppendLine("}");
+            sb.AppendLine("</script>");
+
             sb.Append("</body></http>");
             return new ContentResult
             {
@@ -157,6 +173,6 @@ namespace DBService.Controllers
                 StatusCode = (int)HttpStatusCode.OK,
                 Content = sb.ToString()
             };
+        }
     }
-}
 }

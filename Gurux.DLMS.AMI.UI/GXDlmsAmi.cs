@@ -1227,7 +1227,7 @@ namespace Gurux.DLMS.AMI.UI
         {
             ListObjects req = new ListObjects();
             req.Targets = TargetType.Object | TargetType.Attribute;
-            req.DeviceId = ((GXDevice)device).Id;
+            req.DeviceId = (UInt64)((GXDLMSMeter)device).Tag;
             GXDLMSSettings s = new GXDLMSSettings();
             s.UseUtc2NormalTime = device.UtcTimeZone;
             s.Standard = device.Standard;
@@ -1252,7 +1252,7 @@ namespace Gurux.DLMS.AMI.UI
         {
             ListObjects req = new ListObjects();
             req.Targets = TargetType.Object | TargetType.Attribute;
-            req.DeviceId = ((GXDevice)device).Id;
+            req.DeviceId = (UInt64)((GXDLMSMeter)device).Tag;
             GXDLMSSettings s = new GXDLMSSettings();
             s.UseUtc2NormalTime = device.UtcTimeZone;
             s.Standard = device.Standard;
