@@ -198,14 +198,21 @@ namespace Gurux.DLMS.AMI.Reader
                         }
                         media.Settings = dev.MediaSettings;
                         int deviceAddress;
-                        if (dev.LogicalAddress != 0 &&
-                            (dev.InterfaceType == InterfaceType.HDLC || dev.InterfaceType == InterfaceType.HdlcWithModeE))
+                        if (dev.HDLCAddressing == ManufacturerSettings.HDLCAddressType.SerialNumber)
                         {
-                            deviceAddress = GXDLMSClient.GetServerAddress(dev.LogicalAddress, dev.PhysicalAddress);
+                            deviceAddress = GXDLMSClient.GetServerAddressFromSerialNumber(dev.PhysicalAddress, dev.LogicalAddress);
                         }
                         else
                         {
-                            deviceAddress = dev.PhysicalAddress;
+                            if (dev.LogicalAddress != 0 &&
+                                (dev.InterfaceType == InterfaceType.HDLC || dev.InterfaceType == InterfaceType.HdlcWithModeE))
+                            {
+                                deviceAddress = GXDLMSClient.GetServerAddress(dev.LogicalAddress, dev.PhysicalAddress);
+                            }
+                            else
+                            {
+                                deviceAddress = dev.PhysicalAddress;
+                            }
                         }
                         GXDLMSReader reader;
                         //Read frame counter from the meter.
