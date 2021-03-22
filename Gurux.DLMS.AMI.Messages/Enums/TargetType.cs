@@ -1,7 +1,7 @@
 ﻿//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
-// 
+//
 //
 //
 // Filename:        $HeadURL$
@@ -19,14 +19,14 @@
 // This file is a part of Gurux Device Framework.
 //
 // Gurux Device Framework is Open Source software; you can redistribute it
-// and/or modify it under the terms of the GNU General Public License 
+// and/or modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2 of the License.
 // Gurux Device Framework is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // See the GNU General Public License for more details.
 //
-// This code is licensed under the GNU General Public License v2. 
+// This code is licensed under the GNU General Public License v2.
 // Full text may be retrieved at http://www.gnu.org/licenses/gpl-2.0.txt
 //---------------------------------------------------------------------------
 
@@ -91,6 +91,22 @@ namespace Gurux.DLMS.AMI.Messages.Enums
         /// <summary>
         /// Attribute templates are changed.
         /// </summary>
-        AttributeTemplate = 0x1000
+        AttributeTemplate = 0x1000,
+        /// <summary>
+        /// Device Log is changed.
+        /// </summary>
+        DeviceLog = 0x2000,
+        /// <summary>
+        /// User group is changed.
+        /// </summary>
+        UserGroup = 0x4000,
+        /// <summary>
+        /// User is changed.
+        /// </summary>
+        User = 0x8000,
+        /// <summary>
+        /// User Log is changed.
+        /// </summary>
+        UserLog = 0x10000
     }
 }

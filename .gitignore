@@ -24,6 +24,7 @@ Gurux.DLMS.AMI.UI/.vs
 Gurux.DLMS.AMI.UI/packages
 Gurux.DLMS.AMI/.vs
 Gurux.DLMS.AMI/packages
+temp/
 
 # Locally stored "Eclipse launch configurations"
 *.launch
