@@ -112,7 +112,7 @@ namespace Gurux.DLMS.AMI.Notify
                     ListenerOptions listener = config.GetSection("Listener").Get<ListenerOptions>();
                     GXDLMSObjectCollection objects = new GXDLMSObjectCollection();
                     GXDLMSSecureClient client = new GXDLMSSecureClient(listener.UseLogicalNameReferencing, listener.ClientAddress, listener.ServerAddress, (Authentication)listener.Authentication, listener.Password, (InterfaceType)listener.Interface);
-                    reader = new GXDLMSReader(client, media, _logger, listener.TraceLevel, 60000, 3);
+                    reader = new GXDLMSReader(client, media, _logger, listener.TraceLevel, 60000, 3, 0);
                     GXDLMSData ldn = new GXDLMSData("0.0.42.0.0.255");
                     ldn.SetUIDataType(2, DataType.String);
                     reader.InitializeConnection();
@@ -208,7 +208,8 @@ namespace Gurux.DLMS.AMI.Notify
                                 {
                                     reader.Release();
                                     reader.Disconnect();
-                                    client = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress, (Authentication)dev.Authentication, dev.Password, dev.InterfaceType);
+                                    client = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, dev.ClientAddress, dev.PhysicalAddress,
+                                        dev.Authentication, dev.Password, dev.InterfaceType);
                                     client.UseUtc2NormalTime = dev.UtcTimeZone;
                                     client.Standard = (Standard)dev.Standard;
                                     if (dev.Conformance != 0)
@@ -223,7 +224,12 @@ namespace Gurux.DLMS.AMI.Notify
                                     client.ServerSystemTitle = GXCommon.HexToBytes(dev.DeviceSystemTitle);
                                     client.Ciphering.InvocationCounter = dev.InvocationCounter;
                                     client.Ciphering.Security = dev.Security;
-                                    reader = new GXDLMSReader(client, media, _logger, listener.TraceLevel, dev.WaitTime, dev.ResendCount);
+                                    UInt64 devId = 0;
+                                    if (dev.TraceLevel != TraceLevel.Off)
+                                    {
+                                        devId = dev.Id;
+                                    }
+                                    reader = new GXDLMSReader(client, media, _logger, listener.TraceLevel, dev.WaitTime, dev.ResendCount, devId);
                                     reader.InitializeConnection();
                                 }
                                 List<GXValue> values = new List<GXValue>();

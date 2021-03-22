@@ -33,7 +33,8 @@
 //---------------------------------------------------------------------------
 using Gurux.Common;
 using Gurux.DLMS.AMI.Internal;
-using Gurux.DLMS.AMI.Notify;
+using Gurux.DLMS.AMI.Messages.DB;
+using Gurux.DLMS.AMI.Messages.Rest;
 using Gurux.DLMS.Enums;
 using Gurux.DLMS.Objects;
 using Gurux.DLMS.Secure;
@@ -61,6 +62,9 @@ namespace Gurux.DLMS.AMI.Reader
         TraceLevel Trace;
         GXDLMSSecureClient Client;
         private readonly ILogger _logger;
+        private readonly System.Net.Http.HttpClient httpClient = Helpers.client;
+        //If device ID is give the trace is added to the database.
+        private UInt64 DeviceId;
 
         /// <summary>
         /// Constructor.
@@ -69,7 +73,14 @@ namespace Gurux.DLMS.AMI.Reader
         /// <param name="media">Media.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="trace">Trace level.</param>
-        public GXDLMSReader(GXDLMSSecureClient client, IGXMedia media, ILogger logger, TraceLevel trace, int wt, int retry)
+        public GXDLMSReader(
+            GXDLMSSecureClient client,
+            IGXMedia media,
+            ILogger logger,
+            TraceLevel trace,
+            int wt,
+            int retry,
+            UInt64 deviceId)
         {
             WaitTime = wt * 1000;
             RetryCount = retry;
@@ -77,6 +88,7 @@ namespace Gurux.DLMS.AMI.Reader
             Media = media;
             Client = client;
             _logger = logger;
+            DeviceId = deviceId;
         }
 
         /// <summary>
@@ -492,7 +504,7 @@ namespace Gurux.DLMS.AMI.Reader
                 {
                     if (!reply.IsStreaming())
                     {
-                        WriteTrace("TX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(data, true));
+                        WriteTrace(true, "TX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(data, true));
                         Media.Send(data, null);
                     }
                     succeeded = Media.Receive(p);
@@ -560,11 +572,11 @@ namespace Gurux.DLMS.AMI.Reader
                 }
                 catch (Exception ex)
                 {
-                    WriteTrace("RX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
+                    WriteTrace(false, "RX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
                     throw ex;
                 }
             }
-            WriteTrace("RX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
+            WriteTrace(false, "RX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
             if (reply.Error != 0)
             {
                 if (reply.Error == (short)ErrorCode.Rejected)
@@ -792,7 +804,7 @@ namespace Gurux.DLMS.AMI.Reader
                 {
 
                     if (Client.InterfaceType == InterfaceType.WRAPPER ||
-                        Client.Ciphering.Security != (byte) Security.None)
+                        Client.Ciphering.Security != (byte)Security.None)
                     {
                         ReadDataBlock(Client.ReleaseRequest(), reply);
                     }
@@ -853,7 +865,7 @@ namespace Gurux.DLMS.AMI.Reader
         /// Write trace.
         /// </summary>
         /// <param name="line"></param>
-        void WriteTrace(string line)
+        void WriteTrace(bool tx, string line)
         {
             if (Trace > TraceLevel.Info)
             {
@@ -863,15 +875,38 @@ namespace Gurux.DLMS.AMI.Reader
             {
                 _logger.LogInformation(line);
             }
-            /*
-            using (FileStream fs = File.Open("trace.txt", FileMode.Append))
+            if (DeviceId != 0)
             {
-                using (TextWriter writer = new StreamWriter(fs))
+                try
                 {
-                    writer.WriteLine(line);
+                    GXDeviceLog it = new GXDeviceLog();
+                    it.DeviceId = 1;
+                    if (tx)
+                    {
+                        it.Type = 0;
+                    }
+                    else
+                    {
+                        it.Type = 1;
+                    }
+                    it.Data = line;
+                    AddDeviceLog log = new AddDeviceLog();
+                    log.Logs = new Messages.DB.GXDeviceLog[] { it };
+                    System.Net.Http.HttpResponseMessage response;
+                    using (response = httpClient.PostAsJsonAsync(Startup.ServerAddress + "/api/Log/AddDeviceLog", log).Result)
+                    {
+                        Helpers.CheckStatus(response);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    if (_logger != null)
+                    {
+                        _logger.LogError(ex.Message);
+                    }
                 }
             }
-            */
         }
     }
 }

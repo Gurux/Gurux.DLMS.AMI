@@ -127,7 +127,10 @@ namespace Gurux.DLMS.AMI.Controllers
             else
             {
                 request.Device.Updated = DateTime.Now;
-                host.Connection.Update(GXUpdateArgs.Update(request.Device));
+                GXUpdateArgs arg = GXUpdateArgs.Update(request.Device);
+                //Device template ID is not updated.
+                arg.Exclude<GXDevice>(q => q.TemplateId);
+                host.Connection.Update(arg);
                 host.SetChange(TargetType.DeviceTemplate, DateTime.Now);
             }
             return new UpdateDeviceResponse()

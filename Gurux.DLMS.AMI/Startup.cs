@@ -166,6 +166,7 @@ namespace Gurux.DLMS.AMI
                     h.Connection.CreateTable<GXSchedulerInfo>(false, false);
                     h.Connection.CreateTable<GXReaderInfo>(false, false);
                     h.Connection.CreateTable<GXDeviceToReader>(false, false);
+                    h.Connection.CreateTable<GXDeviceLog>(false, false);
                     AddSchedule(h.Connection);
                 }
                 else
@@ -179,6 +180,7 @@ namespace Gurux.DLMS.AMI
                     h.Connection.UpdateTable<GXObject>();
                     h.Connection.UpdateTable<GXAttribute>();
                     h.Connection.UpdateTable<GXDevice>();
+                    h.Connection.UpdateTable<GXDeviceLog>();
                 }
                 h.Connection.Insert(GXInsertArgs.Insert(new GXSystemError()
                 {

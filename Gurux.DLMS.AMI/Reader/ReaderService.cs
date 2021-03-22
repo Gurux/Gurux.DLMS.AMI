@@ -214,13 +214,23 @@ namespace Gurux.DLMS.AMI.Reader
                                 deviceAddress = dev.PhysicalAddress;
                             }
                         }
+                        TraceLevel trace = _traceLevel;
+                        if (dev.TraceLevel > trace)
+                        {
+                            trace = dev.TraceLevel;
+                        }
+                        UInt64 devId = 0;
+                        if (dev.TraceLevel != TraceLevel.Off)
+                        {
+                            devId = dev.Id;
+                        }
                         GXDLMSReader reader;
                         //Read frame counter from the meter.
                         if (dev.Security != 0)
                         {
                             cl = new GXDLMSSecureClient(dev.UseLogicalNameReferencing, 16, deviceAddress,
                                 Authentication.None, null, (InterfaceType)dev.InterfaceType);
-                            reader = new GXDLMSReader(cl, media, _logger, _traceLevel, dev.WaitTime, dev.ResendCount);
+                            reader = new GXDLMSReader(cl, media, _logger, trace, dev.WaitTime, dev.ResendCount, devId);
                             media.Open();
                             reader.InitializeConnection();
                             //Read Innovation counter.
@@ -261,7 +271,7 @@ namespace Gurux.DLMS.AMI.Reader
                         }
                         cl.Ciphering.InvocationCounter = dev.InvocationCounter;
                         cl.Ciphering.Security = dev.Security;
-                        reader = new GXDLMSReader(cl, media, _logger, _traceLevel, dev.WaitTime, dev.ResendCount);
+                        reader = new GXDLMSReader(cl, media, _logger, trace, dev.WaitTime, dev.ResendCount, devId);
                         media.Open();
                         reader.InitializeConnection();
                         pos = 0;
