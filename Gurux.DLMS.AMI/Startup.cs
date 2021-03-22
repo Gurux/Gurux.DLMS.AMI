@@ -180,7 +180,14 @@ namespace Gurux.DLMS.AMI
                     h.Connection.UpdateTable<GXObject>();
                     h.Connection.UpdateTable<GXAttribute>();
                     h.Connection.UpdateTable<GXDevice>();
-                    h.Connection.UpdateTable<GXDeviceLog>();
+                    if (!h.Connection.TableExist<GXDeviceLog>())
+                    {
+                        h.Connection.CreateTable<GXDeviceLog>(false, false);
+                    }
+                    else
+                    {
+                        h.Connection.UpdateTable<GXDeviceLog>();
+                    }
                 }
                 h.Connection.Insert(GXInsertArgs.Insert(new GXSystemError()
                 {
