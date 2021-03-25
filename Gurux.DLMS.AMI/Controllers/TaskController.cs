@@ -181,7 +181,6 @@ namespace DBService.Controllers
                 arg.OrderBy.Add<GXTask>(q => q.Id);
                 GXSelectArgs onProgress = GXSelectArgs.Select<GXObject>(c => c.DeviceId, q => q.Removed == DateTime.MinValue);
                 onProgress.Joins.AddInnerJoin<GXTask, GXObject>(a => a.Object, b => b.Id);
-                onProgress.Joins.AddInnerJoin<GXObject, GXDevice>(a => a.DeviceId, b => b.Id);
                 onProgress.Where.And<GXTask>(q => q.Start != DateTime.MinValue && q.End == DateTime.MinValue);
                 arg.Where.And<GXObject>(q => !GXSql.Exists<GXObject, GXDevice>(a => a.DeviceId, b => b.Id, onProgress));
                 GXTask task = host.Connection.SingleOrDefault<GXTask>(arg);
