@@ -570,10 +570,10 @@ namespace Gurux.DLMS.AMI.Reader
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WriteTrace(false, "RX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));
-                    throw ex;
+                    throw;
                 }
             }
             WriteTrace(false, "RX:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t" + GXCommon.ToHex(p.Reply, true));

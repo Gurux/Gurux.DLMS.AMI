@@ -180,10 +180,10 @@ namespace Gurux.DLMS.AMI.Reader
                     List<GXValue> list = new List<GXValue>();
                     DateTime latest = task.Object.Attributes[GetBufferIndex(task.Object)].Read;
                     DateTime first = latest;
-                    Boolean read = false;
                     int period = -1;
                     foreach (GXStructure row in (GXArray)val)
                     {
+                        bool read = false;
                         DateTime dt = DateTime.MinValue;
                         task.Data = GXDLMSTranslator.ValueToXml(row);
                         for (int pos = 0; pos != row.Count; ++pos)
