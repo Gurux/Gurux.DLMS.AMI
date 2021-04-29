@@ -28,8 +28,8 @@
   </ItemGroup>
  <ItemGroup>
    <PackageReference Include="Gurux.Common" Version="8.1.2002.1903" />
-   <PackageReference Include="Gurux.DLMS" Version="9.0.2104.2101" />
-   <PackageReference Include="Gurux.Service" Version="1.1.2103.1201" />
+   <PackageReference Include="Gurux.DLMS" Version="9.0.2104.2801" />
+   <PackageReference Include="Gurux.Service" Version="1.1.2103.2902" />
  </ItemGroup>
  <ItemGroup>
    <Folder Include="Properties\" />
