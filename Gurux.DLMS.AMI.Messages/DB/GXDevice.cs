@@ -233,5 +233,16 @@ namespace Gurux.DLMS.AMI.Messages.DB
             set;
         }
 
+        /// <summary>
+        /// Serial number formula.
+        /// </summary>
+        [DataMember]
+        [Description("Serial number formula.")]
+        [DefaultValue(null)]
+        public string SerialNumberFormula
+        {
+            get;
+            set;
+        }
     }
 }
