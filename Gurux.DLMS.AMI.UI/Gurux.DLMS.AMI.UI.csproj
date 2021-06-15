@@ -21,12 +21,12 @@
     <UserSecretsId>7b8c93c0-1ea4-467a-b15a-15cf48cf2471</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Gurux.Common" Version="8.1.2002.1903" />
-    <PackageReference Include="Gurux.DLMS" Version="9.0.2104.2801" />
-    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2104.2901" />
-    <PackageReference Include="Gurux.Net" Version="8.1.2011.1101" />
-    <PackageReference Include="Gurux.Serial" Version="8.1.2002.1901" />
-    <PackageReference Include="Gurux.Terminal" Version="8.1.2002.1901" />
+    <PackageReference Include="Gurux.Common" Version="8.1.2106.901" />
+    <PackageReference Include="Gurux.DLMS" Version="9.0.2106.1501" />
+    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2106.1501" />
+    <PackageReference Include="Gurux.Net" Version="8.1.2106.901" />
+    <PackageReference Include="Gurux.Serial" Version="8.1.2106.901" />
+    <PackageReference Include="Gurux.Terminal" Version="8.1.2106.901" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
  </ItemGroup>
 
