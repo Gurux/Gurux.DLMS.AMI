@@ -54,7 +54,7 @@ After that, you need to modify appsettings.json
     "ClientAddress": 16,
     "ServerAddress": 1,
     "Authentication": 0,
-    "Password": null,
+    "Password": 123456,
     "Security": 0,
     "InvocationCounter": "0.0.43.1.1.255"
   },
