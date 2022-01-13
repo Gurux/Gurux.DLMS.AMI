@@ -28,7 +28,7 @@
   </ItemGroup>
  <ItemGroup>
    <PackageReference Include="Gurux.Common" Version="8.1.2109.2401" />
-   <PackageReference Include="Gurux.DLMS" Version="9.0.2112.905" />
+   <PackageReference Include="Gurux.DLMS" Version="9.0.2201.1301" />
    <PackageReference Include="Gurux.Service" Version="1.1.2109.3001" />
  </ItemGroup>
  <ItemGroup>
