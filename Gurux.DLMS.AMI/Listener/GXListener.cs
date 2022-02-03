@@ -242,9 +242,13 @@ namespace Gurux.DLMS.AMI.Notify
                                     {
                                         if (task.TaskType == TaskType.Write)
                                         {
-                                            if (obj.LogicalName == "0.0.1.1.0.255" && task.Index == 2)
+                                            if (obj is GXDLMSData && obj.LogicalName == "0.0.1.1.0.255" && task.Index == 2)
                                             {
                                                 client.UpdateValue(obj, task.Index, GXDateTime.ToUnixTime(DateTime.UtcNow));
+                                            }
+                                            else if (obj is GXDLMSClock && task.Index == 2)
+                                            {
+                                                client.UpdateValue(obj, task.Index, DateTime.UtcNow);
                                             }
                                             else
                                             {
