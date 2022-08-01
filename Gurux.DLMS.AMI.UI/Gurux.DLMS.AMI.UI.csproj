@@ -21,9 +21,9 @@
     <UserSecretsId>7b8c93c0-1ea4-467a-b15a-15cf48cf2471</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Gurux.Common" Version="8.4.2206.201" />
+    <PackageReference Include="Gurux.Common" Version="8.1.2109.2401" />
     <PackageReference Include="Gurux.DLMS" Version="9.0.2208.101" />
-    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2208.101" />
+    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2206.2301" />
     <PackageReference Include="Gurux.Net" Version="8.1.2109.2401" />
     <PackageReference Include="Gurux.Serial" Version="8.1.2109.2401" />
     <PackageReference Include="Gurux.Terminal" Version="8.1.2109.2401" />
