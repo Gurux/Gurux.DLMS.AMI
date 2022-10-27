@@ -287,13 +287,21 @@ namespace Gurux.DLMS.AMI.Reader
                                 obj.ShortName = task.Object.ShortName;
                                 if (task.TaskType == TaskType.Write)
                                 {
-                                    if (obj is GXDLMSData && obj.LogicalName == "0.0.1.1.0.255" && task.Index == 2)
+                                    if (obj is GXDLMSData &&
+                                        (obj.LogicalName == "0.0.1.1.0.255" ||
+                                        obj.LogicalName == "0.0.1.0.0.255") &&
+                                        task.Index == 2)
                                     {
                                         cl.UpdateValue(obj, task.Index, GXDateTime.ToUnixTime(DateTime.UtcNow));
                                     }
                                     else if (obj is GXDLMSClock && task.Index == 2)
                                     {
-                                        cl.UpdateValue(obj, task.Index, DateTime.UtcNow);
+                                        DateTime timeToSet = DateTime.UtcNow;
+                                        if (task != null && string.Compare(task.Data, "Now", true) == 0)
+                                        {
+                                            timeToSet = DateTime.Now;
+                                        }
+                                        cl.UpdateValue(obj, task.Index, timeToSet);
                                     }
                                     else
                                     {
