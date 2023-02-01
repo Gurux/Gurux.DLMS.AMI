@@ -4,13 +4,13 @@
     <AssemblyName>Gurux.DLMS.AMI.UI</AssemblyName>
     <Company>Gurux Ltd</Company>
     <Authors>Gurux Ltd</Authors>
-    <Copyright>Copyright (c) 1998-2020 Gurux Ltd. All rights reserved.</Copyright>
+    <Copyright>Copyright (c) 1998-2023 Gurux Ltd. All rights reserved.</Copyright>
     <PackageProjectUrl>www.gurux.fi/index.php?q=Gurux.DLMS.AMI</PackageProjectUrl>
     <Description>Gurux.AMI offers meter reading application that you can schedule or order to read wanted objects from DLMS meters.</Description>
     <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">0.0.1-local</Version>
     <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/gurux/gurux.dlms.ami</RepositoryUrl>
     <PackageTags>Gurux Device Framework Network DLMS AMI</PackageTags>
@@ -22,8 +22,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Gurux.Common" Version="8.1.2109.2401" />
-    <PackageReference Include="Gurux.DLMS" Version="9.0.2210.301" />
-    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2210.301" />
+    <PackageReference Include="Gurux.DLMS" Version="9.0.2302.101" />
+    <PackageReference Include="Gurux.DLMS.AMI.Messages" Version="8.1.2302.101" />
     <PackageReference Include="Gurux.Net" Version="8.1.2109.2401" />
     <PackageReference Include="Gurux.Serial" Version="8.1.2109.2401" />
     <PackageReference Include="Gurux.Terminal" Version="8.1.2109.2401" />
